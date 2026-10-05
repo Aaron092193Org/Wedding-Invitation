@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Wedding Portal</title>
+  
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex items-center justify-center bg-stone-900 px-4 relative overflow-hidden">
+
+  <!-- Background Ambient Glow -->
+  <div class="absolute -top-40 -left-40 w-96 h-96 bg-rose-900/30 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-stone-200/80 p-8 sm:p-10 relative z-10">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 bg-rose-50 text-rose-800 rounded-full flex items-center justify-center text-2xl mx-auto mb-3 border border-rose-200">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h1 class="font-serif text-3xl font-bold text-stone-900">Wedding Portal</h1>
+      <p class="text-xs uppercase tracking-widest text-stone-500 font-semibold mt-1">Administrator Sign In</p>
+    </div>
+
+    <!-- Error Alert Box -->
+    <div id="login-error-alert" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-xl p-3 mb-6 text-sm flex items-center gap-2">
+      <i class="fas fa-exclamation-triangle shrink-0"></i>
+      <span id="login-error-msg">Invalid credentials.</span>
+    </div>
+
+    <form id="admin-login-form" class="space-y-5">
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5" for="login-username">
+          Username
+        </label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-stone-400">
+            <i class="fas fa-user text-sm"></i>
+          </span>
+          <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-rose-800 focus:border-transparent outline-none transition text-sm text-stone-800" placeholder="admin" value="admin" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5" for="login-password">
+          Password
+        </label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-stone-400">
+            <i class="fas fa-key text-sm"></i>
+          </span>
+          <input type="password" id="login-password" required class="w-full pl-10 pr-10 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-rose-800 focus:border-transparent outline-none transition text-sm text-stone-800" placeholder="••••••••••••" value="WeddingAdmin2026!" />
+          <button type="button" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 hover:text-stone-600" onclick="togglePasswordVisibility()">
+            <i class="fas fa-eye text-sm" id="toggle-pwd-icon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="btn-login-submit" class="w-full py-3.5 rounded-xl font-bold uppercase tracking-widest text-xs text-white bg-stone-900 hover:bg-stone-800 shadow-lg transition flex items-center justify-center gap-2">
+        <span>Sign In</span>
+        <i class="fas fa-arrow-right text-xs"></i>
+      </button>
+    </form>
+
+    <div class="mt-8 pt-6 border-t border-stone-100 text-center text-xs text-stone-500">
+      <p class="mb-2">Default demo credentials:</p>
+      <code class="px-2 py-1 bg-stone-100 rounded text-stone-700 font-mono">admin / WeddingAdmin2026!</code>
+      <div class="mt-4">
+        <a href="/" class="text-stone-600 hover:text-stone-900 underline">← Return to Wedding Website</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('login-password');
+      const icon = document.getElementById('toggle-pwd-icon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        pwd.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-login-submit');
+      const errBox = document.getElementById('login-error-alert');
+      const errMsg = document.getElementById('login-error-msg');
+      errBox.classList.add('hidden');
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="admin-loader mr-2"></span> Signing In...`;
+
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          setAuthSession(data.token, { username: data.username, fullName: data.fullName });
+          window.location.href = '/admin/index.html';
+        } else {
+          errMsg.textContent = data.message || 'Invalid username or password.';
+          errBox.classList.remove('hidden');
+          btn.disabled = false;
+          btn.innerHTML = `<span>Sign In</span> <i class="fas fa-arrow-right text-xs"></i>`;
+        }
+      } catch (err) {
+        console.error(err);
+        errMsg.textContent = 'Network error during login. Please try again.';
+        errBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = `<span>Sign In</span> <i class="fas fa-arrow-right text-xs"></i>`;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSVP Management — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">RSVP Management</a>
+          <a href="/admin/guests.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Guest Pre-Registration</a>
+          <a href="/admin/gallery.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Gallery</a>
+          <a href="/admin/content.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Content & Program</a>
+          <a href="/admin/settings.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Settings</a>
+          <a href="/admin/database.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Database</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>View Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-stone-300 px-2 py-1">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">RSVPs</a>
+    <a href="/admin/guests.html" class="text-stone-300 px-2 py-1">Guests</a>
+    <a href="/admin/gallery.html" class="text-stone-300 px-2 py-1">Gallery</a>
+    <a href="/admin/content.html" class="text-stone-300 px-2 py-1">Content</a>
+    <a href="/admin/settings.html" class="text-stone-300 px-2 py-1">Settings</a>
+  </div>
+
+  <!-- Main RSVP Management Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <!-- Title & Export Buttons -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">RSVP Responses</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Filter, search, inspect, edit, and export guest reservations.</p>
+      </div>
+
+      <!-- User-Requested Export Action Buttons -->
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <a href="/api/admin/rsvps/export/excel" download class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition flex items-center gap-2">
+          <i class="fas fa-file-excel text-sm"></i>
+          <span>EXPORT TO EXCEL</span>
+        </a>
+        <a href="/api/admin/rsvps/export/csv" download class="px-4 py-2.5 bg-stone-800 hover:bg-stone-900 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition flex items-center gap-2">
+          <i class="fas fa-file-csv text-sm"></i>
+          <span>EXPORT TO CSV</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="bg-white rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Search Input -->
+      <div class="relative flex-1 max-w-md">
+        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-stone-400">
+          <i class="fas fa-search text-xs"></i>
+        </span>
+        <input type="text" id="rsvp-search-input" class="w-full pl-9 pr-4 py-2 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-rose-800 focus:border-transparent outline-none transition" placeholder="Search by name, email, or mobile..." />
+      </div>
+
+      <!-- Filters & Sort -->
+      <div class="flex items-center gap-3 flex-wrap">
+        <!-- Status Filter Buttons -->
+        <div class="flex items-center p-1 bg-stone-100 rounded-xl text-xs font-medium">
+          <button type="button" class="status-filter-btn px-3 py-1.5 rounded-lg active bg-white shadow-sm font-semibold text-stone-800" data-status="all" onclick="setStatusFilter('all')">All</button>
+          <button type="button" class="status-filter-btn px-3 py-1.5 rounded-lg text-stone-600 hover:text-stone-900" data-status="Attending" onclick="setStatusFilter('Attending')">Attending</button>
+          <button type="button" class="status-filter-btn px-3 py-1.5 rounded-lg text-stone-600 hover:text-stone-900" data-status="Declined" onclick="setStatusFilter('Declined')">Declined</button>
+        </div>
+
+        <!-- Sort Select -->
+        <select id="rsvp-sort-select" onchange="loadRsvps(1)" class="px-3 py-2 rounded-xl border border-stone-300 text-xs bg-white text-stone-700 outline-none">
+          <option value="date_desc">Newest First</option>
+          <option value="date_asc">Oldest First</option>
+          <option value="name_asc">Name (A → Z)</option>
+          <option value="name_desc">Name (Z → A)</option>
+          <option value="guests_desc">Most Guests</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- RSVPs Table -->
+    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-stone-50 text-stone-500 text-xs font-bold uppercase tracking-wider border-b border-stone-200">
+              <th class="px-5 py-3.5">Guest Name</th>
+              <th class="px-5 py-3.5">Contact Details</th>
+              <th class="px-5 py-3.5 text-center">Attendance</th>
+              <th class="px-5 py-3.5 text-center">Headcount</th>
+              <th class="px-5 py-3.5">Message / Note</th>
+              <th class="px-5 py-3.5">Companions</th>
+              <th class="px-5 py-3.5">Date</th>
+              <th class="px-5 py-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rsvps-table-body" class="divide-y divide-stone-100">
+            <tr>
+              <td colspan="8" class="px-6 py-12 text-center text-stone-400">
+                <i class="fas fa-spinner fa-spin mr-2"></i> Loading RSVPs...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="px-6 py-4 border-t border-stone-200 flex items-center justify-between text-xs text-stone-500">
+        <div id="rsvp-pagination-info">Showing 0 of 0 RSVPs</div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-prev-page" onclick="changePage(-1)" class="px-3 py-1.5 rounded-lg border border-stone-300 hover:bg-stone-50 font-semibold disabled:opacity-40 disabled:cursor-not-allowed">
+            <i class="fas fa-chevron-left mr-1"></i> Prev
+          </button>
+          <span id="rsvp-current-page" class="font-bold text-stone-800 px-2">Page 1</span>
+          <button type="button" id="btn-next-page" onclick="changePage(1)" class="px-3 py-1.5 rounded-lg border border-stone-300 hover:bg-stone-50 font-semibold disabled:opacity-40 disabled:cursor-not-allowed">
+            Next <i class="fas fa-chevron-right ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== VIEW DETAILS MODAL ==================== -->
+  <div id="modal-view-rsvp" class="admin-modal">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
+        <h3 class="font-serif text-2xl font-bold text-stone-900">RSVP Details</h3>
+        <button type="button" onclick="closeModal('modal-view-rsvp')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+      <div id="view-rsvp-content" class="space-y-3 text-sm"></div>
+      <div class="mt-6 pt-3 border-t border-stone-100 flex justify-end">
+        <button type="button" onclick="closeModal('modal-view-rsvp')" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== EDIT RSVP MODAL ==================== -->
+  <div id="modal-edit-rsvp" class="admin-modal">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
+        <h3 class="font-serif text-2xl font-bold text-stone-900">Edit RSVP</h3>
+        <button type="button" onclick="closeModal('modal-edit-rsvp')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <form id="edit-rsvp-form" onsubmit="submitEditRsvp(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="edit-rsvp-id" />
+
+        <div>
+          <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Full Name</label>
+          <input type="text" id="edit-rsvp-fullname" required class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Email</label>
+            <input type="email" id="edit-rsvp-email" required class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Mobile</label>
+            <input type="tel" id="edit-rsvp-mobile" required class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Attendance</label>
+            <select id="edit-rsvp-status" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white">
+              <option value="Attending">Attending</option>
+              <option value="Declined">Declined</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Number of Guests</label>
+            <input type="number" id="edit-rsvp-guests" min="0" max="10" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Message</label>
+          <textarea id="edit-rsvp-message" rows="2" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-stone-100 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-edit-rsvp')" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-semibold">
+            Cancel
+          </button>
+          <button type="submit" id="btn-save-edit-rsvp" class="px-5 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl font-semibold shadow">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== DELETE CONFIRMATION MODAL ==================== -->
+  <div id="modal-delete-rsvp" class="admin-modal">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-stone-200">
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl mx-auto mb-3">
+        <i class="fas fa-trash-alt"></i>
+      </div>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-1">Delete RSVP</h3>
+      <p class="text-xs text-stone-500 mb-6">Are you sure you want to delete this RSVP? This action cannot be undone.</p>
+      <div class="flex justify-center gap-3">
+        <button type="button" onclick="closeModal('modal-delete-rsvp')" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl">
+          Cancel
+        </button>
+        <button type="button" id="btn-confirm-delete" onclick="confirmDeleteRsvp()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-xl shadow">
+          Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let currentPage = 1;
+    let totalPages = 1;
+    let currentStatusFilter = 'all';
+    let deleteTargetId = null;
+    let rsvpsCache = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRsvps(1);
+
+      // Search debounce
+      let debounceTimer;
+      document.getElementById('rsvp-search-input')?.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => loadRsvps(1), 300);
+      });
+    });
+
+    async function loadRsvps(page = 1) {
+      currentPage = page;
+      const search = document.getElementById('rsvp-search-input')?.value || '';
+      const sort = document.getElementById('rsvp-sort-select')?.value || 'date_desc';
+
+      const url = `/api/admin/rsvps?page=${page}&pageSize=10&search=${encodeURIComponent(search)}&status=${encodeURIComponent(currentStatusFilter)}&sortBy=${sort}`;
+
+      try {
+        const res = await authFetch(url);
+        if (!res || !res.ok) return;
+
+        const data = await res.json();
+        rsvpsCache = data.items;
+        totalPages = Math.ceil(data.totalCount / data.pageSize) || 1;
+
+        renderTable(data.items);
+        updatePagination(data.totalCount, page, totalPages);
+      } catch (err) {
+        console.error('Error loading RSVPs:', err);
+      }
+    }
+
+    function setStatusFilter(status) {
+      currentStatusFilter = status;
+      document.querySelectorAll('.status-filter-btn').forEach(b => {
+        if (b.dataset.status === status) {
+          b.classList.add('active', 'bg-white', 'shadow-sm', 'font-semibold', 'text-stone-800');
+          b.classList.remove('text-stone-600');
+        } else {
+          b.classList.remove('active', 'bg-white', 'shadow-sm', 'font-semibold', 'text-stone-800');
+          b.classList.add('text-stone-600');
+        }
+      });
+      loadRsvps(1);
+    }
+
+    function renderTable(items) {
+      const tbody = document.getElementById('rsvps-table-body');
+      if (!tbody) return;
+
+      if (!items || items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="px-6 py-12 text-center text-stone-400">No RSVPs match your criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = items.map(r => {
+        const isAttending = r.attendanceStatus === 'Attending';
+        const companionNames = (r.companionGuests || []).map(cg => escapeHtml(cg.guestName)).join(', ');
+
+        return `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="px-5 py-3.5 font-bold text-stone-800">${escapeHtml(r.fullName)}</td>
+            <td class="px-5 py-3.5 text-xs text-stone-600">
+              <div>${escapeHtml(r.email)}</div>
+              <div class="text-stone-400 font-mono">${escapeHtml(r.mobileNumber)}</div>
+            </td>
+            <td class="px-5 py-3.5 text-center">
+              <span class="badge-status ${isAttending ? 'badge-attending' : 'badge-declined'}">
+                ${escapeHtml(r.attendanceStatus)}
+              </span>
+            </td>
+            <td class="px-5 py-3.5 text-center font-bold text-stone-800">${r.numberOfGuests}</td>
+            <td class="px-5 py-3.5 text-xs text-stone-600 italic max-w-xs truncate" title="${escapeHtml(r.message || '')}">
+              ${escapeHtml(r.message || '—')}
+            </td>
+            <td class="px-5 py-3.5 text-xs text-stone-500 max-w-xs truncate" title="${companionNames}">
+              ${companionNames || '—'}
+            </td>
+            <td class="px-5 py-3.5 text-xs text-stone-400">
+              ${new Date(r.submittedDate).toLocaleDateString()}
+            </td>
+            <td class="px-5 py-3.5 text-right space-x-1 whitespace-nowrap">
+              <button type="button" onclick="openViewModal(${r.rsvpId})" class="p-1.5 rounded-lg text-stone-400 hover:text-stone-800 hover:bg-stone-100 transition" title="View Details">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button type="button" onclick="openEditModal(${r.rsvpId})" class="p-1.5 rounded-lg text-stone-400 hover:text-rose-800 hover:bg-stone-100 transition" title="Edit RSVP">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button type="button" onclick="openDeleteModal(${r.rsvpId})" class="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-stone-100 transition" title="Delete RSVP">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updatePagination(total, page, maxPage) {
+      const info = document.getElementById('rsvp-pagination-info');
+      const cur = document.getElementById('rsvp-current-page');
+      const prevBtn = document.getElementById('btn-prev-page');
+      const nextBtn = document.getElementById('btn-next-page');
+
+      if (info) info.textContent = `Showing page ${page} of ${maxPage} (${total} total RSVPs)`;
+      if (cur) cur.textContent = `Page ${page}`;
+
+      if (prevBtn) prevBtn.disabled = page <= 1;
+      if (nextBtn) nextBtn.disabled = page >= maxPage;
+    }
+
+    function changePage(delta) {
+      const target = currentPage + delta;
+      if (target >= 1 && target <= totalPages) {
+        loadRsvps(target);
+      }
+    }
+
+    // Modal Helpers
+    function openModal(id) {
+      document.getElementById(id)?.classList.add('show');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id)?.classList.remove('show');
+    }
+
+    function openViewModal(id) {
+      const r = rsvpsCache.find(x => x.rsvpId === id);
+      if (!r) return;
+
+      const companionsHtml = (r.companionGuests && r.companionGuests.length > 0)
+        ? `<div class="mt-2 border-t pt-2 space-y-1">
+              <p class="font-bold text-xs text-stone-600 uppercase">Companions:</p>
+              ${r.companionGuests.map(cg => `<div class="text-xs bg-stone-50 p-2 rounded"><strong>${escapeHtml(cg.guestName)}</strong></div>`).join('')}
+            </div>`
+        : '';
+
+      document.getElementById('view-rsvp-content').innerHTML = `
+        <div class="grid grid-cols-2 gap-2">
+          <div><span class="text-stone-400 text-xs block">Full Name</span><strong>${escapeHtml(r.fullName)}</strong></div>
+          <div><span class="text-stone-400 text-xs block">Status</span><span class="badge-status ${r.attendanceStatus === 'Attending' ? 'badge-attending' : 'badge-declined'}">${escapeHtml(r.attendanceStatus)}</span></div>
+          <div><span class="text-stone-400 text-xs block">Email</span>${escapeHtml(r.email)}</div>
+          <div><span class="text-stone-400 text-xs block">Mobile</span>${escapeHtml(r.mobileNumber)}</div>
+          <div><span class="text-stone-400 text-xs block">Headcount</span>${r.numberOfGuests}</div>
+        </div>
+        ${r.message ? `<div class="mt-2"><span class="text-stone-400 text-xs block">Message</span><p class="italic bg-stone-50 p-3 rounded-lg text-stone-700">"${escapeHtml(r.message)}"</p></div>` : ''}
+        ${companionsHtml}
+        <div class="mt-2 text-xs text-stone-400">Submitted: ${new Date(r.submittedDate).toLocaleString()}</div>
+      `;
+
+      openModal('modal-view-rsvp');
+    }
+
+    function openEditModal(id) {
+      const r = rsvpsCache.find(x => x.rsvpId === id);
+      if (!r) return;
+
+      document.getElementById('edit-rsvp-id').value = r.rsvpId;
+      document.getElementById('edit-rsvp-fullname').value = r.fullName;
+      document.getElementById('edit-rsvp-email').value = r.email;
+      document.getElementById('edit-rsvp-mobile').value = r.mobileNumber;
+      document.getElementById('edit-rsvp-status').value = r.attendanceStatus;
+      document.getElementById('edit-rsvp-guests').value = r.numberOfGuests;
+      document.getElementById('edit-rsvp-message').value = r.message || '';
+
+      openModal('modal-edit-rsvp');
+    }
+
+    async function submitEditRsvp(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-rsvp-id').value;
+      const btn = document.getElementById('btn-save-edit-rsvp');
+      btn.disabled = true;
+
+      const payload = {
+        fullName: document.getElementById('edit-rsvp-fullname').value.trim(),
+        email: document.getElementById('edit-rsvp-email').value.trim(),
+        mobileNumber: document.getElementById('edit-rsvp-mobile').value.trim(),
+        attendanceStatus: document.getElementById('edit-rsvp-status').value,
+        numberOfGuests: parseInt(document.getElementById('edit-rsvp-guests').value, 10),
+        mealPreference: null,
+        dietaryRestrictions: null,
+        message: document.getElementById('edit-rsvp-message').value.trim() || null
+      };
+
+      try {
+        const res = await authFetch(`/api/admin/rsvps/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res && res.ok) {
+          showAdminToast('RSVP updated successfully!');
+          closeModal('modal-edit-rsvp');
+          loadRsvps(currentPage);
+        } else {
+          showAdminToast('Failed to update RSVP.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Network error while saving.', 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function openDeleteModal(id) {
+      deleteTargetId = id;
+      openModal('modal-delete-rsvp');
+    }
+
+    async function confirmDeleteRsvp() {
+      if (!deleteTargetId) return;
+
+      const btn = document.getElementById('btn-confirm-delete');
+      btn.disabled = true;
+
+      try {
+        const res = await authFetch(`/api/admin/rsvps/${deleteTargetId}`, {
+          method: 'DELETE'
+        });
+
+        if (res && res.ok) {
+          showAdminToast('RSVP record deleted.');
+          closeModal('modal-delete-rsvp');
+          loadRsvps(currentPage);
+        } else {
+          showAdminToast('Failed to delete RSVP.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Error deleting RSVP.', 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- QRCode.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">RSVP Management</a>
+          <a href="/admin/guests.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Guest Pre-Registration</a>
+          <a href="/admin/gallery.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Gallery</a>
+          <a href="/admin/content.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Content & Program</a>
+          <a href="/admin/settings.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Settings</a>
+          <a href="/admin/database.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Database</a>
+        </nav>
+
+        <!-- User profile & Logout -->
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>View Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-stone-300 px-2 py-1">RSVPs</a>
+    <a href="/admin/guests.html" class="text-stone-300 px-2 py-1">Guests</a>
+    <a href="/admin/gallery.html" class="text-stone-300 px-2 py-1">Gallery</a>
+    <a href="/admin/content.html" class="text-stone-300 px-2 py-1">Content</a>
+    <a href="/admin/settings.html" class="text-stone-300 px-2 py-1">Settings</a>
+  </div>
+
+  <!-- Main Dashboard Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Page Header Title -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Dashboard Overview</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Real-time RSVP analytics, guest attendance, and wedding metrics.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="/admin/rsvps.html" class="px-4 py-2 bg-stone-900 hover:bg-stone-800 text-white text-xs uppercase font-bold tracking-wider rounded-xl shadow transition flex items-center gap-2">
+          <i class="fas fa-list-ul"></i>
+          <span>Manage RSVPs</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 1. METRIC STAT CARDS -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      
+      <!-- Total RSVPs -->
+      <div class="stat-card">
+        <div class="flex items-center justify-between text-stone-500 mb-2">
+          <span class="text-xs uppercase tracking-wider font-bold">Total RSVPs</span>
+          <i class="fas fa-envelope-open-text text-base text-rose-800"></i>
+        </div>
+        <div id="stat-total-rsvps" class="text-3xl font-bold text-stone-900 font-serif">--</div>
+        <p class="text-xs text-stone-400 mt-1">Submissions received</p>
+      </div>
+
+      <!-- Attending RSVPs -->
+      <div class="stat-card border-green-200 bg-green-50/20">
+        <div class="flex items-center justify-between text-stone-500 mb-2">
+          <span class="text-xs uppercase tracking-wider font-bold text-green-700">Attending RSVPs</span>
+          <i class="fas fa-check-circle text-base text-green-600"></i>
+        </div>
+        <div id="stat-attending-rsvps" class="text-3xl font-bold text-green-800 font-serif">--</div>
+        <p class="text-xs text-green-600/80 mt-1">Joyfully accepted</p>
+      </div>
+
+      <!-- Declined RSVPs -->
+      <div class="stat-card border-red-200 bg-red-50/20">
+        <div class="flex items-center justify-between text-stone-500 mb-2">
+          <span class="text-xs uppercase tracking-wider font-bold text-red-700">Declined RSVPs</span>
+          <i class="fas fa-times-circle text-base text-red-500"></i>
+        </div>
+        <div id="stat-declined-rsvps" class="text-3xl font-bold text-red-800 font-serif">--</div>
+        <p class="text-xs text-red-500/80 mt-1">Regretfully declined</p>
+      </div>
+
+      <!-- Total Confirmed Guests -->
+      <div class="stat-card border-amber-200 bg-amber-50/20">
+        <div class="flex items-center justify-between text-stone-500 mb-2">
+          <span class="text-xs uppercase tracking-wider font-bold text-amber-800">Confirmed Headcount</span>
+          <i class="fas fa-users text-base text-amber-600"></i>
+        </div>
+        <div id="stat-total-guests" class="text-3xl font-bold text-amber-900 font-serif">--</div>
+        <p class="text-xs text-amber-700/80 mt-1">Guests attending in person</p>
+      </div>
+
+    </div>
+
+    <!-- 2. CHARTS & QR CODE ROW -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Attendance Breakdown Chart -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="font-serif text-xl font-bold text-stone-900 mb-1">Attendance Ratio</h3>
+          <p class="text-xs text-stone-500 mb-4">Confirmed vs. Declined submissions</p>
+          <div class="h-56 relative flex items-center justify-center">
+            <canvas id="chart-attendance"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Party Size Distribution Chart -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="font-serif text-xl font-bold text-stone-900 mb-1">Party Size Distribution</h3>
+          <p class="text-xs text-stone-500 mb-4">Breakdown by attending party size</p>
+          <div class="h-56 relative flex items-center justify-center">
+            <canvas id="chart-party-sizes"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEDDING INVITATION QR CODE -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between text-center">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-rose-800 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
+            WEDDING INVITATION QR CODE
+          </span>
+          <h3 class="font-serif text-xl font-bold text-stone-900 mt-3 mb-1">Share Invitation</h3>
+          <p class="text-xs text-stone-500 mb-4">Scan or download for print & digital cards</p>
+          
+          <div class="flex justify-center my-2 p-3 bg-stone-50 border border-stone-200 rounded-xl w-fit mx-auto shadow-inner">
+            <div id="qrcode-container"></div>
+          </div>
+        </div>
+
+        <div class="mt-4 space-y-2">
+          <button type="button" onclick="downloadQrCodePng()" class="w-full py-2.5 px-4 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-semibold uppercase tracking-wider shadow transition flex items-center justify-center gap-2">
+            <i class="fas fa-download"></i>
+            <span>Download QR Code (PNG)</span>
+          </button>
+          <button type="button" onclick="copyAdminText(window.location.origin, 'Website link copied!')" class="w-full py-2 px-4 border border-stone-300 hover:border-stone-400 rounded-xl text-xs font-semibold text-stone-700 transition">
+            <i class="fas fa-link mr-1"></i> Copy Public URL
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. RECENT RSVPs TABLE -->
+    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-5 border-b border-stone-200 flex items-center justify-between">
+        <div>
+          <h3 class="font-serif text-xl font-bold text-stone-900">Recent RSVP Responses</h3>
+          <p class="text-xs text-stone-500">Latest guest submissions</p>
+        </div>
+        <a href="/admin/rsvps.html" class="text-xs font-bold text-rose-900 hover:text-rose-700 tracking-wider uppercase flex items-center gap-1">
+          <span>View All</span>
+          <i class="fas fa-arrow-right text-[10px]"></i>
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-stone-50 text-stone-500 text-xs font-bold uppercase tracking-wider border-b border-stone-200">
+              <th class="px-6 py-3.5">Guest Name</th>
+              <th class="px-6 py-3.5">Contact</th>
+              <th class="px-6 py-3.5 text-center">Status</th>
+              <th class="px-6 py-3.5 text-center">Headcount</th>
+              <th class="px-6 py-3.5">Message / Note</th>
+              <th class="px-6 py-3.5">Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="recent-rsvps-tbody" class="divide-y divide-stone-100">
+            <tr>
+              <td colspan="6" class="px-6 py-8 text-center text-stone-400 text-sm">
+                <i class="fas fa-spinner fa-spin mr-2"></i> Loading recent responses...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let attendanceChart = null;
+    let mealsChart = null;
+    let qrInstance = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardStats();
+      generateQrCode();
+    });
+
+    async function loadDashboardStats() {
+      try {
+        const res = await authFetch('/api/admin/dashboard/stats');
+        if (!res || !res.ok) return;
+
+        const data = await res.json();
+
+        // 1. Stat cards
+        document.getElementById('stat-total-rsvps').textContent = data.totalRsvps;
+        document.getElementById('stat-attending-rsvps').textContent = data.attendingCount;
+        document.getElementById('stat-declined-rsvps').textContent = data.declinedCount;
+        document.getElementById('stat-total-guests').textContent = data.totalAttendingGuests;
+
+        // 2. Render Attendance Doughnut Chart
+        renderAttendanceChart(data.attendingCount, data.declinedCount);
+
+        // 3. Render Party Size Distribution Bar Chart
+        renderPartySizeChart(data.partySizeBreakdown);
+
+        // 4. Render Recent RSVPs Table
+        renderRecentTable(data.recentRsvps);
+      } catch (err) {
+        console.error('Error loading stats:', err);
+      }
+    }
+
+    function renderAttendanceChart(attending, declined) {
+      const ctx = document.getElementById('chart-attendance')?.getContext('2d');
+      if (!ctx) return;
+
+      if (attendanceChart) attendanceChart.destroy();
+
+      attendanceChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Attending', 'Declined'],
+          datasets: [{
+            data: [attending, declined],
+            backgroundColor: ['#15803d', '#dc2626'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Montserrat', size: 11 } } }
+          },
+          cutout: '68%'
+        }
+      });
+    }
+
+    function renderPartySizeChart(partyDict) {
+      const ctx = document.getElementById('chart-party-sizes')?.getContext('2d');
+      if (!ctx) return;
+
+      if (mealsChart) mealsChart.destroy();
+
+      const labels = Object.keys(partyDict || {});
+      const values = Object.values(partyDict || {});
+
+      mealsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels.length ? labels : ['No data yet'],
+          datasets: [{
+            label: 'Parties',
+            data: values.length ? values : [0],
+            backgroundColor: '#7A3B4D',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } } },
+            x: { ticks: { font: { size: 10 } } }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function renderRecentTable(list) {
+      const tbody = document.getElementById('recent-rsvps-tbody');
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-6 text-center text-stone-400">No RSVPs recorded yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(r => {
+        const isAttending = r.attendanceStatus === 'Attending';
+        return `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="px-6 py-4 font-semibold text-stone-800">${escapeHtml(r.fullName)}</td>
+            <td class="px-6 py-4 text-stone-600 text-xs">
+              <div>${escapeHtml(r.email)}</div>
+              <div class="text-stone-400">${escapeHtml(r.mobileNumber)}</div>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <span class="badge-status ${isAttending ? 'badge-attending' : 'badge-declined'}">
+                ${escapeHtml(r.attendanceStatus)}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-center font-bold text-stone-700">${r.numberOfGuests}</td>
+            <td class="px-6 py-4 text-stone-600 text-xs italic max-w-xs truncate" title="${escapeHtml(r.message || '')}">${escapeHtml(r.message || '—')}</td>
+            <td class="px-6 py-4 text-stone-400 text-xs">${new Date(r.submittedDate).toLocaleDateString()}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function generateQrCode() {
+      const container = document.getElementById('qrcode-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const targetUrl = window.location.origin;
+
+      qrInstance = new QRCode(container, {
+        text: targetUrl,
+        width: 140,
+        height: 140,
+        colorDark: '#1c1917',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function downloadQrCodePng() {
+      const img = document.querySelector('#qrcode-container img');
+      const canvas = document.querySelector('#qrcode-container canvas');
+
+      let dataUrl = '';
+      if (img && img.src) {
+        dataUrl = img.src;
+      } else if (canvas) {
+        dataUrl = canvas.toDataURL('image/png');
+      }
+
+      if (!dataUrl) {
+        showAdminToast('Could not extract QR code image.', 'error');
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.download = 'Wedding_Invitation_QR.png';
+      link.href = dataUrl;
+      link.click();
+      showAdminToast('QR code downloaded successfully!');
+    }
+  </script>
+</body>
+</html>

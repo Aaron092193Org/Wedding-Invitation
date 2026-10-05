@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guest Pre-Registration — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">RSVP Management</a>
+          <a href="/admin/guests.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">Guest Pre-Registration</a>
+          <a href="/admin/gallery.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Gallery</a>
+          <a href="/admin/content.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Content & Program</a>
+          <a href="/admin/settings.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Settings</a>
+          <a href="/admin/database.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Database</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>View Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-stone-300 px-2 py-1">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-stone-300 px-2 py-1">RSVPs</a>
+    <a href="/admin/guests.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">Guests</a>
+    <a href="/admin/gallery.html" class="text-stone-300 px-2 py-1">Gallery</a>
+    <a href="/admin/content.html" class="text-stone-300 px-2 py-1">Content</a>
+    <a href="/admin/settings.html" class="text-stone-300 px-2 py-1">Settings</a>
+  </div>
+
+  <!-- Main Guest Pre-Registration Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Guest Pre-Registration</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Manage invited guests, assign allowed seats, and generate invitation links.</p>
+      </div>
+
+      <button type="button" onclick="openAddGuestModal()" class="px-5 py-2.5 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2 self-start sm:self-auto">
+        <i class="fas fa-user-plus"></i>
+        <span>Add Guest</span>
+      </button>
+    </div>
+
+    <!-- Guests Table -->
+    <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-stone-50 text-stone-500 text-xs font-bold uppercase tracking-wider border-b border-stone-200">
+              <th class="px-6 py-3.5">Guest Name</th>
+              <th class="px-6 py-3.5">Invitation Code & Link</th>
+              <th class="px-6 py-3.5 text-center">Allocated Seats</th>
+              <th class="px-6 py-3.5 text-center">RSVP Status</th>
+              <th class="px-6 py-3.5">Contact Details</th>
+              <th class="px-6 py-3.5">Notes</th>
+              <th class="px-6 py-3.5 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="guests-table-body" class="divide-y divide-stone-100">
+            <tr>
+              <td colspan="7" class="px-6 py-12 text-center text-stone-400">
+                <i class="fas fa-spinner fa-spin mr-2"></i> Loading guests...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== ADD / EDIT GUEST MODAL ==================== -->
+  <div id="modal-guest-form" class="admin-modal">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
+        <h3 id="modal-guest-title" class="font-serif text-2xl font-bold text-stone-900">Add Invited Guest</h3>
+        <button type="button" onclick="closeModal('modal-guest-form')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <form id="guest-form" onsubmit="submitGuestForm(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="form-guest-id" />
+
+        <div>
+          <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Full Name *</label>
+          <input type="text" id="form-guest-name" required class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" placeholder="e.g. Atty. Fernando Gomez" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Email</label>
+            <input type="email" id="form-guest-email" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" placeholder="email@example.com" />
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Mobile</label>
+            <input type="tel" id="form-guest-mobile" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" placeholder="+63 917 000 0000" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Allowed Seats *</label>
+            <input type="number" id="form-guest-seats" min="1" max="10" value="1" required class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Invitation Code</label>
+            <div class="flex gap-1">
+              <input type="text" id="form-guest-code" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm uppercase font-mono font-bold" placeholder="Auto" />
+              <button type="button" onclick="generateNewInviteCode()" class="p-2 border border-stone-300 rounded-xl hover:bg-stone-50" title="Generate Random Code">
+                <i class="fas fa-sync-alt text-xs"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Notes / Relation</label>
+          <input type="text" id="form-guest-notes" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" placeholder="e.g. Principal Sponsor, College Friend" />
+        </div>
+
+        <div class="pt-3 border-t border-stone-100 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-guest-form')" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-semibold">
+            Cancel
+          </button>
+          <button type="submit" id="btn-save-guest" class="px-5 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl font-semibold shadow">
+            Save Guest
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div id="modal-delete-guest" class="admin-modal">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-stone-200">
+      <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl mx-auto mb-3">
+        <i class="fas fa-user-times"></i>
+      </div>
+      <h3 class="font-serif text-xl font-bold text-stone-900 mb-1">Remove Guest</h3>
+      <p class="text-xs text-stone-500 mb-6">Are you sure you want to remove this pre-registered guest?</p>
+      <div class="flex justify-center gap-3">
+        <button type="button" onclick="closeModal('modal-delete-guest')" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl">
+          Cancel
+        </button>
+        <button type="button" onclick="confirmDeleteGuest()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-xl shadow">
+          Yes, Remove
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let guestsList = [];
+    let deleteGuestId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadGuests();
+    });
+
+    async function loadGuests() {
+      try {
+        const res = await authFetch('/api/admin/guests');
+        if (!res || !res.ok) return;
+
+        guestsList = await res.json();
+        renderGuestsTable(guestsList);
+      } catch (err) {
+        console.error('Error loading guests:', err);
+      }
+    }
+
+    function renderGuestsTable(items) {
+      const tbody = document.getElementById('guests-table-body');
+      if (!tbody) return;
+
+      if (!items || items.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-stone-400">No guests pre-registered yet. Click "Add Guest" to create one.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = items.map(g => {
+        const guestId = g.guestId || g.GuestId;
+        const fullName = g.fullName || g.FullName || 'Unnamed Guest';
+        const code = g.invitationCode || g.InvitationCode || '';
+        const allowedGuests = g.allowedGuests !== undefined ? g.allowedGuests : (g.AllowedGuests !== undefined ? g.AllowedGuests : 1);
+        const rsvpStatus = g.rsvpStatus || g.RsvpStatus || 'Pending';
+        const email = g.email || g.Email || '';
+        const mobileNumber = g.mobileNumber || g.MobileNumber || '';
+        const notes = g.notes || g.Notes || '';
+
+        const link = `${window.location.origin}/rsvp/${code}`;
+        const statusClass = rsvpStatus === 'Attending' ? 'badge-attending' : (rsvpStatus === 'Declined' ? 'badge-declined' : 'badge-pending');
+
+        return `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="px-6 py-4 font-bold text-stone-800">${escapeHtml(fullName)}</td>
+            <td class="px-6 py-4 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-rose-900 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">${escapeHtml(code)}</span>
+                <button type="button" onclick="copyAdminText('${link}', 'Personalized invitation link copied!')" class="p-1 hover:text-rose-900 text-stone-400" title="Copy Personalized Link (${link})">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-center font-bold text-stone-800">${allowedGuests}</td>
+            <td class="px-6 py-4 text-center">
+              <span class="badge-status ${statusClass}">${escapeHtml(rsvpStatus)}</span>
+            </td>
+            <td class="px-6 py-4 text-xs text-stone-600">
+              <div>${escapeHtml(email || '—')}</div>
+              <div class="text-stone-400">${escapeHtml(mobileNumber || '—')}</div>
+            </td>
+            <td class="px-6 py-4 text-xs text-stone-500 italic max-w-xs truncate">${escapeHtml(notes || '—')}</td>
+            <td class="px-6 py-4 text-right space-x-1 whitespace-nowrap">
+              <button type="button" onclick="openEditGuestModal(${guestId})" class="p-1.5 rounded-lg text-stone-400 hover:text-rose-800 hover:bg-stone-100 transition" title="Edit Guest">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button type="button" onclick="openDeleteGuestModal(${guestId})" class="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-stone-100 transition" title="Remove Guest">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openModal(id) { document.getElementById(id)?.classList.add('show'); }
+    function closeModal(id) { document.getElementById(id)?.classList.remove('show'); }
+
+    function openAddGuestModal() {
+      document.getElementById('modal-guest-title').textContent = 'Add Invited Guest';
+      document.getElementById('form-guest-id').value = '';
+      document.getElementById('form-guest-name').value = '';
+      document.getElementById('form-guest-email').value = '';
+      document.getElementById('form-guest-mobile').value = '';
+      document.getElementById('form-guest-seats').value = 1;
+      document.getElementById('form-guest-notes').value = '';
+      generateNewInviteCode();
+      openModal('modal-guest-form');
+    }
+
+    function openEditGuestModal(id) {
+      const g = guestsList.find(x => (x.guestId === id || x.GuestId === id));
+      if (!g) return;
+
+      document.getElementById('modal-guest-title').textContent = 'Edit Invited Guest';
+      document.getElementById('form-guest-id').value = g.guestId || g.GuestId;
+      document.getElementById('form-guest-name').value = g.fullName || g.FullName || '';
+      document.getElementById('form-guest-email').value = g.email || g.Email || '';
+      document.getElementById('form-guest-mobile').value = g.mobileNumber || g.MobileNumber || '';
+      document.getElementById('form-guest-seats').value = g.allowedGuests !== undefined ? g.allowedGuests : (g.AllowedGuests !== undefined ? g.AllowedGuests : 1);
+      document.getElementById('form-guest-code').value = g.invitationCode || g.InvitationCode || '';
+      document.getElementById('form-guest-notes').value = g.notes || g.Notes || '';
+      openModal('modal-guest-form');
+    }
+
+    function generateNewInviteCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = 'WED-';
+      for (let i = 0; i < 5; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('form-guest-code').value = code;
+    }
+
+    async function submitGuestForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('form-guest-id').value;
+      const btn = document.getElementById('btn-save-guest');
+      btn.disabled = true;
+
+      const payload = {
+        fullName: document.getElementById('form-guest-name').value.trim(),
+        email: document.getElementById('form-guest-email').value.trim() || null,
+        mobileNumber: document.getElementById('form-guest-mobile').value.trim() || null,
+        allowedGuests: parseInt(document.getElementById('form-guest-seats').value, 10),
+        invitationCode: document.getElementById('form-guest-code').value.trim(),
+        notes: document.getElementById('form-guest-notes').value.trim() || null
+      };
+
+      try {
+        const url = id ? `/api/admin/guests/${id}` : '/api/admin/guests';
+        const method = id ? 'PUT' : 'POST';
+
+        const res = await authFetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res && res.ok) {
+          showAdminToast(id ? 'Guest updated!' : 'Guest pre-registered!');
+          closeModal('modal-guest-form');
+          loadGuests();
+        } else {
+          showAdminToast('Failed to save guest.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Network error while saving.', 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function openDeleteGuestModal(id) {
+      deleteGuestId = id;
+      openModal('modal-delete-guest');
+    }
+
+    async function confirmDeleteGuest() {
+      if (!deleteGuestId) return;
+
+      try {
+        const res = await authFetch(`/api/admin/guests/${deleteGuestId}`, { method: 'DELETE' });
+        if (res && res.ok) {
+          showAdminToast('Guest removed.');
+          closeModal('modal-delete-guest');
+          loadGuests();
+        } else {
+          showAdminToast('Failed to remove guest.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Error removing guest.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

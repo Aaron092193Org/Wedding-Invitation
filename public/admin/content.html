@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content & Program — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col bg-stone-50">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">RSVP Management</a>
+          <a href="/admin/guests.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Guest Pre-Registration</a>
+          <a href="/admin/gallery.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Gallery</a>
+          <a href="/admin/content.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">Content & Program</a>
+          <a href="/admin/settings.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Settings</a>
+          <a href="/admin/database.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Database</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>View Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-stone-300 px-2 py-1">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-stone-300 px-2 py-1">RSVPs</a>
+    <a href="/admin/guests.html" class="text-stone-300 px-2 py-1">Guests</a>
+    <a href="/admin/gallery.html" class="text-stone-300 px-2 py-1">Gallery</a>
+    <a href="/admin/content.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">Content</a>
+    <a href="/admin/settings.html" class="text-stone-300 px-2 py-1">Settings</a>
+    <a href="/admin/database.html" class="text-stone-300 px-2 py-1">DB</a>
+  </div>
+
+  <!-- Main Content Body -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- Header Section with Tabs -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Content & Program Editor</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Customize wedding itinerary timeline, wedding entourage members, and guest FAQs.</p>
+      </div>
+
+      <!-- Tab Buttons -->
+      <div class="inline-flex p-1 bg-stone-200 rounded-xl flex-wrap gap-1">
+        <button type="button" onclick="switchTab('timeline')" id="tab-btn-timeline" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition bg-white text-stone-900 shadow-sm flex items-center gap-2">
+          <i class="fas fa-clock text-rose-900"></i>
+          <span>Timeline</span>
+        </button>
+        <button type="button" onclick="switchTab('entourage')" id="tab-btn-entourage" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition text-stone-600 hover:text-stone-900 flex items-center gap-2">
+          <i class="fas fa-users text-stone-500"></i>
+          <span>Entourage</span>
+        </button>
+        <button type="button" onclick="switchTab('faqs')" id="tab-btn-faqs" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition text-stone-600 hover:text-stone-900 flex items-center gap-2">
+          <i class="fas fa-question-circle text-stone-500"></i>
+          <span>FAQs</span>
+        </button>
+        <a href="/admin/settings.html#setting-StoryPhoto1" class="px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition text-stone-700 hover:text-rose-900 hover:bg-white/80 flex items-center gap-2" title="Edit story chapters & upload photos">
+          <i class="fas fa-heart text-rose-700"></i>
+          <span>Love Story</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 1: TIMELINE ==================== -->
+    <section id="tab-content-timeline" class="space-y-4">
+      <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+        <div>
+          <h2 class="font-bold text-stone-800 text-base">Wedding Day Itinerary</h2>
+          <p class="text-stone-500 text-xs">Events appear on the public invitation in order of their display order.</p>
+        </div>
+        <button type="button" onclick="openAddTimelineModal()" class="px-4 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2">
+          <i class="fas fa-plus"></i>
+          <span>Add Event</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-stone-50 text-stone-500 text-xs font-bold uppercase tracking-wider border-b border-stone-200">
+                <th class="px-6 py-3.5 text-center w-16">Order</th>
+                <th class="px-6 py-3.5 w-32">Time</th>
+                <th class="px-6 py-3.5">Event Title & Icon</th>
+                <th class="px-6 py-3.5">Description</th>
+                <th class="px-6 py-3.5 text-right w-28">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="timeline-table-body" class="divide-y divide-stone-100">
+              <tr>
+                <td colspan="5" class="px-6 py-8 text-center text-stone-400">Loading timeline...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: ENTOURAGE ==================== -->
+    <section id="tab-content-entourage" class="hidden space-y-4">
+      <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+        <div>
+          <h2 class="font-bold text-stone-800 text-base">Wedding Entourage Members</h2>
+          <p class="text-stone-500 text-xs">Organized by role category (Parents, Sponsors, Maid of Honor, Best Man, etc.)</p>
+        </div>
+        <button type="button" onclick="openAddEntourageModal()" class="px-4 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2">
+          <i class="fas fa-user-plus"></i>
+          <span>Add Member</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-stone-50 text-stone-500 text-xs font-bold uppercase tracking-wider border-b border-stone-200">
+                <th class="px-6 py-3.5 text-center w-16">Order</th>
+                <th class="px-6 py-3.5 w-56">Category / Group</th>
+                <th class="px-6 py-3.5">Full Name</th>
+                <th class="px-6 py-3.5">Specific Role / Title</th>
+                <th class="px-6 py-3.5 text-right w-28">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="entourage-table-body" class="divide-y divide-stone-100">
+              <tr>
+                <td colspan="5" class="px-6 py-8 text-center text-stone-400">Loading entourage...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: FAQS ==================== -->
+    <section id="tab-content-faqs" class="hidden space-y-4">
+      <div class="flex items-center justify-between bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+        <div>
+          <h2 class="font-bold text-stone-800 text-base">Frequently Asked Questions</h2>
+          <p class="text-stone-500 text-xs">Help guests prepare for attire, attendance, gifting, children policies, and parking.</p>
+        </div>
+        <button type="button" onclick="openAddFaqModal()" class="px-4 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2">
+          <i class="fas fa-plus-circle"></i>
+          <span>Add FAQ</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-stone-50 text-stone-500 text-xs font-bold uppercase tracking-wider border-b border-stone-200">
+                <th class="px-6 py-3.5 text-center w-16">Order</th>
+                <th class="px-6 py-3.5 w-1/3">Question</th>
+                <th class="px-6 py-3.5">Answer</th>
+                <th class="px-6 py-3.5 text-center w-24">Status</th>
+                <th class="px-6 py-3.5 text-right w-28">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="faqs-table-body" class="divide-y divide-stone-100">
+              <tr>
+                <td colspan="5" class="px-6 py-8 text-center text-stone-400">Loading FAQs...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== TIMELINE MODAL ==================== -->
+  <div id="timeline-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 id="timeline-modal-title" class="font-serif text-xl font-bold text-stone-900">Add Timeline Event</h3>
+        <button type="button" onclick="closeModal('timeline-modal')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="timeline-form" onsubmit="handleSaveTimeline(event)" class="space-y-4">
+        <input type="hidden" id="timeline-id" value="">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Time <span class="text-red-500">*</span></label>
+            <input type="text" id="timeline-time" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. 3:00 PM">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Display Order <span class="text-red-500">*</span></label>
+            <input type="number" id="timeline-order" required min="1" value="1" class="w-full px-3 py-2 border rounded-xl text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Event Title <span class="text-red-500">*</span></label>
+          <input type="text" id="timeline-title" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Ceremony, Reception Dinner">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Icon Style</label>
+          <select id="timeline-icon" class="w-full px-3 py-2 border rounded-xl text-sm bg-white">
+            <option value="church">⛪ Church / Ceremony</option>
+            <option value="heart">❤️ Heart / Love</option>
+            <option value="ring">💍 Ring / Exchange</option>
+            <option value="glass-cheers">🥂 Toast / Cheers</option>
+            <option value="utensils">🍽️ Dinner / Reception</option>
+            <option value="music">🎵 Music / Dance Party</option>
+            <option value="camera">📷 Photo Session</option>
+            <option value="sparkles">✨ Sparklers / Send-off</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Description (Optional)</label>
+          <textarea id="timeline-description" rows="3" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Details or instructions for guests during this event..."></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2 border-t">
+          <button type="button" onclick="closeModal('timeline-modal')" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-stone-600 hover:bg-stone-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-rose-900 text-white hover:bg-rose-800 shadow">Save Event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== ENTOURAGE MODAL ==================== -->
+  <div id="entourage-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 id="entourage-modal-title" class="font-serif text-xl font-bold text-stone-900">Add Entourage Member</h3>
+        <button type="button" onclick="closeModal('entourage-modal')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="entourage-form" onsubmit="handleSaveEntourage(event)" class="space-y-4">
+        <input type="hidden" id="entourage-id" value="">
+
+        <div class="grid grid-cols-3 gap-3">
+          <div class="col-span-2">
+            <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Category / Group <span class="text-red-500">*</span></label>
+            <input type="text" id="entourage-category" list="entourage-categories" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Principal Sponsors">
+            <datalist id="entourage-categories">
+              <option value="Parents of the Bride">
+              <option value="Parents of the Groom">
+              <option value="Principal Sponsors">
+              <option value="Maid of Honor">
+              <option value="Best Man">
+              <option value="Bridesmaids">
+              <option value="Groomsmen">
+              <option value="Secondary Sponsors">
+              <option value="Flower Girls">
+              <option value="Ring Bearer">
+              <option value="Coin Bearer">
+              <option value="Bible Bearer">
+            </datalist>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Order <span class="text-red-500">*</span></label>
+            <input type="number" id="entourage-order" required min="1" value="1" class="w-full px-3 py-2 border rounded-xl text-sm">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Full Name <span class="text-red-500">*</span></label>
+          <input type="text" id="entourage-name" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Dr. Benjamin Reyes">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Specific Role / Designation (Optional)</label>
+          <input type="text" id="entourage-role" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Principal Sponsor, Veil Sponsor, Bridesmaid">
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2 border-t">
+          <button type="button" onclick="closeModal('entourage-modal')" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-stone-600 hover:bg-stone-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-rose-900 text-white hover:bg-rose-800 shadow">Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== FAQS MODAL ==================== -->
+  <div id="faqs-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 id="faqs-modal-title" class="font-serif text-xl font-bold text-stone-900">Add FAQ</h3>
+        <button type="button" onclick="closeModal('faqs-modal')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="faqs-form" onsubmit="handleSaveFaq(event)" class="space-y-4">
+        <input type="hidden" id="faq-id" value="">
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Display Order <span class="text-red-500">*</span></label>
+            <input type="number" id="faq-order" required min="1" value="1" class="w-full px-3 py-2 border rounded-xl text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Visibility</label>
+            <div class="mt-2 flex items-center gap-2">
+              <input type="checkbox" id="faq-active" checked class="w-4 h-4 text-rose-900 rounded border-stone-300 focus:ring-rose-900">
+              <label for="faq-active" class="text-xs text-stone-700 font-medium">Active (Visible on site)</label>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Question <span class="text-red-500">*</span></label>
+          <input type="text" id="faq-question" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. What is the dress code?">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Answer <span class="text-red-500">*</span></label>
+          <textarea id="faq-answer" rows="4" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="Detailed answer for your guests..."></textarea>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2 border-t">
+          <button type="button" onclick="closeModal('faqs-modal')" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-stone-600 hover:bg-stone-100">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-rose-900 text-white hover:bg-rose-800 shadow">Save FAQ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let timelineData = [];
+    let entourageData = [];
+    let faqsData = [];
+
+    function showToast(msg, type = 'success') {
+      showAdminToast(msg, type);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTimeline();
+      loadEntourage();
+      loadFaqs();
+    });
+
+    function switchTab(tab) {
+      ['timeline', 'entourage', 'faqs'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const content = document.getElementById(`tab-content-${t}`);
+        if (t === tab) {
+          btn.className = 'px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition bg-white text-stone-900 shadow-sm flex items-center gap-2';
+          btn.querySelector('i').className = 'fas fa-' + (t === 'timeline' ? 'clock' : t === 'entourage' ? 'users' : 'question-circle') + ' text-rose-900';
+          content.classList.remove('hidden');
+        } else {
+          btn.className = 'px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition text-stone-600 hover:text-stone-900 flex items-center gap-2';
+          btn.querySelector('i').className = 'fas fa-' + (t === 'timeline' ? 'clock' : t === 'entourage' ? 'users' : 'question-circle') + ' text-stone-500';
+          content.classList.add('hidden');
+        }
+      });
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ==================== TIMELINE ====================
+    async function loadTimeline() {
+      try {
+        const res = await authFetch('/api/admin/timeline');
+        if (!res || !res.ok) throw new Error('Failed to load timeline');
+        timelineData = await res.json();
+        renderTimeline();
+      } catch (err) {
+        document.getElementById('timeline-table-body').innerHTML = `
+          <tr><td colspan="5" class="px-6 py-6 text-center text-red-500">Error loading timeline: ${err.message}</td></tr>
+        `;
+      }
+    }
+
+    function renderTimeline() {
+      const tbody = document.getElementById('timeline-table-body');
+      if (!timelineData || timelineData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-stone-400">No timeline events found. Click "Add Event" to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = timelineData.map(item => {
+        const id = item.id || item.Id;
+        const displayOrder = item.displayOrder !== undefined ? item.displayOrder : (item.DisplayOrder !== undefined ? item.DisplayOrder : 0);
+        const time = item.time || item.Time || '';
+        const title = item.title || item.Title || '';
+        const icon = item.icon || item.Icon || 'heart';
+        const description = item.description || item.Description || '';
+
+        return `
+        <tr class="hover:bg-stone-50/80 transition">
+          <td class="px-6 py-4 text-center font-bold text-stone-500">${displayOrder}</td>
+          <td class="px-6 py-4 font-semibold text-rose-950">${escapeHtml(time)}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-full bg-rose-100 text-rose-900 flex items-center justify-center text-xs">
+                <i class="fas fa-${escapeHtml(icon)}"></i>
+              </span>
+              <span class="font-bold text-stone-800">${escapeHtml(title)}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 text-stone-600 text-xs">${escapeHtml(description || '—')}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="openEditTimelineModal(${id})" class="p-1.5 text-stone-500 hover:text-rose-900 transition mr-2" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="handleDeleteTimeline(${id})" class="p-1.5 text-stone-400 hover:text-red-600 transition" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `;}).join('');
+    }
+
+    function openAddTimelineModal() {
+      document.getElementById('timeline-modal-title').textContent = 'Add Timeline Event';
+      document.getElementById('timeline-id').value = '';
+      document.getElementById('timeline-time').value = '';
+      document.getElementById('timeline-title').value = '';
+      document.getElementById('timeline-description').value = '';
+      document.getElementById('timeline-icon').value = 'heart';
+      document.getElementById('timeline-order').value = (timelineData.length + 1);
+      document.getElementById('timeline-modal').classList.remove('hidden');
+    }
+
+    function openEditTimelineModal(id) {
+      const item = timelineData.find(t => (t.id === id || t.Id === id));
+      if (!item) return;
+
+      document.getElementById('timeline-modal-title').textContent = 'Edit Timeline Event';
+      document.getElementById('timeline-id').value = item.id || item.Id;
+      document.getElementById('timeline-time').value = item.time || item.Time || '';
+      document.getElementById('timeline-title').value = item.title || item.Title || '';
+      document.getElementById('timeline-description').value = item.description || item.Description || '';
+      document.getElementById('timeline-icon').value = item.icon || item.Icon || 'heart';
+      document.getElementById('timeline-order').value = item.displayOrder !== undefined ? item.displayOrder : item.DisplayOrder;
+      document.getElementById('timeline-modal').classList.remove('hidden');
+    }
+
+    async function handleSaveTimeline(e) {
+      e.preventDefault();
+      const id = document.getElementById('timeline-id').value;
+      const payload = {
+        time: document.getElementById('timeline-time').value.trim(),
+        title: document.getElementById('timeline-title').value.trim(),
+        description: document.getElementById('timeline-description').value.trim(),
+        icon: document.getElementById('timeline-icon').value,
+        displayOrder: parseInt(document.getElementById('timeline-order').value) || 1
+      };
+
+      try {
+        const url = id ? `/api/admin/timeline/${id}` : '/api/admin/timeline';
+        const method = id ? 'PUT' : 'POST';
+        const res = await authFetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Save failed');
+        }
+
+        closeModal('timeline-modal');
+        showToast(id ? 'Timeline event updated!' : 'Timeline event added!');
+        loadTimeline();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function handleDeleteTimeline(id) {
+      if (!confirm('Are you sure you want to delete this timeline event?')) return;
+      try {
+        const res = await authFetch(`/api/admin/timeline/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed');
+        showToast('Timeline event deleted!');
+        loadTimeline();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // ==================== ENTOURAGE ====================
+    async function loadEntourage() {
+      try {
+        const res = await authFetch('/api/admin/entourage');
+        if (!res || !res.ok) throw new Error('Failed to load entourage');
+        entourageData = await res.json();
+        renderEntourage();
+      } catch (err) {
+        document.getElementById('entourage-table-body').innerHTML = `
+          <tr><td colspan="5" class="px-6 py-6 text-center text-red-500">Error loading entourage: ${err.message}</td></tr>
+        `;
+      }
+    }
+
+    function renderEntourage() {
+      const tbody = document.getElementById('entourage-table-body');
+      if (!entourageData || entourageData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-stone-400">No entourage members found. Click "Add Member" to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = entourageData.map(item => {
+        const id = item.id || item.Id;
+        const displayOrder = item.displayOrder !== undefined ? item.displayOrder : (item.DisplayOrder !== undefined ? item.DisplayOrder : 0);
+        const category = item.category || item.Category || 'Entourage';
+        const name = item.name || item.Name || '';
+        const role = item.role || item.Role || '';
+
+        return `
+        <tr class="hover:bg-stone-50/80 transition">
+          <td class="px-6 py-4 text-center font-bold text-stone-500">${displayOrder}</td>
+          <td class="px-6 py-4">
+            <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-200">
+              ${escapeHtml(category)}
+            </span>
+          </td>
+          <td class="px-6 py-4 font-bold text-stone-800">${escapeHtml(name)}</td>
+          <td class="px-6 py-4 text-stone-600 text-xs">${escapeHtml(role || '—')}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="openEditEntourageModal(${id})" class="p-1.5 text-stone-500 hover:text-rose-900 transition mr-2" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="handleDeleteEntourage(${id})" class="p-1.5 text-stone-400 hover:text-red-600 transition" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `;}).join('');
+    }
+
+    function openAddEntourageModal() {
+      document.getElementById('entourage-modal-title').textContent = 'Add Entourage Member';
+      document.getElementById('entourage-id').value = '';
+      document.getElementById('entourage-category').value = '';
+      document.getElementById('entourage-name').value = '';
+      document.getElementById('entourage-role').value = '';
+      document.getElementById('entourage-order').value = (entourageData.length + 1);
+      document.getElementById('entourage-modal').classList.remove('hidden');
+    }
+
+    function openEditEntourageModal(id) {
+      const item = entourageData.find(e => (e.id === id || e.Id === id));
+      if (!item) return;
+
+      document.getElementById('entourage-modal-title').textContent = 'Edit Entourage Member';
+      document.getElementById('entourage-id').value = item.id || item.Id;
+      document.getElementById('entourage-category').value = item.category || item.Category || '';
+      document.getElementById('entourage-name').value = item.name || item.Name || '';
+      document.getElementById('entourage-role').value = item.role || item.Role || '';
+      document.getElementById('entourage-order').value = item.displayOrder !== undefined ? item.displayOrder : item.DisplayOrder;
+      document.getElementById('entourage-modal').classList.remove('hidden');
+    }
+
+    async function handleSaveEntourage(e) {
+      e.preventDefault();
+      const id = document.getElementById('entourage-id').value;
+      const payload = {
+        category: document.getElementById('entourage-category').value.trim(),
+        name: document.getElementById('entourage-name').value.trim(),
+        role: document.getElementById('entourage-role').value.trim(),
+        displayOrder: parseInt(document.getElementById('entourage-order').value) || 1
+      };
+
+      try {
+        const url = id ? `/api/admin/entourage/${id}` : '/api/admin/entourage';
+        const method = id ? 'PUT' : 'POST';
+        const res = await authFetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Save failed');
+        }
+
+        closeModal('entourage-modal');
+        showToast(id ? 'Entourage member updated!' : 'Entourage member added!');
+        loadEntourage();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function handleDeleteEntourage(id) {
+      if (!confirm('Are you sure you want to delete this entourage member?')) return;
+      try {
+        const res = await authFetch(`/api/admin/entourage/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed');
+        showToast('Entourage member deleted!');
+        loadEntourage();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // ==================== FAQS ====================
+    async function loadFaqs() {
+      try {
+        const res = await authFetch('/api/admin/faqs');
+        if (!res || !res.ok) throw new Error('Failed to load FAQs');
+        faqsData = await res.json();
+        renderFaqs();
+      } catch (err) {
+        document.getElementById('faqs-table-body').innerHTML = `
+          <tr><td colspan="5" class="px-6 py-6 text-center text-red-500">Error loading FAQs: ${err.message}</td></tr>
+        `;
+      }
+    }
+
+    function renderFaqs() {
+      const tbody = document.getElementById('faqs-table-body');
+      if (!faqsData || faqsData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-stone-400">No FAQs found. Click "Add FAQ" to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = faqsData.map(item => {
+        const id = item.id || item.Id;
+        const displayOrder = item.displayOrder !== undefined ? item.displayOrder : (item.DisplayOrder !== undefined ? item.DisplayOrder : 0);
+        const question = item.question || item.Question || '';
+        const answer = item.answer || item.Answer || '';
+        const isActive = item.isActive !== undefined ? item.isActive : (item.IsActive !== undefined ? item.IsActive : true);
+
+        return `
+        <tr class="hover:bg-stone-50/80 transition">
+          <td class="px-6 py-4 text-center font-bold text-stone-500">${displayOrder}</td>
+          <td class="px-6 py-4 font-bold text-stone-800">${escapeHtml(question)}</td>
+          <td class="px-6 py-4 text-stone-600 text-xs">${escapeHtml(answer)}</td>
+          <td class="px-6 py-4 text-center">
+            ${isActive 
+              ? '<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-green-100 text-green-800">Active</span>'
+              : '<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-stone-200 text-stone-600">Hidden</span>'}
+          </td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="openEditFaqModal(${id})" class="p-1.5 text-stone-500 hover:text-rose-900 transition mr-2" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="handleDeleteFaq(${id})" class="p-1.5 text-stone-400 hover:text-red-600 transition" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `;}).join('');
+    }
+
+    function openAddFaqModal() {
+      document.getElementById('faqs-modal-title').textContent = 'Add FAQ';
+      document.getElementById('faq-id').value = '';
+      document.getElementById('faq-question').value = '';
+      document.getElementById('faq-answer').value = '';
+      document.getElementById('faq-order').value = (faqsData.length + 1);
+      document.getElementById('faq-active').checked = true;
+      document.getElementById('faqs-modal').classList.remove('hidden');
+    }
+
+    function openEditFaqModal(id) {
+      const item = faqsData.find(f => (f.id === id || f.Id === id));
+      if (!item) return;
+
+      document.getElementById('faqs-modal-title').textContent = 'Edit FAQ';
+      document.getElementById('faq-id').value = item.id || item.Id;
+      document.getElementById('faq-question').value = item.question || item.Question || '';
+      document.getElementById('faq-answer').value = item.answer || item.Answer || '';
+      document.getElementById('faq-order').value = item.displayOrder !== undefined ? item.displayOrder : item.DisplayOrder;
+      document.getElementById('faq-active').checked = item.isActive !== undefined ? item.isActive : item.IsActive;
+      document.getElementById('faqs-modal').classList.remove('hidden');
+    }
+
+    async function handleSaveFaq(e) {
+      e.preventDefault();
+      const id = document.getElementById('faq-id').value;
+      const payload = {
+        question: document.getElementById('faq-question').value.trim(),
+        answer: document.getElementById('faq-answer').value.trim(),
+        displayOrder: parseInt(document.getElementById('faq-order').value) || 1,
+        isActive: document.getElementById('faq-active').checked
+      };
+
+      try {
+        const url = id ? `/api/admin/faqs/${id}` : '/api/admin/faqs';
+        const method = id ? 'PUT' : 'POST';
+        const res = await authFetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Save failed');
+        }
+
+        closeModal('faqs-modal');
+        showToast(id ? 'FAQ updated!' : 'FAQ added!');
+        loadFaqs();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function handleDeleteFaq(id) {
+      if (!confirm('Are you sure you want to delete this FAQ?')) return;
+      try {
+        const res = await authFetch(`/api/admin/faqs/${id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error('Delete failed');
+        showToast('FAQ deleted!');
+        loadFaqs();
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+  </script>
+</body>
+</html>

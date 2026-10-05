@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wedding Settings — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">RSVP Management</a>
+          <a href="/admin/guests.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Guest Pre-Registration</a>
+          <a href="/admin/gallery.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Gallery</a>
+          <a href="/admin/content.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Content & Program</a>
+          <a href="/admin/settings.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">Settings</a>
+          <a href="/admin/database.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Database</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>View Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-stone-300 px-2 py-1">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-stone-300 px-2 py-1">RSVPs</a>
+    <a href="/admin/guests.html" class="text-stone-300 px-2 py-1">Guests</a>
+    <a href="/admin/gallery.html" class="text-stone-300 px-2 py-1">Gallery</a>
+    <a href="/admin/content.html" class="text-stone-300 px-2 py-1">Content</a>
+    <a href="/admin/settings.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">Settings</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Wedding Settings</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Customize couple names, dates, venues, color palette, story, and rules.</p>
+      </div>
+
+      <button type="button" onclick="saveAllSettings()" id="btn-save-settings" class="px-6 py-2.5 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2 self-start sm:self-auto">
+        <i class="fas fa-save"></i>
+        <span>Save All Settings</span>
+      </button>
+    </div>
+
+    <form id="settings-form" class="space-y-6">
+      
+      <!-- 1. Couple Information -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+        <h3 class="font-serif text-xl font-bold text-stone-900 border-b border-stone-100 pb-2">The Couple</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Bride's Full Name</label>
+            <input type="text" id="setting-BrideName" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Groom's Full Name</label>
+            <input type="text" id="setting-GroomName" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Schedule & Venues -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+        <h3 class="font-serif text-xl font-bold text-stone-900 border-b border-stone-100 pb-2">Schedule & Venues</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Wedding Date & Time</label>
+            <input type="datetime-local" id="setting-WeddingDate" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Ceremony Time</label>
+            <input type="text" id="setting-CeremonyTime" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" placeholder="4:00 PM" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Reception Time</label>
+            <input type="text" id="setting-ReceptionTime" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" placeholder="6:00 PM" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+          <div class="bg-stone-50/70 p-4 rounded-xl border border-stone-200/80 space-y-3">
+            <h4 class="font-bold text-sm text-stone-800 flex items-center gap-2">
+              <i class="fas fa-church text-rose-800"></i> Ceremony Location
+            </h4>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Ceremony Venue</label>
+              <input type="text" id="setting-CeremonyVenue" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Ceremony Address</label>
+              <input type="text" id="setting-CeremonyAddress" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Ceremony Google Maps Link</label>
+              <input type="url" id="setting-GoogleMapsUrl" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white font-mono text-xs" placeholder="https://maps.google.com/?q=..." />
+            </div>
+          </div>
+
+          <div class="bg-stone-50/70 p-4 rounded-xl border border-stone-200/80 space-y-3">
+            <h4 class="font-bold text-sm text-stone-800 flex items-center gap-2">
+              <i class="fas fa-glass-cheers text-amber-600"></i> Reception Location
+            </h4>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Reception Venue</label>
+              <input type="text" id="setting-ReceptionVenue" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Reception Address</label>
+              <input type="text" id="setting-ReceptionAddress" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Reception Google Maps Link</label>
+              <input type="url" id="setting-ReceptionGoogleMapsUrl" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white font-mono text-xs" placeholder="https://maps.google.com/?q=..." />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Theme & Colors -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+        <h3 class="font-serif text-xl font-bold text-stone-900 border-b border-stone-100 pb-2">Theme & Palette</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Primary Color (Berry Red)</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="picker-primary" oninput="document.getElementById('setting-PrimaryColor').value = this.value" class="w-10 h-10 p-0 border border-stone-300 rounded cursor-pointer" />
+              <input type="text" id="setting-PrimaryColor" oninput="document.getElementById('picker-primary').value = this.value" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm font-mono" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Secondary (Champagne Gold)</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="picker-secondary" oninput="document.getElementById('setting-SecondaryColor').value = this.value" class="w-10 h-10 p-0 border border-stone-300 rounded cursor-pointer" />
+              <input type="text" id="setting-SecondaryColor" oninput="document.getElementById('picker-secondary').value = this.value" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm font-mono" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Accent (Warm Cream)</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="picker-accent" oninput="document.getElementById('setting-AccentColor').value = this.value" class="w-10 h-10 p-0 border border-stone-300 rounded cursor-pointer" />
+              <input type="text" id="setting-AccentColor" oninput="document.getElementById('picker-accent').value = this.value" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm font-mono" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Dress Code Guideline</label>
+          <input type="text" id="setting-DressCode" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" />
+        </div>
+      </div>
+
+      <!-- 4. RSVP Rules & Hashtag -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+        <h3 class="font-serif text-xl font-bold text-stone-900 border-b border-stone-100 pb-2">RSVP Rules & Social</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Max Guests Per RSVP</label>
+            <input type="number" id="setting-MaxGuestsPerRsvp" min="1" max="10" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Allow Plus One</label>
+            <select id="setting-AllowPlusOne" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white">
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Wedding Hashtag</label>
+            <input type="text" id="setting-WeddingHashtag" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Story Texts & Photos -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-6">
+        <div class="border-b border-stone-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h3 class="font-serif text-xl font-bold text-stone-900">Our Love Story — "How Two Paths Became One"</h3>
+            <p class="text-xs text-stone-500 mt-0.5">Customize the 3 story chapters and couple photos displayed on your wedding website.</p>
+          </div>
+          <span class="text-xs font-bold text-rose-900 bg-rose-50 px-3 py-1 rounded-full border border-rose-200 self-start">
+            <i class="fas fa-heart text-xs mr-1"></i> 3 Chapters
+          </span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Chapter 1 -->
+          <div class="border border-stone-200 rounded-2xl p-4 bg-stone-50/50 flex flex-col justify-between space-y-3">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-900 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">Chapter I</span>
+                <span class="text-xs font-semibold text-stone-600">How We Met</span>
+              </div>
+              <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-200 border border-stone-300 mb-3 group shadow-inner">
+                <img id="preview-StoryPhoto1" src="" alt="Chapter 1 Preview" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=800&q=80'" />
+                <label for="upload-file-StoryPhoto1" class="absolute inset-0 bg-stone-900/60 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer text-xs font-semibold">
+                  <i class="fas fa-camera text-2xl mb-1.5"></i>
+                  <span>Change / Upload Photo</span>
+                </label>
+                <input type="file" id="upload-file-StoryPhoto1" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" onchange="uploadStoryImage(this, 'StoryPhoto1')" />
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">Image URL or Upload</label>
+                  <div class="flex gap-2">
+                    <input type="text" id="setting-StoryPhoto1" oninput="updateStoryPreview('StoryPhoto1', this.value)" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs font-mono bg-white" placeholder="/images/... or https://..." />
+                    <button type="button" onclick="document.getElementById('upload-file-StoryPhoto1').click()" class="px-3.5 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 shadow-sm transition" title="Upload local image">
+                      <i class="fas fa-upload"></i>
+                      <span class="hidden sm:inline">Upload</span>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">Story Text</label>
+                  <textarea id="setting-StoryHowWeMet" rows="5" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs bg-white leading-relaxed focus:ring-1 focus:ring-rose-800" placeholder="Tell how you two first met..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chapter 2 -->
+          <div class="border border-stone-200 rounded-2xl p-4 bg-stone-50/50 flex flex-col justify-between space-y-3">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-900 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">Chapter II</span>
+                <span class="text-xs font-semibold text-stone-600">Our Journey</span>
+              </div>
+              <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-200 border border-stone-300 mb-3 group shadow-inner">
+                <img id="preview-StoryPhoto2" src="" alt="Chapter 2 Preview" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80'" />
+                <label for="upload-file-StoryPhoto2" class="absolute inset-0 bg-stone-900/60 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer text-xs font-semibold">
+                  <i class="fas fa-camera text-2xl mb-1.5"></i>
+                  <span>Change / Upload Photo</span>
+                </label>
+                <input type="file" id="upload-file-StoryPhoto2" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" onchange="uploadStoryImage(this, 'StoryPhoto2')" />
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">Image URL or Upload</label>
+                  <div class="flex gap-2">
+                    <input type="text" id="setting-StoryPhoto2" oninput="updateStoryPreview('StoryPhoto2', this.value)" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs font-mono bg-white" placeholder="/images/... or https://..." />
+                    <button type="button" onclick="document.getElementById('upload-file-StoryPhoto2').click()" class="px-3.5 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 shadow-sm transition" title="Upload local image">
+                      <i class="fas fa-upload"></i>
+                      <span class="hidden sm:inline">Upload</span>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">Story Text</label>
+                  <textarea id="setting-StoryOurJourney" rows="5" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs bg-white leading-relaxed focus:ring-1 focus:ring-rose-800" placeholder="Share your adventures and relationship milestones..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chapter 3 -->
+          <div class="border border-stone-200 rounded-2xl p-4 bg-stone-50/50 flex flex-col justify-between space-y-3">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-900 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">Chapter III</span>
+                <span class="text-xs font-semibold text-stone-600">The Proposal</span>
+              </div>
+              <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-stone-200 border border-stone-300 mb-3 group shadow-inner">
+                <img id="preview-StoryPhoto3" src="" alt="Chapter 3 Preview" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80'" />
+                <label for="upload-file-StoryPhoto3" class="absolute inset-0 bg-stone-900/60 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer text-xs font-semibold">
+                  <i class="fas fa-camera text-2xl mb-1.5"></i>
+                  <span>Change / Upload Photo</span>
+                </label>
+                <input type="file" id="upload-file-StoryPhoto3" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" onchange="uploadStoryImage(this, 'StoryPhoto3')" />
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">Image URL or Upload</label>
+                  <div class="flex gap-2">
+                    <input type="text" id="setting-StoryPhoto3" oninput="updateStoryPreview('StoryPhoto3', this.value)" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs font-mono bg-white" placeholder="/images/... or https://..." />
+                    <button type="button" onclick="document.getElementById('upload-file-StoryPhoto3').click()" class="px-3.5 py-2 bg-stone-800 hover:bg-stone-700 text-white rounded-xl text-xs font-bold whitespace-nowrap flex items-center gap-1.5 shadow-sm transition" title="Upload local image">
+                      <i class="fas fa-upload"></i>
+                      <span class="hidden sm:inline">Upload</span>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold uppercase tracking-wider text-stone-600 mb-1">Story Text</label>
+                  <textarea id="setting-StoryTheProposal" rows="5" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-xs bg-white leading-relaxed focus:ring-1 focus:ring-rose-800" placeholder="Describe that unforgettable moment..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Gifts -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+        <h3 class="font-serif text-xl font-bold text-stone-900 border-b border-stone-100 pb-2">Gift Registry</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Enable Gift Section</label>
+            <select id="setting-GiftSectionEnabled" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm bg-white">
+              <option value="true">Enabled (Shown)</option>
+              <option value="false">Disabled (Hidden)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Gift Registry Message</label>
+            <textarea id="setting-GiftMessage" rows="2" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button type="button" onclick="saveAllSettings()" class="px-8 py-3 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg transition">
+          Save All Settings
+        </button>
+      </div>
+
+    </form>
+
+  </main>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let settingsData = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+    });
+
+    async function loadSettings() {
+      try {
+        const res = await authFetch('/api/admin/settings');
+        if (!res || !res.ok) return;
+
+        settingsData = await res.json();
+
+        // Populate form fields
+        for (const [key, val] of Object.entries(settingsData)) {
+          const el = document.getElementById(`setting-${key}`);
+          if (el) {
+            if (key === 'WeddingDate' && val) {
+              // format for datetime-local (yyyy-MM-ddThh:mm)
+              try {
+                const d = new Date(val);
+                el.value = d.toISOString().slice(0, 16);
+              } catch {
+                el.value = val;
+              }
+            } else {
+              el.value = val;
+            }
+          }
+        }
+
+        // Color pickers sync
+        if (settingsData.PrimaryColor) {
+          document.getElementById('picker-primary').value = settingsData.PrimaryColor;
+        }
+        if (settingsData.SecondaryColor) {
+          document.getElementById('picker-secondary').value = settingsData.SecondaryColor;
+        }
+        if (settingsData.AccentColor) {
+          document.getElementById('picker-accent').value = settingsData.AccentColor;
+        }
+
+        // Story Photos preview
+        if (settingsData.StoryPhoto1) updateStoryPreview('StoryPhoto1', settingsData.StoryPhoto1);
+        if (settingsData.StoryPhoto2) updateStoryPreview('StoryPhoto2', settingsData.StoryPhoto2);
+        if (settingsData.StoryPhoto3) updateStoryPreview('StoryPhoto3', settingsData.StoryPhoto3);
+      } catch (err) {
+        console.error('Error loading settings:', err);
+      }
+    }
+
+    function updateStoryPreview(photoKey, url) {
+      const preview = document.getElementById(`preview-${photoKey}`);
+      if (preview && url) {
+        preview.src = url;
+      }
+    }
+
+    async function uploadStoryImage(inputEl, photoKey) {
+      if (!inputEl.files || inputEl.files.length === 0) return;
+      const file = inputEl.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      showAdminToast(`Uploading ${file.name}...`);
+
+      try {
+        const token = getToken();
+        const res = await fetch('/api/admin/upload-image?folder=story', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ message: 'Upload failed' }));
+          throw new Error(err.message || 'Upload failed');
+        }
+
+        const data = await res.json();
+        if (data.success && data.url) {
+          const input = document.getElementById(`setting-${photoKey}`);
+          if (input) {
+            input.value = data.url;
+          }
+          updateStoryPreview(photoKey, data.url);
+          showAdminToast('Photo uploaded! Click "Save All Settings" to apply.');
+        }
+      } catch (err) {
+        showAdminToast(err.message || 'Error uploading image', 'error');
+      } finally {
+        inputEl.value = '';
+      }
+    }
+
+    async function saveAllSettings() {
+      const btn = document.getElementById('btn-save-settings');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="admin-loader mr-2"></span> Saving...`;
+
+      const payload = {};
+      const inputs = document.querySelectorAll('[id^="setting-"]');
+      inputs.forEach(input => {
+        const key = input.id.replace('setting-', '');
+        payload[key] = input.value;
+      });
+
+      try {
+        const res = await authFetch('/api/admin/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res && res.ok) {
+          showAdminToast('Wedding settings saved successfully!');
+        } else {
+          showAdminToast('Failed to save settings.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Network error while saving.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-save mr-2"></i> Save All Settings`;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Management — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">RSVP Management</a>
+          <a href="/admin/guests.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Guest Pre-Registration</a>
+          <a href="/admin/gallery.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">Gallery</a>
+          <a href="/admin/content.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Content & Program</a>
+          <a href="/admin/settings.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Settings</a>
+          <a href="/admin/database.html" class="px-3.5 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Database</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>View Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-stone-300 px-2 py-1">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-stone-300 px-2 py-1">RSVPs</a>
+    <a href="/admin/guests.html" class="text-stone-300 px-2 py-1">Guests</a>
+    <a href="/admin/gallery.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">Gallery</a>
+    <a href="/admin/content.html" class="text-stone-300 px-2 py-1">Content</a>
+    <a href="/admin/settings.html" class="text-stone-300 px-2 py-1">Settings</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Gallery Management</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Upload new wedding moments, modify captions, and manage photo order.</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="openUploadModal()" class="px-5 py-2.5 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Upload Image</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="gallery-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Loaded dynamically -->
+    </div>
+
+  </main>
+
+  <!-- Upload Modal -->
+  <div id="modal-upload" class="admin-modal">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3 mb-4">
+        <h3 class="font-serif text-2xl font-bold text-stone-900">Upload Gallery Image</h3>
+        <button type="button" onclick="closeModal('modal-upload')" class="text-stone-400 hover:text-stone-600">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <form id="upload-form" onsubmit="submitUpload(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Select File</label>
+          <input type="file" id="upload-file-input" accept="image/*" required class="w-full text-xs text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 uppercase tracking-wider mb-1">Caption</label>
+          <input type="text" id="upload-caption-input" class="w-full px-3 py-2 rounded-xl border border-stone-300 text-sm focus:ring-1 focus:ring-rose-800" placeholder="e.g. Sunset in Boracay" />
+        </div>
+
+        <div class="pt-3 border-t border-stone-100 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-upload')" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-semibold">
+            Cancel
+          </button>
+          <button type="submit" id="btn-submit-upload" class="px-5 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl font-semibold shadow">
+            Upload
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let galleryItems = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadGallery();
+    });
+
+    async function loadGallery() {
+      try {
+        const res = await authFetch('/api/admin/gallery');
+        if (!res || !res.ok) return;
+
+        galleryItems = await res.json();
+        renderGallery(galleryItems);
+      } catch (err) {
+        console.error('Failed to load gallery:', err);
+      }
+    }
+
+    function renderGallery(items) {
+      const grid = document.getElementById('gallery-cards-grid');
+      if (!grid) return;
+
+      if (!items || items.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-stone-400">No photos added yet. Click "Upload Image" to add one.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => {
+        const id = item.id || item.Id;
+        const imgUrl = item.imageUrl || item.ImageUrl || '';
+        const caption = item.caption || item.Caption || 'Untitled moment';
+        const displayOrder = item.displayOrder !== undefined ? item.displayOrder : (item.DisplayOrder !== undefined ? item.DisplayOrder : 0);
+
+        return `
+        <div class="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden flex flex-col justify-between">
+          <div class="aspect-square bg-stone-100 relative group overflow-hidden">
+            <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(caption)}" class="w-full h-full object-cover" />
+          </div>
+          <div class="p-4">
+            <p class="font-serif text-stone-800 font-semibold text-base truncate mb-1" title="${escapeHtml(caption)}">
+              ${escapeHtml(caption)}
+            </p>
+            <div class="flex items-center justify-between text-xs text-stone-400 mt-2">
+              <span>Order: #${displayOrder}</span>
+              <button type="button" onclick="deleteGalleryItem(${id})" class="text-red-500 hover:text-red-700 font-medium">
+                <i class="fas fa-trash-alt mr-1"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `;}).join('');
+    }
+
+    function openModal(id) { document.getElementById(id)?.classList.add('show'); }
+    function closeModal(id) { document.getElementById(id)?.classList.remove('show'); }
+
+    function openUploadModal() {
+      document.getElementById('upload-form').reset();
+      openModal('modal-upload');
+    }
+
+    async function submitUpload(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('upload-file-input');
+      const caption = document.getElementById('upload-caption-input').value.trim();
+      const btn = document.getElementById('btn-submit-upload');
+
+      if (!fileInput.files || fileInput.files.length === 0) return;
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="admin-loader mr-2"></span> Uploading...`;
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      formData.append('caption', caption);
+
+      try {
+        const token = getToken();
+        const res = await fetch('/api/admin/gallery/upload', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        if (res.ok) {
+          showAdminToast('Photo uploaded successfully!');
+          closeModal('modal-upload');
+          loadGallery();
+        } else {
+          const data = await res.json();
+          showAdminToast(data.message || 'Failed to upload photo.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Error uploading image.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Upload';
+      }
+    }
+
+    async function deleteGalleryItem(id) {
+      if (!confirm('Are you sure you want to remove this photo?')) return;
+
+      try {
+        const res = await authFetch(`/api/admin/gallery/${id}`, { method: 'DELETE' });
+        if (res && res.ok) {
+          showAdminToast('Photo removed.');
+          loadGallery();
+        } else {
+          showAdminToast('Failed to delete photo.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Error deleting photo.', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

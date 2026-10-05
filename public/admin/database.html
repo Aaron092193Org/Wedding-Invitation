@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Explorer — Wedding Admin</title>
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="min-h-screen flex flex-col bg-stone-100">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-stone-900 text-white sticky top-0 z-40 border-b border-stone-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-rose-900 flex items-center justify-center text-amber-300 font-serif font-bold text-lg border border-amber-500/30">
+            W
+          </div>
+          <div>
+            <a href="/admin/index.html" class="font-serif text-lg font-bold text-stone-100 hover:text-amber-200 transition">Majh & Aaron</a>
+            <span class="text-[10px] uppercase tracking-widest text-stone-400 block -mt-1 font-semibold">Admin Portal</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1">
+          <a href="/admin/index.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Dashboard</a>
+          <a href="/admin/rsvps.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">RSVPs</a>
+          <a href="/admin/guests.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Guests</a>
+          <a href="/admin/gallery.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Gallery</a>
+          <a href="/admin/content.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Content</a>
+          <a href="/admin/settings.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-stone-300 hover:bg-stone-800 hover:text-white transition">Settings</a>
+          <a href="/admin/database.html" class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider text-white bg-rose-900">Database</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <a href="/" target="_blank" class="text-xs text-stone-400 hover:text-amber-200 hidden sm:inline-flex items-center gap-1">
+            <span>Public Site</span>
+            <i class="fas fa-external-link-alt text-[10px]"></i>
+          </a>
+          <span class="text-stone-700 hidden sm:inline">|</span>
+          <div class="flex items-center gap-2">
+            <span id="admin-header-name" class="text-xs font-semibold text-stone-300 hidden sm:inline">Admin</span>
+            <button type="button" onclick="handleLogout()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-red-950 text-stone-300 hover:text-red-200 border border-stone-700 transition" title="Sign Out">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Sub-Navigation -->
+  <div class="md:hidden bg-stone-800 border-b border-stone-700 px-4 py-2 flex items-center justify-around overflow-x-auto text-xs">
+    <a href="/admin/index.html" class="text-stone-300 px-2 py-1">Dashboard</a>
+    <a href="/admin/rsvps.html" class="text-stone-300 px-2 py-1">RSVPs</a>
+    <a href="/admin/guests.html" class="text-stone-300 px-2 py-1">Guests</a>
+    <a href="/admin/gallery.html" class="text-stone-300 px-2 py-1">Gallery</a>
+    <a href="/admin/content.html" class="text-stone-300 px-2 py-1">Content</a>
+    <a href="/admin/settings.html" class="text-stone-300 px-2 py-1">Settings</a>
+    <a href="/admin/database.html" class="text-white font-bold px-2 py-1 bg-rose-900 rounded">Database</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    
+    <!-- Title & Connection Info Banner -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="font-serif text-3xl font-bold text-stone-900">Database Explorer</h1>
+        <p class="text-stone-500 text-sm mt-0.5">Inspect tables, browse raw rows, and execute custom SQL queries.</p>
+      </div>
+
+      <div id="db-provider-badge" class="px-3.5 py-1.5 bg-stone-900 text-stone-200 rounded-xl text-xs font-mono border border-stone-700 shadow-sm flex items-center gap-2 self-start sm:self-auto">
+        <i class="fas fa-database text-amber-400"></i>
+        <span id="db-provider-name">Connecting...</span>
+      </div>
+    </div>
+
+    <!-- SQL Query Runner Accordion -->
+    <div class="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+        <label for="custom-sql-input" class="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center gap-2">
+          <i class="fas fa-terminal text-rose-800"></i>
+          <span>SQL Query Runner (Read-Only SELECT)</span>
+        </label>
+        <span class="text-[11px] text-stone-400">Max 200 rows</span>
+      </div>
+
+      <div class="space-y-3">
+        <textarea id="custom-sql-input" rows="2" class="w-full px-4 py-2.5 rounded-xl border border-stone-300 font-mono text-xs focus:ring-2 focus:ring-rose-800 focus:border-transparent outline-none transition" placeholder="SELECT * FROM Rsvps WHERE AttendanceStatus = 'Attending';"></textarea>
+        
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button type="button" onclick="setQuickQuery('SELECT * FROM Rsvps ORDER BY SubmittedDate DESC;')" class="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg text-[11px] font-mono">RSVPs</button>
+            <button type="button" onclick="setQuickQuery('SELECT * FROM Guests ORDER BY FullName;')" class="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg text-[11px] font-mono">Guests</button>
+            <button type="button" onclick="setQuickQuery('SELECT * FROM WeddingSettings;')" class="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg text-[11px] font-mono">Settings</button>
+            <button type="button" onclick="setQuickQuery('SELECT * FROM RsvpGuests;')" class="px-2.5 py-1 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-lg text-[11px] font-mono">Companions</button>
+          </div>
+
+          <button type="button" id="btn-run-query" onclick="executeCustomQuery()" class="px-4 py-2 bg-rose-900 hover:bg-rose-800 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow transition flex items-center gap-2">
+            <i class="fas fa-play text-[10px]"></i>
+            <span>Execute Query</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Explorer Layout: Left (Tables List) & Right (Table Grid) -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      
+      <!-- Left: Tables Navigation -->
+      <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-4 space-y-3">
+        <div class="flex items-center justify-between border-b border-stone-100 pb-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-stone-700">Database Tables</span>
+          <span id="tables-count-badge" class="text-xs bg-stone-100 px-2 py-0.5 rounded-full font-mono text-stone-600">0</span>
+        </div>
+
+        <div id="tables-list-container" class="space-y-1 max-h-[500px] overflow-y-auto pr-1">
+          <div class="text-center text-xs text-stone-400 py-6">
+            <i class="fas fa-spinner fa-spin mr-1"></i> Loading tables...
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Table Data Grid -->
+      <div class="lg:col-span-3 bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden flex flex-col">
+        
+        <!-- Table Header & Toolbar -->
+        <div class="px-6 py-4 border-b border-stone-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-stone-50/50">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="active-table-title" class="font-serif text-2xl font-bold text-stone-900">Rsvps</h2>
+              <span id="active-table-count" class="badge-status bg-stone-200 text-stone-700 text-[11px]">0 rows</span>
+            </div>
+            <p id="active-table-sub" class="text-xs text-stone-400 mt-0.5">Showing latest records</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="exportCurrentTableJson()" class="px-3 py-1.5 border border-stone-300 hover:bg-stone-100 rounded-xl text-xs font-semibold text-stone-700 transition flex items-center gap-1.5">
+              <i class="fas fa-file-code text-stone-500"></i>
+              <span>Export JSON</span>
+            </button>
+            <button type="button" onclick="refreshActiveTable()" class="p-2 border border-stone-300 hover:bg-stone-100 rounded-xl text-stone-600 transition" title="Refresh Table">
+              <i class="fas fa-sync-alt text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Data Grid Viewport -->
+        <div class="overflow-x-auto max-h-[600px] relative">
+          <table class="w-full text-left border-collapse text-xs font-mono">
+            <thead id="grid-thead" class="sticky top-0 bg-stone-100 text-stone-600 uppercase tracking-wider border-b border-stone-200 z-10">
+              <tr>
+                <th class="px-4 py-3">Column</th>
+              </tr>
+            </thead>
+            <tbody id="grid-tbody" class="divide-y divide-stone-100 bg-white">
+              <tr>
+                <td class="px-4 py-12 text-center text-stone-400 font-sans">
+                  Select a table on the left to browse its data.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="/js/admin.js"></script>
+  <script>
+    let activeTableName = 'Rsvps';
+    let currentGridData = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDatabaseOverview();
+    });
+
+    async function loadDatabaseOverview() {
+      try {
+        const res = await authFetch('/api/admin/database/overview');
+        if (!res || !res.ok) return;
+
+        const data = await res.json();
+        
+        // Update provider badge
+        const badge = document.getElementById('db-provider-name');
+        if (badge) {
+          const providerShort = data.provider.includes('Sqlite') ? 'SQLite' : (data.provider.includes('SqlServer') ? 'SQL Server' : data.provider);
+          badge.textContent = `${providerShort} (${data.database || data.dataSource || 'Connected'})`;
+        }
+
+        // Render tables list
+        renderTablesList(data.tables || []);
+
+        // Load default table (Rsvps or first available)
+        if (data.tables && data.tables.length > 0) {
+          const defaultTable = data.tables.find(t => t.tableName.toLowerCase() === 'rsvps') || data.tables[0];
+          loadTableData(defaultTable.tableName);
+        }
+      } catch (err) {
+        console.error('Failed to load database overview:', err);
+      }
+    }
+
+    function renderTablesList(tables) {
+      const container = document.getElementById('tables-list-container');
+      const badge = document.getElementById('tables-count-badge');
+      if (!container) return;
+
+      badge.textContent = tables.length;
+
+      if (!tables || tables.length === 0) {
+        container.innerHTML = '<div class="text-xs text-stone-400 text-center py-4">No tables found.</div>';
+        return;
+      }
+
+      container.innerHTML = tables.map(t => {
+        const isActive = t.tableName.toLowerCase() === activeTableName.toLowerCase();
+        return `
+          <button type="button" onclick="loadTableData('${escapeHtml(t.tableName)}')" class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition text-left ${isActive ? 'bg-rose-900 text-white font-semibold' : 'hover:bg-stone-100 text-stone-700'}">
+            <span class="truncate"><i class="fas fa-table mr-2 opacity-60"></i>${escapeHtml(t.tableName)}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full font-mono ${isActive ? 'bg-white/20 text-white' : 'bg-stone-100 text-stone-500'}">${t.rowCount}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    async function loadTableData(tableName) {
+      activeTableName = tableName;
+      document.getElementById('active-table-title').textContent = tableName;
+      document.getElementById('active-table-count').textContent = 'Loading...';
+
+      // Update active highlight in left menu
+      document.querySelectorAll('#tables-list-container button').forEach(btn => {
+        if (btn.textContent.includes(tableName)) {
+          btn.className = 'w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition text-left bg-rose-900 text-white font-semibold';
+        } else {
+          btn.className = 'w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition text-left hover:bg-stone-100 text-stone-700';
+        }
+      });
+
+      try {
+        const res = await authFetch(`/api/admin/database/table/${encodeURIComponent(tableName)}?limit=100`);
+        if (!res || !res.ok) {
+          showAdminToast('Could not load table data.', 'error');
+          return;
+        }
+
+        const data = await res.json();
+        currentGridData = data;
+        renderGrid(data.columns, data.rows);
+        document.getElementById('active-table-count').textContent = `${data.rows.length} rows loaded`;
+      } catch (err) {
+        console.error('Error loading table:', err);
+      }
+    }
+
+    function renderGrid(columns, rows) {
+      const thead = document.getElementById('grid-thead');
+      const tbody = document.getElementById('grid-tbody');
+      if (!thead || !tbody) return;
+
+      if (!columns || columns.length === 0) {
+        thead.innerHTML = '<tr><th class="px-4 py-3">No Columns</th></tr>';
+        tbody.innerHTML = '<tr><td class="px-4 py-8 text-center text-stone-400 font-sans">No data found in table.</td></tr>';
+        return;
+      }
+
+      // Headers
+      thead.innerHTML = `<tr>` + columns.map(c => `
+        <th class="px-4 py-3 text-stone-700 font-bold whitespace-nowrap border-b border-stone-200">
+          ${escapeHtml(c)}
+        </th>
+      `).join('') + `</tr>`;
+
+      // Rows
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${columns.length}" class="px-4 py-12 text-center text-stone-400 font-sans">Table is currently empty.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = rows.map(r => `
+        <tr class="hover:bg-stone-50 transition">
+          ${columns.map(c => {
+            const val = r[c];
+            let displayVal = 'NULL';
+            let valClass = 'text-stone-300 italic';
+
+            if (val !== null && val !== undefined) {
+              if (typeof val === 'boolean') {
+                displayVal = val ? 'TRUE' : 'FALSE';
+                valClass = val ? 'text-green-600 font-bold' : 'text-stone-400';
+              } else if (typeof val === 'object') {
+                displayVal = JSON.stringify(val);
+                valClass = 'text-amber-700';
+              } else {
+                displayVal = String(val);
+                valClass = 'text-stone-800';
+              }
+            }
+
+            return `<td class="px-4 py-2.5 whitespace-nowrap max-w-xs truncate ${valClass}" title="${escapeHtml(displayVal)}">${escapeHtml(displayVal)}</td>`;
+          }).join('')}
+        </tr>
+      `).join('');
+    }
+
+    function refreshActiveTable() {
+      if (activeTableName) {
+        loadTableData(activeTableName);
+      }
+    }
+
+    function setQuickQuery(sql) {
+      document.getElementById('custom-sql-input').value = sql;
+      executeCustomQuery();
+    }
+
+    async function executeCustomQuery() {
+      const sqlInput = document.getElementById('custom-sql-input');
+      const query = sqlInput.value.trim();
+      const btn = document.getElementById('btn-run-query');
+
+      if (!query) {
+        showAdminToast('Please enter a SQL query.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="admin-loader mr-2"></span> Running...`;
+
+      try {
+        const res = await authFetch('/api/admin/database/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+
+        const data = await res.json();
+        if (res && res.ok) {
+          currentGridData = { tableName: 'Query Result', columns: data.columns, rows: data.rows };
+          document.getElementById('active-table-title').textContent = 'Custom Query Results';
+          document.getElementById('active-table-count').textContent = `${data.rowCount} rows`;
+          renderGrid(data.columns, data.rows);
+          showAdminToast(`Query executed: ${data.rowCount} rows returned.`);
+        } else {
+          showAdminToast(data.message || 'Query execution failed.', 'error');
+        }
+      } catch (err) {
+        showAdminToast('Network error while running query.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-play text-[10px] mr-1.5"></i> <span>Execute Query</span>`;
+      }
+    }
+
+    function exportCurrentTableJson() {
+      if (!currentGridData || !currentGridData.rows) {
+        showAdminToast('No data to export.', 'error');
+        return;
+      }
+
+      const jsonStr = JSON.stringify(currentGridData.rows, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${currentGridData.tableName || 'query_result'}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showAdminToast('Exported to JSON!');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+/* ==========================================================================
+   Filipiniana Moderno & Heirloom Gold Stylesheet
+   Majh & Aaron Wedding (#MajhMadeForAaron)
+   ========================================================================== */
+
+:root {
+  --primary-color: #7B2433;       /* Maharlika Burgundy / Barong Wine */
+  --secondary-color: #C5A059;     /* Heirloom Ginto / Antique Philippine Gold */
+  --accent-color: #FBF8F2;        /* Piña Calado Cream / Abaca Ivory */
+  --terracotta: #B85D3B;          /* Lupang Pula / Terracotta */
+  --sage-green: #5A6D55;          /* Dahon ng Lunti / Olive Laurel */
+  --text-dark: #2B211E;           /* Deep Espresso Heritage Brown */
+  --text-muted: #73645E;          /* Warm Sepia */
+  --gold-gradient: linear-gradient(135deg, #F3E0B5 0%, #C5A059 50%, #9E7B35 100%);
+  --gold-glow: rgba(197, 160, 89, 0.35);
+  --burgundy-glow: rgba(123, 36, 51, 0.2);
+  --capiz-bg: rgba(255, 253, 248, 0.96);
+  --card-bg: rgba(255, 255, 255, 0.96);
+  --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Universal Box-Sizing & Viewport Boundary */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Base & Typography */
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-dark);
+  background-color: var(--accent-color);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(197, 160, 89, 0.04) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(123, 36, 51, 0.03) 0%, transparent 20%);
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-script {
+  font-family: 'Great Vibes', cursive;
+}
+
+/* Gold Text Gradient */
+.gold-text {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Primary Color Overrides */
+.bg-wedding-primary {
+  background-color: var(--primary-color);
+}
+
+.text-wedding-primary {
+  color: var(--primary-color);
+}
+
+.border-wedding-primary {
+  border-color: var(--primary-color);
+}
+
+.text-wedding-secondary {
+  color: var(--secondary-color);
+}
+
+.border-wedding-secondary {
+  border-color: var(--secondary-color);
+}
+
+/* Filipiniana Calado Embroidery Lace Borders */
+.calado-frame {
+  position: relative;
+  border: 1px solid rgba(197, 160, 89, 0.45);
+  box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.08), 0 20px 40px -15px rgba(43, 33, 30, 0.08);
+}
+
+.calado-frame::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(197, 160, 89, 0.35);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Traditional Filipino Calado Corner Accents */
+.calado-corner-tl,
+.calado-corner-tr,
+.calado-corner-bl,
+.calado-corner-br {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  pointer-events: none;
+  border-color: var(--secondary-color);
+  opacity: 0.8;
+}
+
+.calado-corner-tl { top: 12px; left: 12px; border-top: 2px solid; border-left: 2px solid; }
+.calado-corner-tr { top: 12px; right: 12px; border-top: 2px solid; border-right: 2px solid; }
+.calado-corner-bl { bottom: 12px; left: 12px; border-bottom: 2px solid; border-left: 2px solid; }
+.calado-corner-br { bottom: 12px; right: 12px; border-bottom: 2px solid; border-right: 2px solid; }
+
+/* Capiz Shell Windowpane Card Style */
+.capiz-card {
+  background: var(--capiz-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 16px;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(43, 33, 30, 0.06);
+}
+
+/* Decorative Calado Dividers */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.25rem auto;
+}
+
+.ornament-divider::before,
+.ornament-divider::after {
+  content: "";
+  height: 1px;
+  width: 70px;
+  background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+}
+
+/* Sampaguita Garland / Laurel Divider */
+.sampaguita-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.25rem auto;
+  max-width: 100%;
+}
+
+.sampaguita-divider span {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--secondary-color);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.sampaguita-divider::before,
+.sampaguita-divider::after {
+  content: "✦";
+  color: var(--secondary-color);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+/* Floating Music Player Button with Golden Ring */
+.music-toggle-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--capiz-bg);
+  color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(43, 33, 30, 0.2);
+  border: 2px solid var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 9999;
+  transition: var(--transition-smooth);
+}
+
+.music-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 30px var(--gold-glow);
+  background: #fff;
+}
+
+.music-toggle-btn.playing {
+  animation: pulseMusic 2s infinite;
+}
+
+@keyframes pulseMusic {
+  0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(197, 160, 89, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}
+
+/* Hero & Invitation Envelope Animation */
+.hero-wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 3.5rem 1rem 2rem 1rem;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(35, 20, 22, 0.55) 0%, rgba(20, 10, 12, 0.88) 100%);
+  backdrop-filter: blur(2px);
+}
+
+.invitation-card {
+  position: relative;
+  z-index: 10;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: rgba(255, 253, 248, 0.96);
+  backdrop-filter: blur(14px);
+  border-radius: 16px;
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(197, 160, 89, 0.5);
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+}
+
+@media (max-width: 640px) {
+  .hero-wrapper {
+    padding: 3.5rem 0.75rem 1.5rem 0.75rem;
+  }
+  .invitation-card {
+    padding: 2.25rem 0.875rem 1.75rem 0.875rem;
+    max-width: 100%;
+  }
+}
+
+/* Terracotta & Antique Gold Sampaguita Wax Seal */
+.wax-seal {
+  width: 76px;
+  height: 76px;
+  margin: -62px auto 1.5rem auto;
+  background: radial-gradient(circle at 35% 35%, #9E3544 0%, #631B26 70%, #421019 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(66, 16, 25, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  border: 2.5px solid #C5A059;
+  color: #FFFDF8;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 23px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  position: relative;
+}
+
+.wax-seal::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px dashed rgba(197, 160, 89, 0.6);
+  pointer-events: none;
+}
+
+.btn-open-invitation {
+  background: var(--gold-gradient);
+  color: #3d2d09;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 13px;
+  padding: 14px 38px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: var(--transition-smooth);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .wax-seal {
+    width: 62px;
+    height: 62px;
+    margin: -50px auto 1.25rem auto;
+    font-size: 18px;
+  }
+  .btn-open-invitation {
+    padding: 12px 28px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    width: auto;
+    max-width: 100%;
+  }
+}
+
+.btn-open-invitation:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.5);
+  filter: brightness(1.05);
+}
+
+/* Unfolding Invitation Effect */
+.opened-invitation {
+  animation: unfoldContent 1s forwards cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes unfoldContent {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Countdown Clock */
+.countdown-container {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.countdown-box {
+  background: white;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  min-width: 90px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease;
+}
+
+.countdown-box:hover {
+  transform: translateY(-4px);
+  border-color: var(--secondary-color);
+}
+
+.countdown-value {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary-color);
+}
+
+.countdown-label {
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .countdown-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.375rem;
+    max-width: 100%;
+  }
+  .countdown-box {
+    padding: 0.75rem 0.25rem;
+    min-width: 0;
+    border-radius: 8px;
+  }
+  .countdown-value {
+    font-size: 1.5rem;
+  }
+  .countdown-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+}
+
+/* Story Cards */
+.story-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: var(--transition-smooth);
+}
+
+.story-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(122, 59, 77, 0.12);
+}
+
+/* Timeline Vertical Line */
+.timeline-track {
+  position: relative;
+}
+
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--secondary-color), var(--primary-color), transparent);
+  transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+  .timeline-track::before {
+    left: 20px;
+  }
+}
+
+.timeline-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--card-bg);
+  border: 2px solid var(--secondary-color);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .timeline-dot {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+/* Gallery & Masonry Grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+  }
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  aspect-ratio: 4 / 5;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-item:hover img {
+  transform: scale(1.08);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(20, 10, 15, 0.75) 0%, transparent 60%);
+  opacity: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.25rem;
+  color: white;
+  transition: opacity 0.4s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+/* Lightbox Modal */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 8, 9, 0.94);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.lightbox-modal.active {
+  display: flex;
+}
+
+.lightbox-img-wrapper {
+  max-width: 90vw;
+  max-height: 85vh;
+  text-align: center;
+  position: relative;
+}
+
+.lightbox-img-wrapper img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.lightbox-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.lightbox-nav-btn:hover {
+  background: var(--primary-color);
+  border-color: var(--secondary-color);
+}
+
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+.lightbox-close { top: 20px; right: 20px; position: fixed; }
+
+/* RSVP Interactive Card */
+.rsvp-card {
+  background: var(--capiz-bg);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(43, 33, 30, 0.08), 0 0 0 1px rgba(197, 160, 89, 0.3);
+  padding: 3rem 2.5rem;
+  position: relative;
+}
+
+@media (max-width: 640px) {
+  .rsvp-card {
+    padding: 1.5rem 0.875rem;
+    border-radius: 14px;
+  }
+}
+
+.radio-tab-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .radio-tab-group {
+    gap: 0.5rem;
+  }
+}
+
+.radio-tab {
+  border: 1.5px solid rgba(197, 160, 89, 0.35);
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  background: #FFFDF8;
+}
+
+@media (max-width: 640px) {
+  .radio-tab {
+    padding: 0.875rem 0.375rem;
+    border-radius: 10px;
+  }
+}
+
+.radio-tab.active {
+  border-color: var(--primary-color);
+  background: #FFF;
+  box-shadow: 0 6px 20px var(--burgundy-glow);
+}
+
+.radio-tab.active .radio-title {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Floating Sampaguita Blossom Petals */
+.petal-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.floating-petal {
+  position: absolute;
+  width: 16px;
+  height: 22px;
+  background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #F8F3ED 70%, #E8DCBE 100%);
+  border-radius: 50% 15% 50% 50%;
+  box-shadow: 0 2px 6px rgba(197, 160, 89, 0.25);
+  animation: fallDown linear infinite;
+}
+
+@keyframes fallDown {
+  0% { transform: translateY(-40px) rotate(0deg) scale(0.9); opacity: 0; }
+  12% { opacity: 0.9; }
+  85% { opacity: 0.85; }
+  100% { transform: translateY(105vh) rotate(380deg) scale(1.05); opacity: 0; }
+}
+
+/* Sacred Traditions (Ang Kandila, Ang Belo, Ang Yugal, Ang Arrhas) */
+.tradition-card {
+  background: var(--capiz-bg);
+  border: 1px solid rgba(197, 160, 89, 0.4);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.tradition-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(123, 36, 51, 0.1);
+  border-color: var(--secondary-color);
+}
+
+.tradition-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gold-gradient);
+}
+
+.tradition-icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 0 auto 1.25rem auto;
+  background: rgba(197, 160, 89, 0.12);
+  border: 1.5px solid var(--secondary-color);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+/* Attire Guide Card */
+.attire-card {
+  background: var(--capiz-bg);
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(43, 33, 30, 0.05);
+}
+
+.swatch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.swatch-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border: 2px solid #FFFDF8;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.swatch-circle:hover {
+  transform: scale(1.1);
+}
+
+/* Toast Notifications */
+.toast-notice {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #2B211E;
+  color: #FFFDF8;
+  border: 1px solid var(--secondary-color);
+  padding: 12px 24px;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(43, 33, 30, 0.35);
+  font-size: 14px;
+  z-index: 10001;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-notice.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .toast-notice {
+    width: 90%;
+    max-width: 340px;
+    padding: 10px 18px;
+    font-size: 12px;
+    bottom: 16px;
+    border-radius: 20px;
+  }
+  .music-toggle-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* Accordion Smooth Transition */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.3s ease;
+}
+
+.accordion-item.open .accordion-content {
+  max-height: 500px;
+}
+
+.accordion-item.open .accordion-icon {
+  transform: rotate(180deg);
+}
+
+/* Respect user's reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
