@@ -49,7 +49,7 @@ php artisan key:generate --show
 
 Paste the returned value into `APP_KEY`. Do not commit the populated Forge environment file.
 
-`ADMIN_PASSWORD` is required the first time the production database is seeded. Use a long unique value. `SEED_DEMO_DATA=false` prevents the example guest and RSVP records from being added in production.
+`ADMIN_PASSWORD` is required the first time the production database is seeded. Use a long unique value. `SEED_DEMO_DATA=true` adds the example guests and RSVPs in production.
 
 ## Forge deployment script
 

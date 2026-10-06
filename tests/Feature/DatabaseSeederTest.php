@@ -15,7 +15,7 @@ class DatabaseSeederTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    public function test_seeded_admin_uses_configured_credentials_and_demo_guests_remain_disabled(): void
+    public function test_seeded_admin_uses_configured_credentials_and_demo_guests_are_created(): void
     {
         config()->set('wedding.admin', [
             'username' => 'forge-admin',
@@ -23,7 +23,7 @@ class DatabaseSeederTest extends TestCase
             'name' => 'Forge Administrator',
             'password' => 'a-test-only-password',
         ]);
-        config()->set('wedding.seed_demo_data', false);
+        config()->set('wedding.seed_demo_data', true);
 
         (new DatabaseSeeder)->run();
 
@@ -33,7 +33,8 @@ class DatabaseSeederTest extends TestCase
         $this->assertSame('Forge Administrator', $admin->FullName);
         $this->assertTrue(Hash::check('a-test-only-password', $admin->PasswordHash));
         $this->assertTrue(Hash::check('a-test-only-password', $user->password));
-        $this->assertSame(0, Guest::count());
+        $this->assertSame(6, Guest::count());
+        $this->assertSame('Atty. Fernando Gomez', Guest::where('InvitationCode', 'WED-8F29K')->value('FullName'));
     }
 
     public function test_production_seeding_requires_an_admin_password(): void
