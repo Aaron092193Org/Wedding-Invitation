@@ -1,58 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Majh & Aaron Wedding
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a Laravel 13 application with static wedding and admin pages in `public/` and JSON APIs served by Laravel. It is a PHP application, not a Node server.
 
-## About Laravel
+## Runtime requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.4 recommended (PHP 8.3 is the framework minimum)
+- Composer 2
+- MySQL in production, or SQLite for local development
+- Node.js 20.19+ only when rebuilding the optional Vite starter assets
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+There is intentionally no `npm start` command. Forge serves the application through Nginx and PHP-FPM. The checked-in wedding pages load `/css/wedding.css`, `/css/admin.css`, `/js/wedding.js`, and `/js/admin.js` directly from `public/`; they do not use the Vite build output.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Local setup
 
-## Learning Laravel
+PowerShell:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```powershell
+composer install
+Copy-Item .env.example .env
+New-Item -ItemType File -Path database/database.sqlite -Force
+php artisan key:generate
+php artisan migrate:fresh --seed
+npm ci
+npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Open `http://127.0.0.1:8000`. The admin portal is at `http://127.0.0.1:8000/admin/`.
 
-## Contributing
+`SEED_DEMO_DATA=true` creates the example guests and RSVPs locally. When `ADMIN_PASSWORD` is blank outside production, the local fallback is `WeddingAdmin2026!`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The Vite commands prove the Node toolchain works, but they are not required to render the current wedding pages. For day-to-day work, `php artisan serve` is enough unless `resources/css/app.css` or `resources/js/app.js` is connected to a Blade view later.
 
-## Code of Conduct
+## Forge site settings
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Create the Forge site as a PHP / Laravel site with:
 
-## Security Vulnerabilities
+- PHP version: 8.4
+- Web directory: `/public`
+- A MySQL database and database user assigned to the site
+- SSL enabled before setting `SESSION_SECURE_COOKIE=true`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+In Forge's Environment editor, copy `.env.forge.example`, then replace every example domain, database value, email, and password. Generate `APP_KEY` from the Forge site's command runner:
 
-## License
+```bash
+php artisan key:generate --show
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Paste the returned value into `APP_KEY`. Do not commit the populated Forge environment file.
+
+`ADMIN_PASSWORD` is required the first time the production database is seeded. Use a long unique value. `SEED_DEMO_DATA=true` adds the example guests and RSVPs in production.
+
+## Forge deployment script
+
+Use this in Forge's Deploy Script editor, replacing the first path with the site's actual root directory:
+
+```bash
+cd /home/forge/example.com
+
+git pull origin "$FORGE_SITE_BRANCH"
+
+$FORGE_COMPOSER install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+$FORGE_PHP artisan config:clear
+$FORGE_PHP artisan migrate --force
+$FORGE_PHP artisan optimize
+
+( flock -w 10 9 || exit 1
+    echo 'Restarting PHP-FPM...'
+    sudo -S service "$FORGE_PHP_FPM" reload
+) 9>/tmp/fpmlock
+```
+
+Run this once after the first successful migration to create the initial wedding content and admin account:
+
+```bash
+php artisan db:seed --force
+```
+
+Do not add `npm start`, `npm run dev`, or a Node daemon. If the application is later changed to reference Vite assets, add these two build commands before `php artisan optimize`:
+
+```bash
+npm ci
+npm run build
+```
+
+## Deployment checks
+
+After deployment, check:
+
+- `https://your-domain.example/up` returns HTTP 200.
+- `https://your-domain.example/api/public/wedding-info` returns JSON.
+- `https://your-domain.example/admin/` displays the admin login.
+- `storage/` and `bootstrap/cache/` are writable by the Forge site user.
+- Forge's deployment output has no database authentication, missing `APP_KEY`, or PHP version errors.
+
+If the home page loads but wedding data does not, the static HTML is working while Laravel or MySQL is not. Check the public API URL above and inspect `storage/logs/laravel.log` on the server.
