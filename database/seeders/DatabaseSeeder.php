@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\WeddingSetting;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use RuntimeException;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,22 +24,40 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Seed Admin User
-        $hashedPassword = Hash::make('WeddingAdmin2026!');
-        if (!AdminUser::where('Username', 'admin')->exists()) {
+        $adminUsername = (string) config('wedding.admin.username');
+        $adminEmail = (string) config('wedding.admin.email');
+        $adminName = (string) config('wedding.admin.name');
+        $adminNeedsCreating = ! AdminUser::where('Username', $adminUsername)->exists();
+        $userNeedsCreating = ! User::where('email', $adminEmail)->exists();
+
+        if ($adminNeedsCreating || $userNeedsCreating) {
+            $adminPassword = (string) config('wedding.admin.password');
+
+            if ($adminPassword === '') {
+                if (app()->isProduction()) {
+                    throw new RuntimeException('ADMIN_PASSWORD must be configured before seeding production.');
+                }
+
+                $adminPassword = 'WeddingAdmin2026!';
+            }
+
+            $hashedPassword = Hash::make($adminPassword);
+        }
+
+        if ($adminNeedsCreating) {
             AdminUser::create([
-                'Username' => 'admin',
-                'Email' => 'admin@wedding.local',
-                'FullName' => 'Wedding Administrator',
+                'Username' => $adminUsername,
+                'Email' => $adminEmail,
+                'FullName' => $adminName,
                 'PasswordHash' => $hashedPassword,
                 'CreatedAt' => now(),
             ]);
         }
 
-        if (!User::where('email', 'admin@wedding.local')->exists()) {
+        if ($userNeedsCreating) {
             User::create([
-                'name' => 'Wedding Administrator',
-                'email' => 'admin@wedding.local',
+                'name' => $adminName,
+                'email' => $adminEmail,
                 'password' => $hashedPassword,
             ]);
         }
@@ -171,7 +190,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // 8. Seed Pre-Registered Guests
-        if (Guest::count() === 0) {
+        if (config('wedding.seed_demo_data') && Guest::count() === 0) {
             $guests = [
                 ['FullName' => 'Atty. Fernando Gomez', 'Email' => 'fgomez@example.com', 'MobileNumber' => '+639171112222', 'AllowedGuests' => 2, 'InvitationCode' => 'WED-8F29K', 'RsvpStatus' => 'Attending', 'Notes' => 'Principal Sponsor', 'CreatedAt' => now()],
                 ['FullName' => 'Dr. Benjamin Reyes', 'Email' => 'breyes@example.com', 'MobileNumber' => '+639173334444', 'AllowedGuests' => 2, 'InvitationCode' => 'WED-K93PL', 'RsvpStatus' => 'Attending', 'Notes' => 'Principal Sponsor', 'CreatedAt' => now()],
