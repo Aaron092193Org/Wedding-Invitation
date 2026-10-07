@@ -115,6 +115,14 @@ function applyThemeAndConfig(cfg) {
     if (numInput && !personalizedGuest) {
         numInput.max = cfg.maxGuestsPerRsvp || 4;
     }
+
+    // 8. Background Music Configuration
+    if (cfg.backgroundMusic) {
+        if (!audioPlayer) audioPlayer = document.getElementById('wedding-audio');
+        if (audioPlayer && !isAudioPlaying && audioPlayer.getAttribute('src') !== cfg.backgroundMusic) {
+            audioPlayer.src = cfg.backgroundMusic;
+        }
+    }
 }
 
 // 2. Real-time Countdown Timer
@@ -790,7 +798,7 @@ function toggleMusic() {
         if (toggleBtn) {
             toggleBtn.classList.remove('playing');
             toggleBtn.innerHTML = `♫`;
-            toggleBtn.title = 'Play Background Music';
+            toggleBtn.title = 'Play: Puede ng Mangarap - Lyca Gairanod';
         }
     } else {
         const playPromise = audioPlayer.play();
@@ -800,7 +808,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause Background Music';
+                    toggleBtn.title = 'Pause: Puede ng Mangarap - Lyca Gairanod';
                 }
             }).catch(e => {
                 console.log('Audio file playback prevented or missing, starting soothing ambient chime fallback:', e);
@@ -809,6 +817,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
+                    toggleBtn.title = 'Pause: Puede ng Mangarap - Lyca Gairanod';
                 }
             });
         }
