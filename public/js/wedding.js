@@ -504,7 +504,47 @@ function openInvitation() {
     }
 }
 
-// 5. Load Timeline
+// 5. Load Timeline (Horizontal Order)
+function scrollTimeline(direction) {
+    const el = document.getElementById('timeline-horizontal-viewport');
+    if (!el) return;
+    const scrollAmount = 260;
+    el.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+    });
+}
+
+function attachTimelineTouchEvents() {
+    const slider = document.getElementById('timeline-horizontal-viewport');
+    if (!slider) return;
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.style.cursor = 'grabbing';
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+    });
+    slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.style.cursor = '';
+    });
+    slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.style.cursor = '';
+    });
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+    });
+}
+
 async function loadTimeline() {
     try {
         const res = await fetch('/api/public/timeline');
@@ -514,32 +554,65 @@ async function loadTimeline() {
         const container = document.getElementById('timeline-container');
         if (!container) return;
 
-        const timelineHtml = items.map((item, index) => {
-            const isEven = index % 2 === 0;
-            return `
-            <div class="relative flex items-start md:items-center md:justify-normal ${isEven ? 'md:flex-row-reverse' : ''} group mb-8">
-              <div class="hidden md:block w-5/12 ${isEven ? 'text-left pl-8' : 'text-right pr-8'}">
-                <span class="font-cinzel text-xs font-bold text-wedding-primary tracking-[0.2em] uppercase block mb-1">${escapeHtml(item.time)}</span>
-                <h4 class="font-cinzel text-lg sm:text-xl font-bold text-stone-800 tracking-wide">${escapeHtml(item.title)}</h4>
-                ${item.description ? `<p class="font-serif italic text-stone-600 text-sm mt-1 leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
-              </div>
+        const timelineHtml = `
+          <div class="timeline-horizontal-container relative">
+            <!-- Left & Right Arrow Navigation Buttons -->
+            <button type="button" class="hidden sm:flex absolute -left-2 sm:-left-3 top-[54px] z-20 w-9 h-9 rounded-full bg-white/95 border border-amber-300 text-wedding-primary shadow-md items-center justify-center hover:bg-wedding-primary hover:text-white transition-all cursor-pointer" onclick="scrollTimeline('left')" aria-label="Previous events">
+              <i class="fas fa-chevron-left text-xs"></i>
+            </button>
+            <button type="button" class="hidden sm:flex absolute -right-2 sm:-right-3 top-[54px] z-20 w-9 h-9 rounded-full bg-white/95 border border-amber-300 text-wedding-primary shadow-md items-center justify-center hover:bg-wedding-primary hover:text-white transition-all cursor-pointer" onclick="scrollTimeline('right')" aria-label="Next events">
+              <i class="fas fa-chevron-right text-xs"></i>
+            </button>
 
-              <div class="timeline-dot shrink-0 md:mx-auto z-10">
-                <i class="fas fa-${getTimelineIcon(item.icon)}"></i>
-              </div>
+            <!-- Scrollable Track Viewport -->
+            <div class="timeline-horizontal-viewport" id="timeline-horizontal-viewport">
+              <div class="timeline-horizontal-track">
+                ${items.map((item, index) => {
+                    let lineClass = 'line-middle';
+                    if (index === 0) lineClass = 'line-first';
+                    else if (index === items.length - 1) lineClass = 'line-last';
+                    if (items.length === 1) lineClass = 'hidden';
 
-              <div class="flex-1 min-w-0 pl-4 md:pl-0 md:w-5/12 ${isEven ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}">
-                <div class="md:hidden">
-                  <span class="font-cinzel text-xs font-bold text-wedding-primary tracking-[0.2em] uppercase block mb-1">${escapeHtml(item.time)}</span>
-                  <h4 class="font-cinzel text-base sm:text-lg font-bold text-stone-800 leading-snug tracking-wide">${escapeHtml(item.title)}</h4>
-                  ${item.description ? `<p class="font-serif italic text-stone-600 text-xs sm:text-sm mt-1 leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
-                </div>
+                    return `
+                    <div class="timeline-step-item group">
+                      <!-- Connector Line Segment -->
+                      <div class="timeline-step-line ${lineClass}"></div>
+
+                      <!-- Step Card Content -->
+                      <div class="timeline-step-card flex flex-col items-center">
+                        <!-- Time Badge -->
+                        <span class="inline-block font-cinzel text-xs font-bold text-wedding-primary tracking-[0.18em] uppercase bg-amber-50/90 border border-amber-200/70 px-3 py-1 rounded-full shadow-2xs mb-2.5 z-10">
+                          ${escapeHtml(item.time)}
+                        </span>
+
+                        <!-- Circular Dot on Connector Line -->
+                        <div class="timeline-dot mb-3">
+                          <i class="fas fa-${getTimelineIcon(item.icon)}"></i>
+                        </div>
+
+                        <!-- Event Title & Description -->
+                        <h4 class="font-cinzel text-sm sm:text-base font-bold text-stone-900 tracking-wide mb-1 leading-snug">
+                          ${escapeHtml(item.title)}
+                        </h4>
+                        ${item.description ? `
+                          <p class="font-serif italic text-stone-600 text-xs sm:text-sm leading-relaxed max-w-[210px] mx-auto">
+                            ${escapeHtml(item.description)}
+                          </p>` : ''}
+                      </div>
+                    </div>`;
+                }).join('')}
               </div>
-            </div>`;
-        }).join('');
+            </div>
+
+            <!-- Mobile Scroll Hint -->
+            <p class="text-center text-[11px] sm:text-xs text-stone-400 italic mt-1 font-serif">
+              <i class="fas fa-arrows-alt-h mr-1 text-wedding-secondary"></i> Scroll or swipe horizontally to view all events
+            </p>
+          </div>
+        `;
 
         const bottomFlourish = `
-          <div class="text-center mt-12 pt-8 border-t border-amber-200/50">
+          <div class="text-center mt-8 pt-8 border-t border-amber-200/50">
             <p class="font-script text-3xl sm:text-4xl text-wedding-secondary mb-2">Thank you for being here!</p>
             <div class="flex items-center justify-center gap-3 text-wedding-secondary text-xs">
               <span class="text-stone-400">—— ❧</span>
@@ -550,6 +623,7 @@ async function loadTimeline() {
         `;
 
         container.innerHTML = timelineHtml + bottomFlourish;
+        attachTimelineTouchEvents();
     } catch (e) {
         console.error('Failed to load timeline:', e);
     }
