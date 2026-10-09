@@ -31,8 +31,8 @@
 <body class="relative selection:bg-rose-950 selection:text-amber-200">
 
   <!-- Floating Audio Background Player -->
-  <audio id="wedding-audio" loop preload="auto" src="/audio/puede-nang-mangarap.mp3"></audio>
-  <button id="music-toggle" class="music-toggle-btn" title="Play: Puede ng Mangarap - Lyca Gairanod">
+  <audio id="wedding-audio" loop preload="auto" src="/audio/palagi-wedding-version.mp3"></audio>
+  <button id="music-toggle" class="music-toggle-btn" title="Play: Palagi (Wedding Version)">
     ♫
   </button>
 
@@ -100,7 +100,7 @@
     <section class="py-16 px-4 bg-white/70 backdrop-blur border-b border-stone-200/60">
       <div class="max-w-4xl mx-auto text-center">
         <span class="text-xs uppercase tracking-widest font-semibold text-wedding-secondary block mb-1">Counting Down</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 mb-2">To Forever</h2>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 mb-2">To Forever</h2>
         <div class="ornament-divider">
           <i class="fas fa-hourglass-half text-wedding-secondary text-xs"></i>
         </div>
@@ -130,58 +130,111 @@
       </div>
     </section>
 
-    <!-- 2. OUR STORY SECTION -->
-    <section class="py-20 px-4 max-w-6xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">Our Love Story</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">How Two Paths Became One</h2>
+    <!-- 2. OUR STORY SECTION (1 CONTAINER ONLY & 3S AUTO-CAROUSEL) -->
+    <section class="py-20 px-4 max-w-5xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Our Love Story</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">How Two Paths Became One</h2>
         <div class="ornament-divider">
           <i class="fas fa-heart text-wedding-primary text-xs"></i>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Chapter 1 -->
-        <div class="story-card calado-frame group">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img id="story-photo-1" src="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=800&q=80" alt="How we met" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+      <!-- 1 SINGLE UNIFIED LOVE STORY CONTAINER -->
+      <div class="capiz-card calado-frame p-4 sm:p-8 md:p-10 relative overflow-hidden shadow-sm" id="story-card">
+        <div class="calado-corner-tl"></div>
+        <div class="calado-corner-tr"></div>
+        <div class="calado-corner-bl"></div>
+        <div class="calado-corner-br"></div>
+
+        <!-- CAROUSEL VIEWPORT -->
+        <div class="story-viewport relative rounded-2xl overflow-hidden" id="story-viewport">
+          <!-- The slides track -->
+          <div class="story-track" id="story-track">
+            <!-- Chapter 1 -->
+            <div class="story-slide" data-index="0">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center p-2 sm:p-4">
+                <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-amber-200/60 relative bg-stone-900 group">
+                  <img id="story-photo-1" src="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=800&q=80" alt="How we met" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" loading="eager" />
+                  <div class="absolute bottom-3 left-3 bg-stone-900/75 backdrop-blur-sm text-amber-200 text-xs px-3 py-1 rounded-full border border-amber-400/30 font-serif">
+                    Chapter I
+                  </div>
+                </div>
+                <div class="text-center md:text-left px-2 sm:px-4">
+                  <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Chapter I</span>
+                  <h3 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 mb-3">How We Met</h3>
+                  <p id="story-how-we-met" class="text-stone-600 text-sm sm:text-base leading-relaxed">
+                    We met on a rainy afternoon at a coffee shop in BGC. A spilled latte led to laughter and a four-hour conversation that neither of us wanted to end.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chapter 2 -->
+            <div class="story-slide" data-index="1">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center p-2 sm:p-4">
+                <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-amber-200/60 relative bg-stone-900 group">
+                  <img id="story-photo-2" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" alt="Our journey" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
+                  <div class="absolute bottom-3 left-3 bg-stone-900/75 backdrop-blur-sm text-amber-200 text-xs px-3 py-1 rounded-full border border-amber-400/30 font-serif">
+                    Chapter II
+                  </div>
+                </div>
+                <div class="text-center md:text-left px-2 sm:px-4">
+                  <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Chapter II</span>
+                  <h3 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 mb-3">Our Journey</h3>
+                  <p id="story-our-journey" class="text-stone-600 text-sm sm:text-base leading-relaxed">
+                    Over six wonderful years, we explored breathtaking mountaintops, shared quiet Sunday mornings, cooked countless dinners, and stood by each other through life's trials.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chapter 3 -->
+            <div class="story-slide" data-index="2">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center p-2 sm:p-4">
+                <div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md border border-amber-200/60 relative bg-stone-900 group">
+                  <img id="story-photo-3" src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80" alt="The proposal" class="w-full h-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
+                  <div class="absolute bottom-3 left-3 bg-stone-900/75 backdrop-blur-sm text-amber-200 text-xs px-3 py-1 rounded-full border border-amber-400/30 font-serif">
+                    Chapter III
+                  </div>
+                </div>
+                <div class="text-center md:text-left px-2 sm:px-4">
+                  <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Chapter III</span>
+                  <h3 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 mb-3">The Proposal</h3>
+                  <p id="story-the-proposal" class="text-stone-600 text-sm sm:text-base leading-relaxed">
+                    During a sunset stroll along the pristine white sands of Boracay, surrounded by twilight and whispering waves, Aaron got down on one knee and asked the question that changed forever.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="p-6">
-            <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Chapter I</span>
-            <h3 class="font-serif text-2xl font-bold text-stone-800 mb-3">How We Met</h3>
-            <p id="story-how-we-met" class="text-stone-600 text-sm leading-relaxed">
-              We met on a rainy afternoon at a coffee shop in BGC. A spilled latte led to laughter and a four-hour conversation that neither of us wanted to end.
-            </p>
-          </div>
+
+          <!-- Left / Right Navigation Buttons -->
+          <button type="button" id="story-prev-btn" class="story-slider-btn prev-btn" aria-label="Previous Chapter">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button type="button" id="story-next-btn" class="story-slider-btn next-btn" aria-label="Next Chapter">
+            <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
 
-        <!-- Chapter 2 -->
-        <div class="story-card calado-frame group">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img id="story-photo-2" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" alt="Our journey" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
-          </div>
-          <div class="p-6">
-            <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Chapter II</span>
-            <h3 class="font-serif text-2xl font-bold text-stone-800 mb-3">Our Journey</h3>
-            <p id="story-our-journey" class="text-stone-600 text-sm leading-relaxed">
-              Over six wonderful years, we explored breathtaking mountaintops, shared quiet Sunday mornings, cooked countless dinners, and stood by each other through life's trials.
-            </p>
-          </div>
+        <!-- Chapter Tabs / Indicators at Bottom of Single Container -->
+        <div class="flex justify-center items-center gap-2 sm:gap-3 mt-6 pt-4 border-t border-amber-200/40 flex-wrap" id="story-tabs">
+          <button type="button" class="story-tab-btn active" data-index="0">
+            <span class="hidden sm:inline">Chapter I: </span>How We Met
+          </button>
+          <button type="button" class="story-tab-btn" data-index="1">
+            <span class="hidden sm:inline">Chapter II: </span>Our Journey
+          </button>
+          <button type="button" class="story-tab-btn" data-index="2">
+            <span class="hidden sm:inline">Chapter III: </span>The Proposal
+          </button>
         </div>
 
-        <!-- Chapter 3 -->
-        <div class="story-card calado-frame group">
-          <div class="aspect-[4/3] overflow-hidden">
-            <img id="story-photo-3" src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80" alt="The proposal" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
-          </div>
-          <div class="p-6">
-            <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Chapter III</span>
-            <h3 class="font-serif text-2xl font-bold text-stone-800 mb-3">The Proposal</h3>
-            <p id="story-the-proposal" class="text-stone-600 text-sm leading-relaxed">
-              During a sunset stroll along the pristine white sands of Boracay, surrounded by twilight and whispering waves, Aaron got down on one knee and asked the question that changed forever.
-            </p>
-          </div>
-        </div>
+        <!-- Touch Hint -->
+        <p class="text-center text-xs text-stone-400 italic mt-3 font-serif">
+          Swipe left or right to read our chapters
+        </p>
       </div>
     </section>
 
@@ -189,135 +242,151 @@
     <section class="py-20 px-4 bg-stone-100/70 border-y border-stone-200">
       <div class="max-w-5xl mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16">
-          <span class="font-script text-3xl text-wedding-secondary block mb-1">Celebration Details</span>
-          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Sacred Matrimony & Reception</h2>
+          <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Celebration Details</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Sacred Matrimony & Reception</h2>
           <div class="ornament-divider">
             <i class="fas fa-church text-wedding-primary text-xs"></i>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <!-- Ceremony Card -->
-          <div class="capiz-card calado-frame p-6 sm:p-8 text-center relative overflow-hidden flex flex-col justify-between">
-            <div class="calado-corner-tl"></div>
-            <div class="calado-corner-tr"></div>
-            <div>
-              <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-wedding-primary text-2xl border border-amber-200/80 shadow-sm">
-                <i class="fas fa-church"></i>
-              </div>
-              <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">The Ceremony</span>
-              <h3 class="font-serif text-2xl font-bold text-stone-800 mb-2">The Holy Matrimony</h3>
-              <p id="ceremony-date" class="font-semibold text-wedding-primary text-base mb-1">February 26, 2027</p>
-              <p id="ceremony-time" class="text-sm text-stone-600 mb-4 font-medium">3:00 PM</p>
-              
-              <div class="border-t border-stone-200/80 pt-4 mt-2">
-                <h4 id="ceremony-venue" class="font-serif text-xl font-bold text-stone-900 mb-1">Our Lady of La Sallette Quasi Parish</h4>
-                <p id="ceremony-address" class="text-stone-600 text-sm max-w-sm mx-auto">
-                  M. Villarica Road Mountain View, Barangay Muzon, City of San Jose del Monte, Bulacan
-                </p>
-              </div>
-            </div>
-            
-            <div class="mt-8">
-              <a id="btn-ceremony-map" href="https://maps.app.goo.gl/zTNEPZgL3Nvw2beD8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-wedding-secondary text-stone-800 text-xs font-semibold uppercase tracking-wider hover:bg-wedding-secondary hover:text-white transition-all shadow-sm">
-                <span>View on Google Maps</span>
-                <i class="fas fa-external-link-alt text-xs"></i>
-              </a>
-            </div>
-          </div>
+        <!-- 1 SINGLE UNIFIED CELEBRATION CONTAINER -->
+        <div class="capiz-card calado-frame p-6 sm:p-10 md:p-12 relative overflow-hidden shadow-sm max-w-4xl mx-auto" id="celebration-card">
+          <div class="calado-corner-tl"></div>
+          <div class="calado-corner-tr"></div>
+          <div class="calado-corner-bl"></div>
+          <div class="calado-corner-br"></div>
 
-          <!-- Reception Card -->
-          <div class="capiz-card calado-frame p-6 sm:p-8 text-center relative overflow-hidden flex flex-col justify-between">
-            <div class="calado-corner-tl"></div>
-            <div class="calado-corner-tr"></div>
-            <div>
-              <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-wedding-secondary text-2xl border border-amber-200/80 shadow-sm">
-                <i class="fas fa-glass-cheers"></i>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative items-stretch">
+            <!-- Left: Ceremony -->
+            <div class="text-center flex flex-col justify-between">
+              <div>
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-wedding-primary text-2xl border border-amber-200/80 shadow-xs">
+                  <i class="fas fa-church"></i>
+                </div>
+                <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">The Ceremony</span>
+                <h3 class="font-serif text-2xl font-bold text-stone-800 mb-2">The Holy Matrimony</h3>
+                <p id="ceremony-date" class="font-semibold text-wedding-primary text-base mb-1">February 26, 2027</p>
+                <p id="ceremony-time" class="text-sm text-stone-600 mb-4 font-medium">3:00 PM</p>
+                
+                <div class="border-t border-amber-200/50 pt-4 mt-2">
+                  <h4 id="ceremony-venue" class="font-serif text-xl font-bold text-stone-900 mb-1">Our Lady of La Sallette Quasi Parish</h4>
+                  <p id="ceremony-address" class="text-stone-600 text-sm max-w-sm mx-auto">
+                    M. Villarica Road Mountain View, Barangay Muzon, City of San Jose del Monte, Bulacan
+                  </p>
+                </div>
               </div>
-              <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">The Reception</span>
-              <h3 class="font-serif text-2xl font-bold text-stone-800 mb-2">The Wedding Reception</h3>
-              <p id="reception-date" class="font-semibold text-wedding-primary text-base mb-1">February 26, 2027</p>
-              <p id="reception-time" class="text-sm text-stone-600 mb-4 font-medium">5:00 PM</p>
               
-              <div class="border-t border-stone-200/80 pt-4 mt-2">
-                <h4 id="reception-venue" class="font-serif text-xl font-bold text-stone-900 mb-1">The Grounds Events</h4>
-                <p id="reception-address" class="text-stone-600 text-sm max-w-sm mx-auto">
-                  9022 Provincial Road, Sitio Gulod, Sapang Palay Proper, City of San Jose del Monte, Bulacan
-                </p>
+              <div class="mt-8">
+                <a id="btn-ceremony-map" href="https://maps.app.goo.gl/zTNEPZgL3Nvw2beD8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-wedding-secondary text-stone-800 text-xs font-semibold uppercase tracking-wider hover:bg-wedding-secondary hover:text-white transition-all shadow-sm">
+                  <span>View on Google Maps</span>
+                  <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
               </div>
             </div>
 
-            <div class="mt-8">
-              <a id="btn-reception-map" href="https://maps.app.goo.gl/1yj3RXyGy8ZQ5sEu8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-wedding-secondary text-stone-800 text-xs font-semibold uppercase tracking-wider hover:bg-wedding-secondary hover:text-white transition-all shadow-sm">
-                <span>View on Google Maps</span>
-                <i class="fas fa-external-link-alt text-xs"></i>
-              </a>
+            <!-- Vertical Divider on desktop, Horizontal Divider on mobile -->
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-amber-300/60 to-transparent -translate-x-1/2 pointer-events-none"></div>
+            <div class="md:hidden w-full h-px bg-gradient-to-r from-transparent via-amber-300/60 to-transparent my-2"></div>
+
+            <!-- Right: Reception -->
+            <div class="text-center flex flex-col justify-between">
+              <div>
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-wedding-secondary text-2xl border border-amber-200/80 shadow-xs">
+                  <i class="fas fa-glass-cheers"></i>
+                </div>
+                <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">The Reception</span>
+                <h3 class="font-serif text-2xl font-bold text-stone-800 mb-2">The Wedding Reception</h3>
+                <p id="reception-date" class="font-semibold text-wedding-primary text-base mb-1">February 26, 2027</p>
+                <p id="reception-time" class="text-sm text-stone-600 mb-4 font-medium">5:00 PM</p>
+                
+                <div class="border-t border-amber-200/50 pt-4 mt-2">
+                  <h4 id="reception-venue" class="font-serif text-xl font-bold text-stone-900 mb-1">The Grounds Events</h4>
+                  <p id="reception-address" class="text-stone-600 text-sm max-w-sm mx-auto">
+                    9022 Provincial Road, Sitio Gulod, Sapang Palay Proper, City of San Jose del Monte, Bulacan
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-8">
+                <a id="btn-reception-map" href="https://maps.app.goo.gl/1yj3RXyGy8ZQ5sEu8" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-wedding-secondary text-stone-800 text-xs font-semibold uppercase tracking-wider hover:bg-wedding-secondary hover:text-white transition-all shadow-sm">
+                  <span>View on Google Maps</span>
+                  <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- NEW SECTION: TRADISYONG KASALANG FILIPINO (SACRED WEDDING RITES) -->
-    <section class="py-20 px-4 max-w-6xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">Sacred Rituals</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Filipino Wedding Traditions</h2>
+    <!-- 4. SACRED WEDDING RITES (1 CONTAINER ONLY) -->
+    <section class="py-20 px-4 max-w-5xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Sacred Rituals</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Filipino Wedding Traditions</h2>
         <div class="ornament-divider">
           <i class="fas fa-gem text-wedding-primary text-xs"></i>
         </div>
-        <p class="text-stone-600 text-sm sm:text-base max-w-xl mx-auto">
+        <p class="text-stone-600 text-sm max-w-lg mx-auto">
           Four cherished cultural rites symbolizing faith, infinite commitment, and shared blessings before God and family.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- 1. Ang Kandila -->
-        <div class="tradition-card">
-          <div class="tradition-icon-wrapper">
-            <i class="fas fa-fire"></i>
-          </div>
-          <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Light of Christ</span>
-          <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">The Candles (Ang Kandila)</h3>
-          <p class="text-stone-600 text-xs leading-relaxed">
-            Symbolizing the light of Christ guiding the couple, illuminating their shared path toward love, peace, and steadfast devotion.
-          </p>
-        </div>
+      <!-- 1 SINGLE UNIFIED SACRED RITUALS CONTAINER -->
+      <div class="capiz-card calado-frame p-6 sm:p-10 md:p-12 relative overflow-hidden shadow-sm" id="sacred-rituals-card">
+        <div class="calado-corner-tl"></div>
+        <div class="calado-corner-tr"></div>
+        <div class="calado-corner-bl"></div>
+        <div class="calado-corner-br"></div>
 
-        <!-- 2. Ang Belo -->
-        <div class="tradition-card">
-          <div class="tradition-icon-wrapper">
-            <i class="fas fa-dove"></i>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+          <!-- 1. Ang Kandila -->
+          <div class="p-4 sm:p-5 rounded-xl bg-white/45 border border-amber-200/50 hover:bg-white/70 transition-all flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-wedding-primary text-xl border border-amber-200/80 mb-3 shadow-xs">
+              <i class="fas fa-fire"></i>
+            </div>
+            <span class="text-[11px] uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Light of Christ</span>
+            <h3 class="font-serif text-lg font-bold text-stone-900 mb-1.5 leading-snug">The Candles<br><span class="text-xs font-normal text-stone-500 italic font-serif">(Ang Kandila)</span></h3>
+            <p class="text-stone-600 text-xs leading-relaxed mt-1">
+              Symbolizing the light of Christ guiding the couple, illuminating their shared path toward love, peace, and steadfast devotion.
+            </p>
           </div>
-          <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Clothed in Unity</span>
-          <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">The Veil (Ang Belo)</h3>
-          <p class="text-stone-600 text-xs leading-relaxed">
-            Symbolizing two lives clothed as one, bound together and protected under the grace and blessing of Almighty God.
-          </p>
-        </div>
 
-        <!-- 3. Ang Yugal -->
-        <div class="tradition-card">
-          <div class="tradition-icon-wrapper">
-            <i class="fas fa-infinity"></i>
+          <!-- 2. Ang Belo -->
+          <div class="p-4 sm:p-5 rounded-xl bg-white/45 border border-amber-200/50 hover:bg-white/70 transition-all flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-wedding-primary text-xl border border-amber-200/80 mb-3 shadow-xs">
+              <i class="fas fa-dove"></i>
+            </div>
+            <span class="text-[11px] uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Clothed in Unity</span>
+            <h3 class="font-serif text-lg font-bold text-stone-900 mb-1.5 leading-snug">The Veil<br><span class="text-xs font-normal text-stone-500 italic font-serif">(Ang Belo)</span></h3>
+            <p class="text-stone-600 text-xs leading-relaxed mt-1">
+              Symbolizing two lives clothed as one, bound together and protected under the grace and blessing of Almighty God.
+            </p>
           </div>
-          <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Infinite Bond</span>
-          <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">The Cord (Ang Yugal)</h3>
-          <p class="text-stone-600 text-xs leading-relaxed">
-            Shaped in a figure eight to symbolize an infinite, unbreakable bond of marital love, loyalty, and lifelong partnership.
-          </p>
-        </div>
 
-        <!-- 4. Ang Arrhas -->
-        <div class="tradition-card">
-          <div class="tradition-icon-wrapper">
-            <i class="fas fa-coins"></i>
+          <!-- 3. Ang Yugal -->
+          <div class="p-4 sm:p-5 rounded-xl bg-white/45 border border-amber-200/50 hover:bg-white/70 transition-all flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-wedding-secondary text-xl border border-amber-200/80 mb-3 shadow-xs">
+              <i class="fas fa-infinity"></i>
+            </div>
+            <span class="text-[11px] uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Infinite Bond</span>
+            <h3 class="font-serif text-lg font-bold text-stone-900 mb-1.5 leading-snug">The Cord<br><span class="text-xs font-normal text-stone-500 italic font-serif">(Ang Yugal)</span></h3>
+            <p class="text-stone-600 text-xs leading-relaxed mt-1">
+              Shaped in a figure eight to symbolize an infinite, unbreakable bond of marital love, loyalty, and lifelong partnership.
+            </p>
           </div>
-          <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Shared Prosperity</span>
-          <h3 class="font-serif text-xl font-bold text-stone-900 mb-2">The Arras (Ang Arrhas)</h3>
-          <p class="text-stone-600 text-xs leading-relaxed">
-            Thirteen unity coins symbolizing God's providence, shared prosperity, and mutual dedication to the care of their family.
-          </p>
+
+          <!-- 4. Ang Arrhas -->
+          <div class="p-4 sm:p-5 rounded-xl bg-white/45 border border-amber-200/50 hover:bg-white/70 transition-all flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center text-wedding-secondary text-xl border border-amber-200/80 mb-3 shadow-xs">
+              <i class="fas fa-coins"></i>
+            </div>
+            <span class="text-[11px] uppercase font-bold tracking-widest text-wedding-secondary block mb-1">Shared Prosperity</span>
+            <h3 class="font-serif text-lg font-bold text-stone-900 mb-1.5 leading-snug">The Arras<br><span class="text-xs font-normal text-stone-500 italic font-serif">(Ang Arrhas)</span></h3>
+            <p class="text-stone-600 text-xs leading-relaxed mt-1">
+              Thirteen unity coins symbolizing God's providence, shared prosperity, and mutual dedication to the care of their family.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -325,8 +394,8 @@
     <!-- 4. TIMELINE SECTION -->
     <section class="py-20 px-4 max-w-4xl mx-auto">
       <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">Order of Events</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Wedding Day Timeline</h2>
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Order of Events</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Wedding Day Timeline</h2>
         <div class="ornament-divider">
           <i class="fas fa-clock text-wedding-primary text-xs"></i>
         </div>
@@ -339,10 +408,10 @@
 
     <!-- 5. ENTOURAGE SECTION -->
     <section class="py-20 px-4 bg-stone-100/70 border-t border-stone-200">
-      <div class="max-w-5xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-          <span class="font-script text-3xl text-wedding-secondary block mb-1">With Heartfelt Gratitude</span>
-          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">The Wedding Entourage</h2>
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">With Heartfelt Gratitude</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">The Wedding Entourage</h2>
           <div class="ornament-divider">
             <i class="fas fa-users text-wedding-primary text-xs"></i>
           </div>
@@ -351,114 +420,175 @@
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="entourage-container">
-          <!-- Dynamically populated from API -->
+        <!-- 1 SINGLE UNIFIED ENTOURAGE CONTAINER -->
+        <div class="entourage-single-container calado-frame p-6 sm:p-10 md:p-14 relative overflow-hidden" id="entourage-card">
+          <div class="calado-corner-tl"></div>
+          <div class="calado-corner-tr"></div>
+          <div class="calado-corner-bl"></div>
+          <div class="calado-corner-br"></div>
+
+          <div id="entourage-container">
+            <!-- Dynamically populated from API by wedding.js -->
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 6. FILIPINIANA ATTIRE GUIDE & PALETTE SECTION -->
+    <!-- 6. FILIPINIANA ATTIRE GUIDE & PALETTE SECTION (1 CONTAINER ONLY) -->
     <section class="py-20 px-4 max-w-4xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">Attire Guide</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Modern Filipiniana Dress Code</h2>
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Attire Guide</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Modern Filipiniana Dress Code</h2>
         <div class="ornament-divider">
           <i class="fas fa-vest text-wedding-primary text-xs"></i>
         </div>
-        <p id="dress-code-text" class="text-stone-700 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mt-2">
+      </div>
+
+      <!-- 1 SINGLE UNIFIED ATTIRE CONTAINER -->
+      <div class="capiz-card calado-frame p-6 sm:p-10 md:p-12 relative overflow-hidden shadow-sm" id="attire-card">
+        <div class="calado-corner-tl"></div>
+        <div class="calado-corner-tr"></div>
+        <div class="calado-corner-bl"></div>
+        <div class="calado-corner-br"></div>
+
+        <!-- Top Guidance Description -->
+        <p id="dress-code-text" class="text-stone-700 text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed mb-8 font-serif">
           Modern Filipiniana / Barong Tagalog for Gentlemen; Terno, Modern Filipiniana, or Formal Long Gowns in Earthy Tones & Warm Champagne for Ladies.
         </p>
-      </div>
 
-      <!-- Attire Recommendations for Gentlemen & Ladies -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <!-- Gentlemen Card -->
-        <div class="attire-card text-center calado-frame">
-          <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-wedding-primary text-2xl border border-amber-200">
-            <i class="fas fa-user-tie"></i>
+        <!-- Attire Recommendations for Gentlemen & Ladies (2 Balanced Columns) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-8">
+          <!-- Gentlemen -->
+          <div class="p-6 rounded-xl bg-white/45 border border-amber-200/50 text-center flex flex-col justify-between">
+            <div>
+              <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-50 flex items-center justify-center text-wedding-primary text-2xl border border-amber-200 shadow-xs">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">For Gentlemen</span>
+              <h3 class="font-serif text-2xl font-bold text-stone-800 mb-2">Barong Tagalog</h3>
+              <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                Traditional Barong Tagalog crafted from Piña, Jusi, or Cocoon fabric with traditional Calado or needlework embroidery. Paired with dark dress slacks and classic leather shoes.
+              </p>
+            </div>
+            <div>
+              <div class="inline-block bg-white/80 rounded-full px-4 py-1.5 text-xs text-stone-700 font-medium border border-stone-200 shadow-2xs">
+                Barong Tagalog / Formal Dark Suit
+              </div>
+            </div>
           </div>
-          <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">For Gentlemen</span>
-          <h3 class="font-serif text-2xl font-bold text-stone-800 mb-3">Barong Tagalog</h3>
-          <p class="text-stone-600 text-sm leading-relaxed mb-4">
-            Traditional Barong Tagalog crafted from Piña, Jusi, or Cocoon fabric with traditional Calado or needlework embroidery. Paired with dark dress slacks and classic leather shoes.
+
+          <!-- Ladies -->
+          <div class="p-6 rounded-xl bg-white/45 border border-amber-200/50 text-center flex flex-col justify-between">
+            <div>
+              <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-rose-50 flex items-center justify-center text-wedding-primary text-2xl border border-rose-200 shadow-xs">
+                <i class="fas fa-female"></i>
+              </div>
+              <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">For Ladies</span>
+              <h3 class="font-serif text-2xl font-bold text-stone-800 mb-2">Modern Filipiniana / Terno</h3>
+              <p class="text-stone-600 text-sm leading-relaxed mb-4">
+                Modern Filipiniana, Terno with elegant butterfly sleeves, Maria Clara / Mestiza silhouette, or floor-length formal evening gowns in earthy and warm champagne hues.
+              </p>
+            </div>
+            <div>
+              <div class="inline-block bg-white/80 rounded-full px-4 py-1.5 text-xs text-stone-700 font-medium border border-stone-200 shadow-2xs">
+                Modern Terno / Long Formal Gown
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider with fleuron -->
+        <div class="entourage-divider my-8">
+          <span class="entourage-divider-symbol">❦</span>
+        </div>
+
+        <!-- Color Palette Swatches inside the SAME container -->
+        <div class="text-center">
+          <span class="text-xs uppercase tracking-widest font-bold text-wedding-secondary block mb-2">Wedding Color Palette</span>
+          <h4 class="font-serif text-xl font-bold text-stone-800 mb-6">Inspired by Traditional Philippine Heritage</h4>
+
+          <div class="flex justify-center items-center gap-4 sm:gap-8 flex-wrap">
+            <div class="swatch-item">
+              <div id="palette-primary" class="swatch-circle" style="background-color: #7B2433;"></div>
+              <span class="text-xs uppercase font-bold text-stone-700 block">Maharlika</span>
+              <span class="text-[11px] text-stone-500">Wine Burgundy</span>
+              <span id="hex-primary" class="text-[10px] font-mono text-stone-400">#7B2433</span>
+            </div>
+            <div class="swatch-item">
+              <div id="palette-secondary" class="swatch-circle" style="background-color: #C5A059;"></div>
+              <span class="text-xs uppercase font-bold text-stone-700 block">Ginto</span>
+              <span class="text-[11px] text-stone-500">Antique Gold</span>
+              <span id="hex-secondary" class="text-[10px] font-mono text-stone-400">#C5A059</span>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch-circle" style="background-color: #B85D3B;"></div>
+              <span class="text-xs uppercase font-bold text-stone-700 block">Lupang Pula</span>
+              <span class="text-[11px] text-stone-500">Terracotta</span>
+              <span class="text-[10px] font-mono text-stone-400">#B85D3B</span>
+            </div>
+            <div class="swatch-item">
+              <div class="swatch-circle" style="background-color: #5A6D55;"></div>
+              <span class="text-xs uppercase font-bold text-stone-700 block">Lunti</span>
+              <span class="text-[11px] text-stone-500">Olive Sage</span>
+              <span class="text-[10px] font-mono text-stone-400">#5A6D55</span>
+            </div>
+            <div class="swatch-item">
+              <div id="palette-accent" class="swatch-circle" style="background-color: #FBF8F2; border: 2px solid #E5DFD5;"></div>
+              <span class="text-xs uppercase font-bold text-stone-700 block">Piña Calado</span>
+              <span class="text-[11px] text-stone-500">Cream Ivory</span>
+              <span id="hex-accent" class="text-[10px] font-mono text-stone-400">#FBF8F2</span>
+            </div>
+          </div>
+
+          <p class="text-xs italic text-stone-500 mt-6 border-t border-amber-200/50 pt-4 max-w-lg mx-auto font-serif">
+            Gentle Note: We kindly request guests to reserve pure white and off-white shades for the bride.
           </p>
-          <div class="inline-block bg-stone-100 rounded-full px-4 py-1.5 text-xs text-stone-600 font-medium border border-stone-200">
-            Barong Tagalog / Formal Dark Suit
-          </div>
         </div>
-
-        <!-- Ladies Card -->
-        <div class="attire-card text-center calado-frame">
-          <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-rose-50 flex items-center justify-center text-wedding-primary text-2xl border border-rose-200">
-            <i class="fas fa-female"></i>
-          </div>
-          <span class="text-xs uppercase font-bold tracking-widest text-wedding-secondary block mb-1">For Ladies</span>
-          <h3 class="font-serif text-2xl font-bold text-stone-800 mb-3">Modern Filipiniana / Terno</h3>
-          <p class="text-stone-600 text-sm leading-relaxed mb-4">
-            Modern Filipiniana, Terno with elegant butterfly sleeves, Maria Clara / Mestiza silhouette, or floor-length formal evening gowns in earthy and warm champagne hues.
-          </p>
-          <div class="inline-block bg-stone-100 rounded-full px-4 py-1.5 text-xs text-stone-600 font-medium border border-stone-200">
-            Modern Terno / Long Formal Gown
-          </div>
-        </div>
-      </div>
-
-      <!-- Color Palette Swatches -->
-      <div class="capiz-card calado-frame p-5 sm:p-8 text-center">
-        <span class="text-xs uppercase tracking-widest font-bold text-wedding-secondary block mb-2">Wedding Color Palette</span>
-        <h4 class="font-serif text-xl font-bold text-stone-800 mb-6">Inspired by Traditional Philippine Heritage</h4>
-
-        <div class="flex justify-center items-center gap-4 sm:gap-8 flex-wrap">
-          <div class="swatch-item">
-            <div id="palette-primary" class="swatch-circle" style="background-color: #7B2433;"></div>
-            <span class="text-xs uppercase font-bold text-stone-700 block">Maharlika</span>
-            <span class="text-[11px] text-stone-500">Wine Burgundy</span>
-            <span id="hex-primary" class="text-[10px] font-mono text-stone-400">#7B2433</span>
-          </div>
-          <div class="swatch-item">
-            <div id="palette-secondary" class="swatch-circle" style="background-color: #C5A059;"></div>
-            <span class="text-xs uppercase font-bold text-stone-700 block">Ginto</span>
-            <span class="text-[11px] text-stone-500">Antique Gold</span>
-            <span id="hex-secondary" class="text-[10px] font-mono text-stone-400">#C5A059</span>
-          </div>
-          <div class="swatch-item">
-            <div class="swatch-circle" style="background-color: #B85D3B;"></div>
-            <span class="text-xs uppercase font-bold text-stone-700 block">Lupang Pula</span>
-            <span class="text-[11px] text-stone-500">Terracotta</span>
-            <span class="text-[10px] font-mono text-stone-400">#B85D3B</span>
-          </div>
-          <div class="swatch-item">
-            <div class="swatch-circle" style="background-color: #5A6D55;"></div>
-            <span class="text-xs uppercase font-bold text-stone-700 block">Lunti</span>
-            <span class="text-[11px] text-stone-500">Olive Sage</span>
-            <span class="text-[10px] font-mono text-stone-400">#5A6D55</span>
-          </div>
-          <div class="swatch-item">
-            <div id="palette-accent" class="swatch-circle" style="background-color: #FBF8F2; border: 2px solid #E5DFD5;"></div>
-            <span class="text-xs uppercase font-bold text-stone-700 block">Piña Calado</span>
-            <span class="text-[11px] text-stone-500">Cream Ivory</span>
-            <span id="hex-accent" class="text-[10px] font-mono text-stone-400">#FBF8F2</span>
-          </div>
-        </div>
-
-        <p class="text-xs italic text-stone-500 mt-6 border-t border-stone-200/80 pt-4 max-w-lg mx-auto">
-          Gentle Note: We kindly request guests to reserve pure white and off-white shades for the bride.
-        </p>
       </div>
     </section>
 
-    <!-- 7. PHOTO GALLERY -->
-    <section class="py-20 px-4 max-w-6xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-14">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">Pre-Wedding Memories</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Captured Moments</h2>
+    <!-- 7. PHOTO GALLERY (SWIPEABLE & 3S AUTO-ADVANCE CAROUSEL) -->
+    <section class="py-20 px-4 max-w-5xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Pre-Wedding Memories</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Captured Moments</h2>
         <div class="ornament-divider">
           <i class="fas fa-camera-retro text-wedding-primary text-xs"></i>
         </div>
       </div>
 
-      <div class="gallery-grid" id="gallery-grid">
-        <!-- Loaded from API -->
+      <!-- CAROUSEL WRAPPER -->
+      <div class="gallery-slider-container relative select-none">
+        <!-- Overflow hidden viewport -->
+        <div class="gallery-viewport overflow-hidden rounded-2xl border border-amber-200/60 shadow-lg relative bg-stone-900" id="gallery-viewport">
+          <!-- The slides track -->
+          <div class="gallery-track flex" id="gallery-track">
+            <!-- Dynamically populated slides by wedding.js -->
+          </div>
+
+          <!-- Nav Buttons: Left & Right -->
+          <button type="button" id="gallery-prev-btn" class="gallery-slider-btn prev-btn" aria-label="Previous Photo">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button type="button" id="gallery-next-btn" class="gallery-slider-btn next-btn" aria-label="Next Photo">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+
+          <!-- Current slide counter pill in corner -->
+          <div class="gallery-counter-pill" id="gallery-counter">
+            1 / 6
+          </div>
+        </div>
+
+        <!-- Pagination Dots below -->
+        <div class="gallery-dots flex justify-center items-center gap-2 mt-5" id="gallery-dots">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Instruction hint -->
+        <p class="text-center text-xs text-stone-500 italic mt-3 font-serif">
+          Swipe left or right, or use the arrows to view our memories. Click any photo to view full size.
+        </p>
       </div>
     </section>
 
@@ -466,7 +596,7 @@
     <section class="py-14 px-4 bg-stone-900 text-white text-center relative overflow-hidden">
       <div class="max-w-xl mx-auto relative z-10">
         <span class="text-xs uppercase tracking-widest text-amber-400 block mb-2 font-semibold">Capture & Share Your Moments</span>
-        <h3 id="wedding-hashtag-display" class="font-serif text-3xl sm:text-4xl font-bold tracking-wider mb-6 text-amber-100">
+        <h3 id="wedding-hashtag-display" class="font-serif text-2xl sm:text-3xl font-bold tracking-wider mb-6 text-amber-100">
           #MajhMadeForAaron
         </h3>
         <button type="button" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-amber-300/40 text-amber-200 text-xs font-semibold uppercase tracking-wider transition-all" onclick="copyHashtag()">
@@ -479,8 +609,8 @@
     <!-- 9. GIFT REGISTRY SECTION -->
     <section id="gift-section" class="py-20 px-4 max-w-4xl mx-auto">
       <div class="text-center max-w-2xl mx-auto">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">With Love & Gratitude</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Gift Registry</h2>
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">With Love & Gratitude</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Gift Registry</h2>
         <div class="ornament-divider">
           <i class="fas fa-gift text-wedding-primary text-xs"></i>
         </div>
@@ -496,8 +626,8 @@
     <section class="py-20 px-4 bg-stone-100/70 border-t border-stone-200">
       <div class="max-w-3xl mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-12">
-          <span class="font-script text-3xl text-wedding-secondary block mb-1">Helpful Details</span>
-          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">Frequently Asked Questions</h2>
+          <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Helpful Details</span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">Frequently Asked Questions</h2>
           <div class="ornament-divider">
             <i class="fas fa-question-circle text-wedding-primary text-xs"></i>
           </div>
@@ -512,8 +642,8 @@
     <!-- 11. RSVP FORM SECTION -->
     <section id="rsvp" class="py-24 px-4 max-w-3xl mx-auto">
       <div class="text-center max-w-xl mx-auto mb-12">
-        <span class="font-script text-3xl text-wedding-secondary block mb-1">Celebrate With Us</span>
-        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-800 tracking-wide">RSVP</h2>
+        <span class="font-script text-2xl sm:text-3xl text-wedding-secondary block mb-1">Celebrate With Us</span>
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-stone-800 tracking-wide">RSVP</h2>
         <div class="ornament-divider">
           <i class="fas fa-envelope text-wedding-primary text-xs"></i>
         </div>
@@ -630,15 +760,15 @@
     </section>
 
     <!-- ==================== FOOTER ==================== -->
-    <footer class="bg-stone-900 text-stone-400 py-16 px-4 text-center border-t border-stone-800">
-      <div class="max-w-2xl mx-auto space-y-4">
-        <h3 id="footer-couple-names" class="font-serif text-3xl font-bold text-amber-100 tracking-wider">
+    <footer class="bg-stone-900 text-stone-400 py-12 px-4 text-center border-t border-stone-800">
+      <div class="max-w-2xl mx-auto space-y-3">
+        <h3 id="footer-couple-names" class="font-serif text-xl sm:text-2xl font-bold text-amber-100 tracking-wider">
           Majh & Aaron
         </h3>
-        <p class="font-script text-2xl text-amber-300/80">Forever begins today.</p>
-        <p class="text-xs uppercase tracking-widest text-stone-500">February 26, 2027 • Bulacan, Philippines</p>
+        <p class="font-script text-xl text-amber-300/80">Forever begins today.</p>
+        <p class="text-[11px] uppercase tracking-widest text-stone-500">February 26, 2027 • Bulacan, Philippines</p>
         
-        <div class="pt-6 border-t border-stone-800/80 flex justify-center items-center text-xs text-stone-500">
+        <div class="pt-5 border-t border-stone-800/80 flex justify-center items-center text-xs text-stone-500">
           <span>&copy; 2027 Majh & Aaron's Wedding</span>
         </div>
       </div>

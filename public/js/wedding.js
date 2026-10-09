@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAudioPlayer();
     setupRsvpForm();
     setupLightbox();
+    initStoryCarousel();
     createFloatingPetals();
 });
 
@@ -160,6 +161,184 @@ function startCountdown(weddingDateStr) {
 
     update();
     countdownTimer = setInterval(update, 1000);
+}
+
+// ========================================================
+// 2b. Our Love Story Carousel & Swipeable 3s Auto-Advance
+// ========================================================
+let storyCurrentIndex = 0;
+let storyAutoPlayTimer = null;
+const STORY_AUTOPLAY_INTERVAL = 3000; // 3 seconds automatic advance
+
+function initStoryCarousel() {
+    const viewport = document.getElementById('story-viewport');
+    const track = document.getElementById('story-track');
+    const prevBtn = document.getElementById('story-prev-btn');
+    const nextBtn = document.getElementById('story-next-btn');
+    const tabs = document.querySelectorAll('.story-tab-btn');
+
+    if (!viewport || !track) return;
+
+    const totalSlides = 3;
+
+    function updateStoryUI() {
+        track.style.transform = `translateX(-${storyCurrentIndex * 100}%)`;
+        tabs.forEach((tab, idx) => {
+            if (idx === storyCurrentIndex) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+    }
+
+    function goToStorySlide(index) {
+        storyCurrentIndex = (index + totalSlides) % totalSlides;
+        updateStoryUI();
+        resetStoryAutoPlay();
+    }
+
+    function nextStorySlide() {
+        storyCurrentIndex = (storyCurrentIndex + 1) % totalSlides;
+        updateStoryUI();
+    }
+
+    function prevStorySlide() {
+        storyCurrentIndex = (storyCurrentIndex - 1 + totalSlides) % totalSlides;
+        updateStoryUI();
+    }
+
+    function startStoryAutoPlay() {
+        stopStoryAutoPlay();
+        storyAutoPlayTimer = setInterval(() => {
+            nextStorySlide();
+        }, STORY_AUTOPLAY_INTERVAL);
+    }
+
+    function stopStoryAutoPlay() {
+        if (storyAutoPlayTimer) {
+            clearInterval(storyAutoPlayTimer);
+            storyAutoPlayTimer = null;
+        }
+    }
+
+    function resetStoryAutoPlay() {
+        stopStoryAutoPlay();
+        startStoryAutoPlay();
+    }
+
+    // Button controls
+    if (prevBtn) {
+        prevBtn.onclick = (e) => {
+            e.stopPropagation();
+            prevStorySlide();
+            resetStoryAutoPlay();
+        };
+    }
+    if (nextBtn) {
+        nextBtn.onclick = (e) => {
+            e.stopPropagation();
+            nextStorySlide();
+            resetStoryAutoPlay();
+        };
+    }
+
+    // Tab buttons
+    tabs.forEach((tab) => {
+        tab.onclick = () => {
+            const idx = parseInt(tab.dataset.index, 10);
+            if (!isNaN(idx)) goToStorySlide(idx);
+        };
+    });
+
+    // Pause on hover
+    viewport.addEventListener('mouseenter', stopStoryAutoPlay);
+    viewport.addEventListener('mouseleave', startStoryAutoPlay);
+
+    // Tab visibility handling
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopStoryAutoPlay();
+        } else {
+            startStoryAutoPlay();
+        }
+    });
+
+    // --- TOUCH SWIPE (MOBILE & TABLET) ---
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    let isTouching = false;
+
+    viewport.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchEndX = touchStartX;
+        touchEndY = touchStartY;
+        isTouching = true;
+        stopStoryAutoPlay();
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', (e) => {
+        if (!isTouching || !e.touches || e.touches.length === 0) return;
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', () => {
+        if (!isTouching) return;
+        isTouching = false;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        const absDiffX = Math.abs(diffX);
+        const absDiffY = Math.abs(diffY);
+
+        if (absDiffX > 35 && absDiffX > absDiffY) {
+            if (diffX < 0) {
+                nextStorySlide();
+            } else {
+                prevStorySlide();
+            }
+        }
+        resetStoryAutoPlay();
+    });
+
+    // --- MOUSE DRAG / SWIPE (DESKTOP) ---
+    let mouseStartX = 0;
+    let mouseEndX = 0;
+    let isMouseDown = false;
+
+    viewport.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        isMouseDown = true;
+        mouseStartX = e.clientX;
+        mouseEndX = e.clientX;
+        stopStoryAutoPlay();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        mouseEndX = e.clientX;
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        const diffX = mouseEndX - mouseStartX;
+        if (Math.abs(diffX) > 40) {
+            if (diffX < 0) {
+                nextStorySlide();
+            } else {
+                prevStorySlide();
+            }
+        }
+        resetStoryAutoPlay();
+    });
+
+    // Start 3-second auto-play!
+    startStoryAutoPlay();
 }
 
 // 3. Personalized Invitation Verification
@@ -363,7 +542,7 @@ async function loadTimeline() {
     }
 }
 
-// 6. Load Entourage
+// 6. Load Entourage (Single-Container Symmetrical Program Layout)
 async function loadEntourage() {
     try {
         const res = await fetch('/api/public/entourage');
@@ -372,46 +551,588 @@ async function loadEntourage() {
         const container = document.getElementById('entourage-container');
         if (!container) return;
 
-        const grouped = data.grouped || {};
-        const categories = Object.keys(grouped);
+        const items = data.all || [];
+        if (!items || items.length === 0) {
+            container.innerHTML = '<p class="text-center text-stone-500 py-8 italic font-serif">Entourage details will be announced soon.</p>';
+            return;
+        }
 
-        container.innerHTML = categories.map(cat => `
-          <div class="capiz-card calado-frame p-6 shadow-sm text-center">
-            <h4 class="font-serif text-xl font-bold text-wedding-primary tracking-wide uppercase mb-3">${escapeHtml(cat)}</h4>
-            <div class="space-y-1.5">
-              ${grouped[cat].map(m => `
-                <div class="text-stone-800 font-medium">${escapeHtml(m.name)}</div>
-                ${m.role && m.role !== cat ? `<div class="text-xs text-stone-500 italic">${escapeHtml(m.role)}</div>` : ''}
-              `).join('')}
-            </div>
-          </div>
-        `).join('');
+        renderSymmetricalEntourage(items, container);
     } catch (e) {
         console.error('Failed to load entourage:', e);
     }
 }
 
-// 7. Load Gallery
+function renderSymmetricalEntourage(items, container) {
+    const claimedIds = new Set();
+
+    // 1. Extract Groom & Bride Parents
+    let groomParents = items.filter(i => {
+        const catRole = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return catRole.includes('groom') && (catRole.includes('parent') || catRole.includes('magulang') || catRole.includes('ama') || catRole.includes('ina'));
+    });
+    let brideParents = items.filter(i => {
+        const catRole = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return catRole.includes('bride') && (catRole.includes('parent') || catRole.includes('magulang') || catRole.includes('ama') || catRole.includes('ina'));
+    });
+    
+    // Fallback if named with Avendaño / Fernandez
+    if (groomParents.length === 0) {
+        groomParents = items.filter(i => /avendaño|avendano/i.test(i.name) && /parent/i.test(i.category || ''));
+    }
+    if (brideParents.length === 0) {
+        brideParents = items.filter(i => /fernandez/i.test(i.name) && /parent/i.test(i.category || ''));
+    }
+    [...groomParents, ...brideParents].forEach(i => i.id && claimedIds.add(i.id));
+
+    // 2. Extract Ninongs and Ninangs (Principal Sponsors)
+    let ninongs = [];
+    let ninangs = [];
+
+    items.forEach(i => {
+        const catRole = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        const isSponsor = (catRole.includes('sponsor') || catRole.includes('ninong') || catRole.includes('ninang')) &&
+                          !catRole.includes('secondary') &&
+                          !catRole.includes('candle') &&
+                          !catRole.includes('veil') &&
+                          !catRole.includes('cord');
+        if (!isSponsor) return;
+
+        if (i.id) claimedIds.add(i.id);
+
+        if (catRole.includes('ninang')) {
+            ninangs.push({ name: i.name, role: 'Ninang' });
+        } else if (catRole.includes('ninong')) {
+            ninongs.push({ name: i.name, role: 'Ninong' });
+        } else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
+            const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
+            if (parts.length >= 2) {
+                ninongs.push({ name: parts[0].trim(), role: 'Ninong' });
+                ninangs.push({ name: parts[1].trim(), role: 'Ninang' });
+            } else {
+                ninongs.push({ name: i.name.trim(), role: 'Ninong' });
+            }
+        } else {
+            ninongs.push({ name: i.name, role: 'Ninong' });
+        }
+    });
+
+    // 3. Best Man & Maid of Honor
+    const bestMan = items.filter(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return cr.includes('best man') || cr.includes('bestman');
+    });
+    const maidOfHonor = items.filter(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return cr.includes('maid of honor') || cr.includes('matron of honor') || cr.includes('maid-of-honor');
+    });
+    [...bestMan, ...maidOfHonor].forEach(i => i.id && claimedIds.add(i.id));
+
+    // 4. Groomsmen & Bridesmaids
+    const groomsmen = items.filter(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return cr.includes('groomsman') || cr.includes('groomsmen');
+    });
+    const bridesmaids = items.filter(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return cr.includes('bridesmaid');
+    });
+    [...groomsmen, ...bridesmaids].forEach(i => i.id && claimedIds.add(i.id));
+
+    // 5. Secondary Sponsors (Candle, Veil, Cord)
+    let candleLeft = null, candleRight = null;
+    let veilLeft = null, veilRight = null;
+    let cordLeft = null, cordRight = null;
+
+    const secondaryItems = items.filter(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        return cr.includes('secondary') || cr.includes('candle') || cr.includes('veil') || cr.includes('cord');
+    });
+    secondaryItems.forEach(i => i.id && claimedIds.add(i.id));
+
+    secondaryItems.forEach(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        const hasGroom = cr.includes('groom') || cr.includes('male');
+        const hasBride = cr.includes('bride') || cr.includes('female');
+
+        if (cr.includes('candle')) {
+            if (hasGroom) candleLeft = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
+            else if (hasBride) candleRight = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
+            else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
+                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
+                candleLeft = { name: parts[0].trim(), role: 'Candle Sponsor · To Light Our Path' };
+                candleRight = { name: parts[1].trim(), role: 'Candle Sponsor · To Light Our Path' };
+            } else if (!candleLeft) {
+                candleLeft = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
+            } else {
+                candleRight = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
+            }
+        } else if (cr.includes('veil')) {
+            if (hasGroom) veilLeft = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
+            else if (hasBride) veilRight = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
+            else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
+                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
+                veilLeft = { name: parts[0].trim(), role: 'Veil Sponsor · To Clothe Us in Unity' };
+                veilRight = { name: parts[1].trim(), role: 'Veil Sponsor · To Clothe Us in Unity' };
+            } else if (!veilLeft) {
+                veilLeft = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
+            } else {
+                veilRight = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
+            }
+        } else if (cr.includes('cord')) {
+            if (hasGroom) cordLeft = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
+            else if (hasBride) cordRight = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
+            else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
+                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
+                cordLeft = { name: parts[0].trim(), role: 'Cord Sponsor · To Bind Us in Love' };
+                cordRight = { name: parts[1].trim(), role: 'Cord Sponsor · To Bind Us in Love' };
+            } else if (!cordLeft) {
+                cordLeft = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
+            } else {
+                cordRight = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
+            }
+        }
+    });
+
+    const secondaryLeft = [candleLeft, veilLeft, cordLeft].filter(Boolean);
+    const secondaryRight = [candleRight, veilRight, cordRight].filter(Boolean);
+
+    // 6. Bearers & Flower Girls
+    let bearers = [];
+    let flowerGirls = [];
+
+    items.forEach(i => {
+        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        if (cr.includes('bearer') || cr.includes('ring') || cr.includes('coin') || cr.includes('arrhas') || cr.includes('bible')) {
+            if (i.id) claimedIds.add(i.id);
+            let subrole = 'Bearer';
+            if (cr.includes('ring')) subrole = 'Ring Bearer';
+            else if (cr.includes('coin') || cr.includes('arrhas')) subrole = 'Coin Bearer (Arrhas)';
+            else if (cr.includes('bible')) subrole = 'Bible Bearer';
+            bearers.push({ name: i.name, role: subrole });
+        } else if (cr.includes('flower')) {
+            if (i.id) claimedIds.add(i.id);
+            if (i.name.includes('&') || /\band\b/i.test(i.name)) {
+                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
+                parts.forEach(p => flowerGirls.push({ name: p.trim(), role: 'Flower Girl' }));
+            } else {
+                flowerGirls.push({ name: i.name, role: 'Flower Girl' });
+            }
+        }
+    });
+
+    // 7. Other Unclaimed Items
+    const otherItems = items.filter(i => !claimedIds.has(i.id));
+
+    // Divider HTML
+    const dividerHtml = `
+      <div class="entourage-divider">
+        <span class="entourage-divider-symbol">❦</span>
+      </div>
+    `;
+
+    // Tier builder for 2 balanced columns with same-level alignment
+    const buildAlignedTier = (sectionHeading, sectionSub, leftHeader, rightHeader, leftList, rightList) => {
+        const maxLen = Math.max(leftList.length, rightList.length);
+        if (maxLen === 0) return '';
+
+        let headingBlock = '';
+        if (sectionHeading) {
+            headingBlock = `
+              <div class="text-center mb-5 sm:mb-6">
+                <h4 class="entourage-section-heading">${escapeHtml(sectionHeading)}</h4>
+                ${sectionSub ? `<p class="text-xs text-stone-500 italic font-serif mt-0.5">${escapeHtml(sectionSub)}</p>` : ''}
+              </div>
+            `;
+        }
+
+        let rowsHtml = '';
+        for (let idx = 0; idx < maxLen; idx++) {
+            const left = leftList[idx];
+            const right = rightList[idx];
+
+            const renderCell = (item, defaultRole) => {
+                if (!item) return '<div class="text-stone-300 text-sm select-none">—</div>';
+                const name = typeof item === 'string' ? item : item.name;
+                const role = typeof item === 'object' && item.role && item.role !== defaultRole ? item.role : '';
+                return `
+                  <div>
+                    <div class="entourage-person-name">${escapeHtml(name)}</div>
+                    ${role ? `<div class="entourage-person-subrole">${escapeHtml(role)}</div>` : ''}
+                  </div>
+                `;
+            };
+
+            rowsHtml += `
+              <div class="grid grid-cols-2 gap-3 sm:gap-10 text-center items-center py-1">
+                <div class="px-1 sm:px-3">${renderCell(left, leftHeader)}</div>
+                <div class="px-1 sm:px-3">${renderCell(right, rightHeader)}</div>
+              </div>
+            `;
+        }
+
+        return `
+          <div class="entourage-tier">
+            ${headingBlock}
+            <div class="grid grid-cols-2 gap-3 sm:gap-10 text-center mb-3">
+              <div><span class="entourage-role-title">${escapeHtml(leftHeader)}</span></div>
+              <div><span class="entourage-role-title">${escapeHtml(rightHeader)}</span></div>
+            </div>
+            <div class="space-y-2">
+              ${rowsHtml}
+            </div>
+          </div>
+        `;
+    };
+
+    // Build the complete entourage program
+    const tiers = [];
+
+    // Header banner inside container
+    const programHeader = `
+      <div class="text-center border-b border-amber-200/50 pb-5 mb-8">
+        <span class="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-bold text-wedding-secondary block mb-1">Kasalan nina Majh at Aaron</span>
+        <h3 class="font-serif text-xl sm:text-2xl font-bold text-stone-800 tracking-wide">Sacred Matrimonial Entourage</h3>
+        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent via-wedding-secondary to-transparent mx-auto mt-2.5"></div>
+      </div>
+    `;
+
+    // Tier 1: Parents (Groom on Left, Bride on Right)
+    if (groomParents.length > 0 || brideParents.length > 0) {
+        tiers.push(buildAlignedTier(
+            '',
+            '',
+            'Parents of the Groom',
+            'Parents of the Bride',
+            groomParents,
+            brideParents
+        ));
+    }
+
+    // Tier 2: Principal Sponsors (Ninong on Left, Ninang on Right)
+    if (ninongs.length > 0 || ninangs.length > 0) {
+        tiers.push(buildAlignedTier(
+            'Principal Sponsors',
+            'Witnesses of Faith & Life · Mga Ninong at Ninang',
+            'Ninong',
+            'Ninang',
+            ninongs,
+            ninangs
+        ));
+    }
+
+    // Tier 3: Primary Attendants (Best Man on Left, Maid of Honor on Right)
+    if (bestMan.length > 0 || maidOfHonor.length > 0) {
+        tiers.push(buildAlignedTier(
+            '',
+            '',
+            'Best Man',
+            'Maid of Honor',
+            bestMan,
+            maidOfHonor
+        ));
+    }
+
+    // Tier 4: Groomsmen & Bridesmaids
+    if (groomsmen.length > 0 || bridesmaids.length > 0) {
+        tiers.push(buildAlignedTier(
+            '',
+            '',
+            'Groomsmen',
+            'Bridesmaids',
+            groomsmen,
+            bridesmaids
+        ));
+    }
+
+    // Tier 5: Secondary Sponsors (Candle, Veil, Cord)
+    if (secondaryLeft.length > 0 || secondaryRight.length > 0) {
+        tiers.push(buildAlignedTier(
+            'Secondary Sponsors',
+            'Mga Pangalawang Tagapagtaguyod',
+            'Gentlemen',
+            'Ladies',
+            secondaryLeft,
+            secondaryRight
+        ));
+    }
+
+    // Tier 6: Bearers & Flower Girls
+    if (bearers.length > 0 || flowerGirls.length > 0) {
+        tiers.push(buildAlignedTier(
+            '',
+            '',
+            'Bearers',
+            'Flower Girls',
+            bearers,
+            flowerGirls
+        ));
+    }
+
+    // Tier 7: Other Unclaimed Entourage Items (if any)
+    if (otherItems.length > 0) {
+        const half = Math.ceil(otherItems.length / 2);
+        const leftOther = otherItems.slice(0, half);
+        const rightOther = otherItems.slice(half);
+        tiers.push(buildAlignedTier(
+            'Special Honored Attendants',
+            '',
+            'Honored Members',
+            'Honored Members',
+            leftOther,
+            rightOther
+        ));
+    }
+
+    // Assemble all tiers separated by decorative Filipino divider
+    container.innerHTML = programHeader + tiers.join(dividerHtml);
+}
+
+// ========================================================
+// 7. Load Gallery & Swipeable 3s Auto-Carousel
+// ========================================================
+let galleryCurrentIndex = 0;
+let galleryAutoPlayTimer = null;
+const GALLERY_AUTOPLAY_INTERVAL = 3000; // 3 seconds automatic swipe as requested
+
 async function loadGallery() {
     try {
         const res = await fetch('/api/public/gallery');
         if (!res.ok) return;
         currentGallery = await res.json();
+        if (!Array.isArray(currentGallery) || currentGallery.length === 0) return;
 
-        const grid = document.getElementById('gallery-grid');
-        if (!grid) return;
+        const track = document.getElementById('gallery-track');
+        const dotsContainer = document.getElementById('gallery-dots');
+        const counter = document.getElementById('gallery-counter');
+        if (!track) return;
 
-        grid.innerHTML = currentGallery.map((img, idx) => `
-          <div class="gallery-item group" onclick="openLightbox(${idx})">
-            <img src="${escapeHtml(img.imageUrl)}" alt="${escapeHtml(img.caption || 'Wedding Photo')}" loading="lazy" />
-            <div class="gallery-overlay">
-              <p class="font-serif text-sm tracking-wide">${escapeHtml(img.caption || 'Forever & Always')}</p>
+        // Populate Slides
+        track.innerHTML = currentGallery.map((img, idx) => `
+          <div class="gallery-slide" data-index="${idx}">
+            <img src="${escapeHtml(img.imageUrl)}" alt="${escapeHtml(img.caption || 'Wedding Photo')}" loading="${idx === 0 ? 'eager' : 'lazy'}" />
+            <div class="gallery-caption-bar">
+              <p class="gallery-caption-title">${escapeHtml(img.caption || 'Pre-Wedding Memories')}</p>
             </div>
           </div>
         `).join('');
+
+        // Populate Dots
+        if (dotsContainer) {
+            dotsContainer.innerHTML = currentGallery.map((_, idx) => `
+              <button type="button" class="gallery-dot ${idx === 0 ? 'active' : ''}" data-index="${idx}" aria-label="Go to photo ${idx + 1}"></button>
+            `).join('');
+        }
+
+        if (counter) {
+            counter.textContent = `1 / ${currentGallery.length}`;
+        }
+
+        galleryCurrentIndex = 0;
+        initGalleryCarousel();
     } catch (e) {
         console.error('Failed to load gallery:', e);
     }
+}
+
+function updateGalleryUI() {
+    const track = document.getElementById('gallery-track');
+    const dots = document.querySelectorAll('.gallery-dot');
+    const counter = document.getElementById('gallery-counter');
+
+    if (track) {
+        track.style.transform = `translateX(-${galleryCurrentIndex * 100}%)`;
+    }
+
+    dots.forEach((dot, idx) => {
+        if (idx === galleryCurrentIndex) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+
+    if (counter && currentGallery && currentGallery.length > 0) {
+        counter.textContent = `${galleryCurrentIndex + 1} / ${currentGallery.length}`;
+    }
+}
+
+function goToGallerySlide(index) {
+    if (!currentGallery || currentGallery.length === 0) return;
+    galleryCurrentIndex = (index + currentGallery.length) % currentGallery.length;
+    updateGalleryUI();
+    resetGalleryAutoPlay();
+}
+
+function nextGallerySlide() {
+    if (!currentGallery || currentGallery.length === 0) return;
+    galleryCurrentIndex = (galleryCurrentIndex + 1) % currentGallery.length;
+    updateGalleryUI();
+}
+
+function prevGallerySlide() {
+    if (!currentGallery || currentGallery.length === 0) return;
+    galleryCurrentIndex = (galleryCurrentIndex - 1 + currentGallery.length) % currentGallery.length;
+    updateGalleryUI();
+}
+
+function startGalleryAutoPlay() {
+    stopGalleryAutoPlay();
+    if (!currentGallery || currentGallery.length <= 1) return;
+    galleryAutoPlayTimer = setInterval(() => {
+        nextGallerySlide();
+    }, GALLERY_AUTOPLAY_INTERVAL);
+}
+
+function stopGalleryAutoPlay() {
+    if (galleryAutoPlayTimer) {
+        clearInterval(galleryAutoPlayTimer);
+        galleryAutoPlayTimer = null;
+    }
+}
+
+function resetGalleryAutoPlay() {
+    stopGalleryAutoPlay();
+    startGalleryAutoPlay();
+}
+
+function initGalleryCarousel() {
+    const viewport = document.getElementById('gallery-viewport');
+    const prevBtn = document.getElementById('gallery-prev-btn');
+    const nextBtn = document.getElementById('gallery-next-btn');
+    const dotsContainer = document.getElementById('gallery-dots');
+
+    if (!viewport) return;
+
+    // Prev / Next button listeners
+    if (prevBtn) {
+        prevBtn.onclick = (e) => {
+            e.stopPropagation();
+            prevGallerySlide();
+            resetGalleryAutoPlay();
+        };
+    }
+    if (nextBtn) {
+        nextBtn.onclick = (e) => {
+            e.stopPropagation();
+            nextGallerySlide();
+            resetGalleryAutoPlay();
+        };
+    }
+
+    // Dots listener
+    if (dotsContainer) {
+        dotsContainer.onclick = (e) => {
+            const dot = e.target.closest('.gallery-dot');
+            if (dot && dot.dataset.index !== undefined) {
+                goToGallerySlide(parseInt(dot.dataset.index, 10));
+            }
+        };
+    }
+
+    // Pause on hover
+    viewport.addEventListener('mouseenter', stopGalleryAutoPlay);
+    viewport.addEventListener('mouseleave', startGalleryAutoPlay);
+
+    // Tab visibility handling
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopGalleryAutoPlay();
+        } else {
+            startGalleryAutoPlay();
+        }
+    });
+
+    // --- TOUCH SWIPE (MOBILE & TABLET) ---
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    let isTouching = false;
+
+    viewport.addEventListener('touchstart', (e) => {
+        if (!e.touches || e.touches.length === 0) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchEndX = touchStartX;
+        touchEndY = touchStartY;
+        isTouching = true;
+        stopGalleryAutoPlay();
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', (e) => {
+        if (!isTouching || !e.touches || e.touches.length === 0) return;
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', (e) => {
+        if (!isTouching) return;
+        isTouching = false;
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        const absDiffX = Math.abs(diffX);
+        const absDiffY = Math.abs(diffY);
+
+        if (absDiffX > 35 && absDiffX > absDiffY) {
+            if (diffX < 0) {
+                // Swiped Left -> Next Photo
+                nextGallerySlide();
+            } else {
+                // Swiped Right -> Prev Photo
+                prevGallerySlide();
+            }
+        } else if (absDiffX < 10 && absDiffY < 10) {
+            // Tap / Click to open Lightbox
+            openLightbox(galleryCurrentIndex);
+        }
+        resetGalleryAutoPlay();
+    });
+
+    // --- MOUSE DRAG / SWIPE (DESKTOP) ---
+    let mouseStartX = 0;
+    let mouseEndX = 0;
+    let isMouseDown = false;
+    let hasDragged = false;
+
+    viewport.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return; // Left click only
+        isMouseDown = true;
+        hasDragged = false;
+        mouseStartX = e.clientX;
+        mouseEndX = e.clientX;
+        stopGalleryAutoPlay();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        mouseEndX = e.clientX;
+        if (Math.abs(mouseEndX - mouseStartX) > 8) {
+            hasDragged = true;
+        }
+    });
+
+    window.addEventListener('mouseup', (e) => {
+        if (!isMouseDown) return;
+        isMouseDown = false;
+        const diffX = mouseEndX - mouseStartX;
+        if (Math.abs(diffX) > 40) {
+            if (diffX < 0) {
+                nextGallerySlide();
+            } else {
+                prevGallerySlide();
+            }
+        } else if (!hasDragged) {
+            // Check if the click target is a slide (and not a nav button)
+            if (e.target.closest('#gallery-viewport') && !e.target.closest('.gallery-slider-btn')) {
+                openLightbox(galleryCurrentIndex);
+            }
+        }
+        resetGalleryAutoPlay();
+    });
+
+    // Start 3-second auto-play!
+    startGalleryAutoPlay();
 }
 
 // Lightbox Logic
@@ -798,7 +1519,7 @@ function toggleMusic() {
         if (toggleBtn) {
             toggleBtn.classList.remove('playing');
             toggleBtn.innerHTML = `♫`;
-            toggleBtn.title = 'Play: Puede ng Mangarap - Lyca Gairanod';
+            toggleBtn.title = 'Play: Palagi (Wedding Version)';
         }
     } else {
         const playPromise = audioPlayer.play();
@@ -808,7 +1529,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause: Puede ng Mangarap - Lyca Gairanod';
+                    toggleBtn.title = 'Pause: Palagi (Wedding Version)';
                 }
             }).catch(e => {
                 console.log('Audio file playback prevented or missing, starting soothing ambient chime fallback:', e);
@@ -817,7 +1538,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause: Puede ng Mangarap - Lyca Gairanod';
+                    toggleBtn.title = 'Pause: Palagi (Wedding Version)';
                 }
             });
         }
