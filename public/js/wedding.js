@@ -1570,7 +1570,7 @@ function toggleMusic() {
         if (toggleBtn) {
             toggleBtn.classList.remove('playing');
             toggleBtn.innerHTML = `♫`;
-            toggleBtn.title = 'Play: Palagi (Wedding Version) - KZ Tandingan & TJ Monterde';
+            toggleBtn.title = 'Play: Wedding Ambient Music';
         }
     } else {
         const playPromise = audioPlayer.play();
@@ -1580,7 +1580,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause: Palagi (Wedding Version) - KZ Tandingan & TJ Monterde';
+                    toggleBtn.title = 'Pause: Wedding Ambient Music';
                 }
             }).catch(e => {
                 console.log('Audio file playback prevented or missing, starting soothing ambient chime fallback:', e);
@@ -1589,7 +1589,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause: Palagi (Wedding Version) - KZ Tandingan & TJ Monterde';
+                    toggleBtn.title = 'Pause: Wedding Ambient Music';
                 }
             });
         }
