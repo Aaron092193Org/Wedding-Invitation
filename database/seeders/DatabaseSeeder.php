@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
                 ['Key' => 'DressCode', 'Value' => 'Modern Filipiniana / Barong Tagalog for Gentlemen; Terno, Modern Filipiniana, or Long Gowns in Earthy & Warm Champagne Tones for Ladies', 'Category' => 'Details', 'Description' => 'Guest dress code instructions'],
                 ['Key' => 'GoogleMapsUrl', 'Value' => 'https://maps.app.goo.gl/zTNEPZgL3Nvw2beD8', 'Category' => 'Venue', 'Description' => 'Ceremony Google Maps link'],
                 ['Key' => 'ReceptionGoogleMapsUrl', 'Value' => 'https://maps.app.goo.gl/1yj3RXyGy8ZQ5sEu8', 'Category' => 'Venue', 'Description' => 'Reception Google Maps link'],
-                ['Key' => 'BackgroundMusic', 'Value' => '/audio/palagi-wedding-version.mp3', 'Category' => 'Media', 'Description' => 'Audio file path or URL (Palagi - Wedding Version)'],
+                ['Key' => 'BackgroundMusic', 'Value' => '/audio/palagi-wedding-version.mp3', 'Category' => 'Media', 'Description' => 'Audio file path or URL (Palagi - Wedding Version by KZ Tandingan & TJ Monterde)'],
                 ['Key' => 'WeddingTheme', 'Value' => 'Filipiniana Moderno & Heirloom Gold', 'Category' => 'Theme', 'Description' => 'Wedding aesthetic theme'],
                 ['Key' => 'PrimaryColor', 'Value' => '#7B2433', 'Category' => 'Theme', 'Description' => 'Primary color hex (Maharlika Burgundy)'],
                 ['Key' => 'SecondaryColor', 'Value' => '#C5A059', 'Category' => 'Theme', 'Description' => 'Secondary color hex (Heirloom Antique Gold)'],

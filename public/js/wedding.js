@@ -589,33 +589,84 @@ function renderSymmetricalEntourage(items, container) {
     let ninongs = [];
     let ninangs = [];
 
-    items.forEach(i => {
-        const catRole = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        const isSponsor = (catRole.includes('sponsor') || catRole.includes('ninong') || catRole.includes('ninang')) &&
-                          !catRole.includes('secondary') &&
-                          !catRole.includes('candle') &&
-                          !catRole.includes('veil') &&
-                          !catRole.includes('cord');
-        if (!isSponsor) return;
+    // Helpers to classify Filipino honorifics & names
+    const isFemaleName = (str) => {
+        const s = ' ' + (str || '').toLowerCase() + ' ';
+        return /\b(mrs|dra|ms|miss|gng|madam|lady|sister|ninang|ina|nanay|tita)\b/i.test(s) ||
+               /\b(teresa|patricia|cynthia|maria|ma\.|carmela|elena|sofia|kristine|alyssa|camille|claudine|bea|katrina|clarisse)\b/i.test(s);
+    };
 
+    const isMaleName = (str) => {
+        const s = ' ' + (str || '').toLowerCase() + ' ';
+        return /\b(mr|engr|atty|dr|g\.|sir|bro|fr|ninong|ama|tatay|tito)\b/i.test(s) ||
+               /\b(fernando|benjamin|carlos|roberto|antonio|gabriel|marco|daniel|christian|joshua|paolo|miguel|ethan|lucas|mateo)\b/i.test(s);
+    };
+
+    const sponsorCandidates = items.filter(i => {
+        if (claimedIds.has(i.id)) return false;
+        const cat = (i.category || '').toLowerCase();
+        const role = (i.role || '').toLowerCase();
+        const cr = `${cat} ${role}`;
+
+        if (cr.includes('secondary') || cr.includes('candle') || cr.includes('veil') || cr.includes('cord') ||
+            cr.includes('bearer') || cr.includes('flower') || cr.includes('best man') || cr.includes('maid of honor') ||
+            cr.includes('matron of honor') || cr.includes('bridesmaid') || cr.includes('groomsman') || cr.includes('parent')) {
+            return false;
+        }
+        return cr.includes('sponsor') || cr.includes('ninong') || cr.includes('ninang') || cr.includes('principal') || cr.includes('godparent');
+    });
+
+    sponsorCandidates.forEach(i => {
         if (i.id) claimedIds.add(i.id);
+        const rawName = (i.name || '').trim();
+        const role = (i.role || '').toLowerCase();
+        const cat = (i.category || '').toLowerCase();
 
-        if (catRole.includes('ninang')) {
-            ninangs.push({ name: i.name, role: 'Ninang' });
-        } else if (catRole.includes('ninong')) {
-            ninongs.push({ name: i.name, role: 'Ninong' });
-        } else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
-            const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
-            if (parts.length >= 2) {
-                ninongs.push({ name: parts[0].trim(), role: 'Ninong' });
-                ninangs.push({ name: parts[1].trim(), role: 'Ninang' });
+        // A. Paired couple in a single row (e.g. 'Atty. Fernando Gomez & Hon. Teresa Gomez')
+        const pairSplit = rawName.split(/\s*(?:&|\band\b|\bat\b|[/+])\s*/i).filter(Boolean);
+        if (pairSplit.length >= 2) {
+            let leftPerson = pairSplit[0].trim();
+            let rightPerson = pairSplit[1].trim();
+
+            // If left is female and right is male, swap so Ninong stays on left and Ninang on right
+            if (isFemaleName(leftPerson) && !isFemaleName(rightPerson)) {
+                ninongs.push({ name: rightPerson, role: 'Ninong' });
+                ninangs.push({ name: leftPerson, role: 'Ninang' });
             } else {
-                ninongs.push({ name: i.name.trim(), role: 'Ninong' });
+                ninongs.push({ name: leftPerson, role: 'Ninong' });
+                ninangs.push({ name: rightPerson, role: 'Ninang' });
             }
+            return;
+        }
+
+        // B. Individual entry
+        const roleHasNinang = role.includes('ninang') && !role.includes('ninong');
+        const roleHasNinong = role.includes('ninong') && !role.includes('ninang');
+        const catHasNinang = cat.includes('ninang') && !cat.includes('ninong');
+        const catHasNinong = cat.includes('ninong') && !cat.includes('ninang');
+
+        if (roleHasNinang || catHasNinang || isFemaleName(rawName)) {
+            ninangs.push({ name: rawName, role: 'Ninang' });
+        } else if (roleHasNinong || catHasNinong || isMaleName(rawName)) {
+            ninongs.push({ name: rawName, role: 'Ninong' });
         } else {
-            ninongs.push({ name: i.name, role: 'Ninong' });
+            // Unspecified: balance equally between left and right columns
+            if (ninongs.length <= ninangs.length) {
+                ninongs.push({ name: rawName, role: 'Ninong' });
+            } else {
+                ninangs.push({ name: rawName, role: 'Ninang' });
+            }
         }
     });
+
+    // Safeguard: If somehow one side ended up empty and the other has multiple items, rebalance
+    if (ninongs.length === 0 && ninangs.length > 1) {
+        const half = Math.ceil(ninangs.length / 2);
+        ninongs = ninangs.splice(0, half).map(x => ({ ...x, role: 'Ninong' }));
+    } else if (ninangs.length === 0 && ninongs.length > 1) {
+        const half = Math.ceil(ninongs.length / 2);
+        ninangs = ninongs.splice(half).map(x => ({ ...x, role: 'Ninang' }));
+    }
 
     // 3. Best Man & Maid of Honor
     const bestMan = items.filter(i => {
@@ -1519,7 +1570,7 @@ function toggleMusic() {
         if (toggleBtn) {
             toggleBtn.classList.remove('playing');
             toggleBtn.innerHTML = `♫`;
-            toggleBtn.title = 'Play: Palagi (Wedding Version)';
+            toggleBtn.title = 'Play: Palagi (Wedding Version) - KZ Tandingan & TJ Monterde';
         }
     } else {
         const playPromise = audioPlayer.play();
@@ -1529,7 +1580,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause: Palagi (Wedding Version)';
+                    toggleBtn.title = 'Pause: Palagi (Wedding Version) - KZ Tandingan & TJ Monterde';
                 }
             }).catch(e => {
                 console.log('Audio file playback prevented or missing, starting soothing ambient chime fallback:', e);
@@ -1538,7 +1589,7 @@ function toggleMusic() {
                 if (toggleBtn) {
                     toggleBtn.classList.add('playing');
                     toggleBtn.innerHTML = `<i class="fas fa-volume-up text-sm"></i>`;
-                    toggleBtn.title = 'Pause: Palagi (Wedding Version)';
+                    toggleBtn.title = 'Pause: Palagi (Wedding Version) - KZ Tandingan & TJ Monterde';
                 }
             });
         }
