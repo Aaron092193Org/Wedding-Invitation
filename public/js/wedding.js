@@ -867,7 +867,7 @@ function renderSymmetricalEntourage(items, container) {
       </div>
     `;
 
-    // Tier builder for 2 balanced columns with same-level alignment
+    // Tier builder for 2 balanced columns with same-level alignment (Compressed & Elegant)
     const buildAlignedTier = (sectionHeading, sectionSub, leftHeader, rightHeader, leftList, rightList) => {
         const maxLen = Math.max(leftList.length, rightList.length);
         if (maxLen === 0) return '';
@@ -875,9 +875,9 @@ function renderSymmetricalEntourage(items, container) {
         let headingBlock = '';
         if (sectionHeading) {
             headingBlock = `
-              <div class="text-center mb-5 sm:mb-6">
+              <div class="text-center mb-2 sm:mb-2.5">
                 <h4 class="entourage-section-heading">${escapeHtml(sectionHeading)}</h4>
-                ${sectionSub ? `<p class="text-xs text-stone-500 italic font-serif mt-0.5">${escapeHtml(sectionSub)}</p>` : ''}
+                ${sectionSub ? `<p class="text-[11px] sm:text-xs text-stone-500 italic font-serif mt-0.5 leading-none">${escapeHtml(sectionSub)}</p>` : ''}
               </div>
             `;
         }
@@ -888,11 +888,11 @@ function renderSymmetricalEntourage(items, container) {
             const right = rightList[idx];
 
             const renderCell = (item, defaultRole) => {
-                if (!item) return '<div class="text-stone-300 text-sm select-none">—</div>';
+                if (!item) return '<div class="text-stone-300 text-xs select-none leading-none">—</div>';
                 const name = typeof item === 'string' ? item : item.name;
                 const role = typeof item === 'object' && item.role && item.role !== defaultRole ? item.role : '';
                 return `
-                  <div>
+                  <div class="py-0.5">
                     <div class="entourage-person-name">${escapeHtml(name)}</div>
                     ${role ? `<div class="entourage-person-subrole">${escapeHtml(role)}</div>` : ''}
                   </div>
@@ -900,9 +900,9 @@ function renderSymmetricalEntourage(items, container) {
             };
 
             rowsHtml += `
-              <div class="grid grid-cols-2 gap-3 sm:gap-10 text-center items-center py-1">
-                <div class="px-1 sm:px-3">${renderCell(left, leftHeader)}</div>
-                <div class="px-1 sm:px-3">${renderCell(right, rightHeader)}</div>
+              <div class="grid grid-cols-2 gap-2 sm:gap-6 text-center items-center">
+                <div class="px-1 sm:px-2">${renderCell(left, leftHeader)}</div>
+                <div class="px-1 sm:px-2">${renderCell(right, rightHeader)}</div>
               </div>
             `;
         }
@@ -910,11 +910,11 @@ function renderSymmetricalEntourage(items, container) {
         return `
           <div class="entourage-tier">
             ${headingBlock}
-            <div class="grid grid-cols-2 gap-3 sm:gap-10 text-center mb-3">
+            <div class="grid grid-cols-2 gap-2 sm:gap-6 text-center mb-1">
               <div><span class="entourage-role-title">${escapeHtml(leftHeader)}</span></div>
               <div><span class="entourage-role-title">${escapeHtml(rightHeader)}</span></div>
             </div>
-            <div class="space-y-2">
+            <div class="space-y-0.5">
               ${rowsHtml}
             </div>
           </div>
@@ -926,10 +926,10 @@ function renderSymmetricalEntourage(items, container) {
 
     // Header banner inside container
     const programHeader = `
-      <div class="text-center border-b border-amber-200/50 pb-5 mb-8">
-        <span class="text-[11px] sm:text-xs uppercase tracking-[0.25em] font-bold text-wedding-secondary block mb-1">Kasalan nina Majh at Aaron</span>
-        <h3 class="font-serif text-xl sm:text-2xl font-bold text-stone-800 tracking-wide">Sacred Matrimonial Entourage</h3>
-        <div class="w-16 h-0.5 bg-gradient-to-r from-transparent via-wedding-secondary to-transparent mx-auto mt-2.5"></div>
+      <div class="text-center border-b border-amber-200/50 pb-3 mb-4 sm:mb-5">
+        <span class="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-bold text-wedding-secondary block mb-0.5">Kasalan nina Majh at Aaron</span>
+        <h3 class="font-serif text-lg sm:text-xl font-bold text-stone-800 tracking-wide">Sacred Matrimonial Entourage</h3>
+        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent via-wedding-secondary to-transparent mx-auto mt-1.5"></div>
       </div>
     `;
 

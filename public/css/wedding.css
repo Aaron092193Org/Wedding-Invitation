@@ -1132,16 +1132,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ========================================================
-   SINGLE-CONTAINER BALANCED WEDDING ENTOURAGE STYLING
+   SINGLE-CONTAINER BALANCED WEDDING ENTOURAGE STYLING (COMPRESSED)
    ======================================================== */
 .entourage-single-container {
   background: var(--card-bg) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1.5px solid var(--card-border) !important;
-  border-radius: 20px;
+  border-radius: 18px;
   position: relative;
-  box-shadow: 0 0 0 5px rgba(199, 178, 161, 0.2), 0 20px 45px -10px rgba(92, 69, 51, 0.12) !important;
+  box-shadow: 0 0 0 4px rgba(199, 178, 161, 0.2), 0 15px 35px -8px rgba(92, 69, 51, 0.1) !important;
 }
 
 .entourage-tier {
@@ -1150,17 +1150,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .entourage-section-heading {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.15rem;
-  letter-spacing: 0.12em;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--primary-color);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.2;
 }
 
 @media (min-width: 640px) {
   .entourage-section-heading {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 }
 
@@ -1173,47 +1174,49 @@ h1, h2, h3, h4, h5, h6 {
 
 .entourage-role-title {
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   font-weight: 700;
   color: var(--secondary-color);
   display: inline-block;
-  padding-bottom: 0.35rem;
+  padding-bottom: 0.2rem;
   border-bottom: 1px solid rgba(197, 160, 89, 0.35);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.2;
 }
 
 .entourage-person-name {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.125rem;
+  font-size: 1.02rem;
   font-weight: 600;
   color: var(--text-dark) !important;
-  line-height: 1.35;
+  line-height: 1.25;
   transition: color 0.2s ease;
 }
 
 @media (min-width: 640px) {
   .entourage-person-name {
-    font-size: 1.22rem;
+    font-size: 1.12rem;
   }
 }
 
 .entourage-person-subrole {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   color: var(--text-muted) !important;
   font-style: italic;
   font-family: 'Montserrat', sans-serif;
-  margin-top: 0.15rem;
+  margin-top: 0.05rem;
+  line-height: 1.15;
 }
 
 .entourage-divider {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 1.75rem auto;
-  max-width: 20rem;
-  opacity: 0.75;
+  margin: 0.85rem auto;
+  max-width: 14rem;
+  opacity: 0.65;
 }
 
 .entourage-divider::before,
@@ -1225,10 +1228,48 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .entourage-divider-symbol {
-  padding: 0 0.75rem;
+  padding: 0 0.5rem;
   color: var(--secondary-color);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   line-height: 1;
+}
+
+/* Sacred Rituals Horizontal Timeline Design */
+.sacred-rituals-horizontal-wrapper {
+  width: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.sacred-ritual-node {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FAF6F0;
+  border: 2px solid var(--secondary-color);
+  color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(92, 69, 51, 0.15);
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.sacred-ritual-node:hover {
+  transform: scale(1.12);
+  background: var(--secondary-color);
+  color: #FAF5EF;
+  box-shadow: 0 4px 14px rgba(92, 69, 51, 0.28);
+}
+
+@media (max-width: 768px) {
+  .sacred-ritual-node {
+    width: 30px;
+    height: 30px;
+    font-size: 0.7rem;
+    border-width: 1.5px;
+  }
 }
 
 /* Form Inputs & Controls in Warm Gold-Brown Aesthetic */
