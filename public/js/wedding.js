@@ -514,14 +514,14 @@ async function loadTimeline() {
         const container = document.getElementById('timeline-container');
         if (!container) return;
 
-        container.innerHTML = items.map((item, index) => {
+        const timelineHtml = items.map((item, index) => {
             const isEven = index % 2 === 0;
             return `
             <div class="relative flex items-start md:items-center md:justify-normal ${isEven ? 'md:flex-row-reverse' : ''} group mb-8">
               <div class="hidden md:block w-5/12 ${isEven ? 'text-left pl-8' : 'text-right pr-8'}">
-                <span class="text-sm font-semibold text-wedding-primary tracking-widest uppercase">${escapeHtml(item.time)}</span>
-                <h4 class="font-serif text-2xl font-bold text-stone-800">${escapeHtml(item.title)}</h4>
-                ${item.description ? `<p class="text-stone-600 text-sm mt-1">${escapeHtml(item.description)}</p>` : ''}
+                <span class="font-cinzel text-xs font-bold text-wedding-primary tracking-[0.2em] uppercase block mb-1">${escapeHtml(item.time)}</span>
+                <h4 class="font-cinzel text-lg sm:text-xl font-bold text-stone-800 tracking-wide">${escapeHtml(item.title)}</h4>
+                ${item.description ? `<p class="font-serif italic text-stone-600 text-sm mt-1 leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
               </div>
 
               <div class="timeline-dot shrink-0 md:mx-auto z-10">
@@ -530,13 +530,26 @@ async function loadTimeline() {
 
               <div class="flex-1 min-w-0 pl-4 md:pl-0 md:w-5/12 ${isEven ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}">
                 <div class="md:hidden">
-                  <span class="text-xs font-bold text-wedding-primary tracking-widest uppercase block mb-0.5">${escapeHtml(item.time)}</span>
-                  <h4 class="font-serif text-lg sm:text-xl font-bold text-stone-800 leading-snug">${escapeHtml(item.title)}</h4>
-                  ${item.description ? `<p class="text-stone-600 text-xs sm:text-sm mt-1 leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
+                  <span class="font-cinzel text-xs font-bold text-wedding-primary tracking-[0.2em] uppercase block mb-1">${escapeHtml(item.time)}</span>
+                  <h4 class="font-cinzel text-base sm:text-lg font-bold text-stone-800 leading-snug tracking-wide">${escapeHtml(item.title)}</h4>
+                  ${item.description ? `<p class="font-serif italic text-stone-600 text-xs sm:text-sm mt-1 leading-relaxed">${escapeHtml(item.description)}</p>` : ''}
                 </div>
               </div>
             </div>`;
         }).join('');
+
+        const bottomFlourish = `
+          <div class="text-center mt-12 pt-8 border-t border-amber-200/50">
+            <p class="font-script text-3xl sm:text-4xl text-wedding-secondary mb-2">Thank you for being here!</p>
+            <div class="flex items-center justify-center gap-3 text-wedding-secondary text-xs">
+              <span class="text-stone-400">—— ❧</span>
+              <span class="font-cinzel text-xs font-semibold tracking-[0.25em] uppercase text-stone-700">We Love You!</span>
+              <span class="text-stone-400">☙ ——</span>
+            </div>
+          </div>
+        `;
+
+        container.innerHTML = timelineHtml + bottomFlourish;
     } catch (e) {
         console.error('Failed to load timeline:', e);
     }
