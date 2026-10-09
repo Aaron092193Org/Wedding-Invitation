@@ -1,24 +1,37 @@
 /* ==========================================================================
-   Filipiniana Moderno & Heirloom Gold Stylesheet
+   Filipiniana & Gold-Brown Romance Stylesheet
    Majh & Aaron Wedding (#MajhMadeForAaron)
+   Inspired by Warm Gold-Brown & Taupe Reference Inspo
    ========================================================================== */
 
 :root {
-  --primary-color: #7B2433;       /* Maharlika Burgundy / Barong Wine */
-  --secondary-color: #C5A059;     /* Heirloom Ginto / Antique Philippine Gold */
-  --accent-color: #FAF6F0;        /* Warm Alabaster / Piña Calado Cream */
-  --terracotta: #8B4A2D;          /* Warm Terracotta / Clay */
-  --dusty-rose: #C58567;          /* Warm Clay Rose */
-  --champagne: #E7D2C4;           /* Warm Champagne Silk */
-  --pina-cream: #F7F2EB;          /* Piña Calado Ivory */
-  --sage-green: #5F6F52;          /* Eucalyptus Sage Laurel */
-  --text-dark: #2C2523;           /* Warm Charcoal Espresso */
-  --text-muted: #73645E;          /* Warm Sepia */
-  --gold-gradient: linear-gradient(135deg, #F3E0B5 0%, #C5A059 50%, #9E7B35 100%);
-  --gold-glow: rgba(197, 160, 89, 0.35);
-  --burgundy-glow: rgba(123, 36, 51, 0.2);
-  --capiz-bg: rgba(255, 253, 248, 0.96);
-  --card-bg: rgba(255, 255, 255, 0.96);
+  /* Warm Gold-Brown & Champagne Palette (Sampled from Reference Image) */
+  --primary-color: #5C4533;       /* Rich Golden Brown / Warm Mocha (Headings, primary accents) */
+  --primary-dark: #453325;        /* Deep Golden Espresso */
+  --secondary-color: #8C6849;     /* Warm Caramel Gold / Hazelnut (Script, lines, icons) */
+  --secondary-light: #B89674;     /* Soft Honey Gold */
+  --accent-color: #DFD3C4;        /* Warm Gold-Brown Canvas (sampled from reference photo border) */
+  
+  --section-bg-1: #E6DACD;        /* Section Gold-Brown Tone 1 */
+  --section-bg-2: #DCCDC0;        /* Section Gold-Brown Tone 2 */
+  --section-border: #C7B2A1;      /* Exact sampled border/frame color */
+  
+  --card-bg: rgba(246, 241, 235, 0.96); /* Inner Arch/Card Warm Alabaster Greige */
+  --card-border: #C7B2A1;         /* Card Outline Border */
+  --capiz-bg: rgba(246, 241, 235, 0.96);
+  
+  --timeline-line: #70563D;       /* Sampled timeline track color */
+  --timeline-dot: #70563D;        /* Sampled timeline dot color */
+  
+  --text-dark: #453325;           /* Deep Golden Brown text */
+  --text-heading: #5C4533;        /* Golden Brown Headings */
+  --text-subheading: #7A5E48;     /* Warm Caramel Subtitles & Category Badges */
+  --text-body: #5C5449;           /* Soft Earthy Warm Brown Body Text */
+  --text-muted: #746050;          /* Warm Muted Brown */
+  
+  --gold-gradient: linear-gradient(135deg, #B89674 0%, #8C6849 50%, #5C4533 100%);
+  --gold-glow: rgba(140, 104, 73, 0.25);
+  --burgundy-glow: rgba(92, 69, 51, 0.2);
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -37,11 +50,11 @@ html {
 /* Base & Typography */
 body {
   font-family: 'Montserrat', sans-serif;
-  color: var(--text-dark);
+  color: var(--text-body);
   background-color: var(--accent-color);
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(197, 160, 89, 0.04) 0%, transparent 20%),
-    radial-gradient(circle at 90% 80%, rgba(123, 36, 51, 0.03) 0%, transparent 20%);
+    radial-gradient(circle at 12% 18%, rgba(140, 104, 73, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 88% 82%, rgba(199, 178, 161, 0.16) 0%, transparent 40%);
   overflow-x: hidden;
   max-width: 100vw;
   width: 100%;
@@ -66,6 +79,17 @@ body {
   font-family: 'Alex Brush', 'Great Vibes', cursive;
 }
 
+/* Section Background Themes (Warm Gold-Brown as in user's image) */
+.section-gold-brown-1 {
+  background: linear-gradient(180deg, #E6DACD 0%, #DCCDC0 100%);
+  border-bottom: 1px solid rgba(199, 178, 161, 0.65);
+}
+
+.section-gold-brown-2 {
+  background: linear-gradient(180deg, #DFD1C2 0%, #D4C3B0 100%);
+  border-bottom: 1px solid rgba(199, 178, 161, 0.65);
+}
+
 /* Gold Text Gradient */
 .gold-text {
   background: var(--gold-gradient);
@@ -73,39 +97,67 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Primary Color Overrides */
+/* Primary & Secondary Color Overrides */
 .bg-wedding-primary {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color) !important;
 }
 
 .text-wedding-primary {
-  color: var(--primary-color);
+  color: var(--primary-color) !important;
 }
 
 .border-wedding-primary {
-  border-color: var(--primary-color);
+  border-color: var(--primary-color) !important;
 }
 
 .text-wedding-secondary {
-  color: var(--secondary-color);
+  color: var(--secondary-color) !important;
+}
+
+.bg-wedding-secondary {
+  background-color: var(--secondary-color) !important;
 }
 
 .border-wedding-secondary {
-  border-color: var(--secondary-color);
+  border-color: var(--secondary-color) !important;
+}
+
+/* Global Font Color Overrides to Gold Brown (matching reference image) */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+}
+
+.text-stone-900,
+.text-stone-800 {
+  color: var(--primary-color) !important;
+}
+
+.text-stone-700,
+.text-stone-600 {
+  color: var(--text-body) !important;
+}
+
+.text-stone-500 {
+  color: var(--text-subheading) !important;
+}
+
+.text-stone-400 {
+  color: #9C8675 !important;
 }
 
 /* Filipiniana Calado Embroidery Lace Borders */
 .calado-frame {
   position: relative;
-  border: 1px solid rgba(197, 160, 89, 0.45);
-  box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.08), 0 20px 40px -15px rgba(43, 33, 30, 0.08);
+  background: var(--card-bg) !important;
+  border: 1.5px solid var(--card-border) !important;
+  box-shadow: 0 0 0 4px rgba(199, 178, 161, 0.22), 0 20px 40px -15px rgba(92, 69, 51, 0.12) !important;
 }
 
 .calado-frame::before {
   content: "";
   position: absolute;
   inset: 6px;
-  border: 1px dashed rgba(197, 160, 89, 0.35);
+  border: 1px dashed rgba(199, 178, 161, 0.55);
   pointer-events: none;
   border-radius: inherit;
 }
@@ -130,12 +182,12 @@ body {
 
 /* Capiz Shell Windowpane Card Style */
 .capiz-card {
-  background: var(--capiz-bg);
+  background: var(--capiz-bg) !important;
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(197, 160, 89, 0.35);
+  border: 1.5px solid var(--card-border) !important;
   border-radius: 16px;
   position: relative;
-  box-shadow: 0 10px 30px rgba(43, 33, 30, 0.06);
+  box-shadow: 0 10px 30px rgba(92, 69, 51, 0.09) !important;
 }
 
 /* Decorative Calado Dividers */
@@ -192,7 +244,7 @@ body {
   border-radius: 50%;
   background: var(--capiz-bg);
   color: var(--primary-color);
-  box-shadow: 0 8px 24px rgba(43, 33, 30, 0.2);
+  box-shadow: 0 8px 24px rgba(69, 51, 37, 0.25);
   border: 2px solid var(--secondary-color);
   display: flex;
   align-items: center;
@@ -213,9 +265,9 @@ body {
 }
 
 @keyframes pulseMusic {
-  0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.6); }
-  70% { box-shadow: 0 0 0 14px rgba(197, 160, 89, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(140, 104, 73, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(140, 104, 73, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(140, 104, 73, 0); }
 }
 
 /* Hero & Invitation Envelope Animation */
@@ -237,7 +289,7 @@ body {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(35, 20, 22, 0.55) 0%, rgba(20, 10, 12, 0.88) 100%);
+  background: radial-gradient(circle at center, rgba(69, 51, 37, 0.55) 0%, rgba(45, 31, 21, 0.88) 100%);
   backdrop-filter: blur(2px);
 }
 
@@ -248,11 +300,11 @@ body {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
-  background: rgba(255, 253, 248, 0.96);
+  background: var(--card-bg) !important;
   backdrop-filter: blur(14px);
   border-radius: 16px;
-  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.45);
-  border: 2px solid rgba(197, 160, 89, 0.5);
+  box-shadow: 0 30px 60px -15px rgba(69, 51, 37, 0.45);
+  border: 2px solid var(--card-border) !important;
   padding: 3.5rem 2.5rem;
   text-align: center;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
@@ -268,18 +320,18 @@ body {
   }
 }
 
-/* Terracotta & Antique Gold Sampaguita Wax Seal */
+/* Gold-Brown Sampaguita Wax Seal */
 .wax-seal {
   width: 76px;
   height: 76px;
   margin: -62px auto 1.5rem auto;
-  background: radial-gradient(circle at 35% 35%, #9E3544 0%, #631B26 70%, #421019 100%);
+  background: radial-gradient(circle at 35% 35%, #8C6849 0%, #5C4533 70%, #3D2C20 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(66, 16, 25, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.35);
-  border: 2.5px solid #C5A059;
+  box-shadow: 0 8px 20px rgba(61, 44, 32, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  border: 2.5px solid #B89674;
   color: #FFFDF8;
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 23px;
@@ -293,13 +345,13 @@ body {
   position: absolute;
   inset: 3px;
   border-radius: 50%;
-  border: 1px dashed rgba(197, 160, 89, 0.6);
+  border: 1px dashed rgba(199, 178, 161, 0.6);
   pointer-events: none;
 }
 
 .btn-open-invitation {
-  background: var(--gold-gradient);
-  color: #3d2d09;
+  background: linear-gradient(135deg, #8C6849 0%, #6A5343 50%, #5C4533 100%) !important;
+  color: #FAF5EF !important;
   font-weight: 600;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -310,8 +362,8 @@ body {
   align-items: center;
   gap: 10px;
   transition: var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-  border: none;
+  box-shadow: 0 6px 20px rgba(92, 69, 51, 0.3) !important;
+  border: 1px solid #B89674 !important;
   cursor: pointer;
 }
 
@@ -333,7 +385,8 @@ body {
 
 .btn-open-invitation:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.5);
+  background: linear-gradient(135deg, #9C7859 0%, #7A6150 50%, #6A5343 100%) !important;
+  box-shadow: 0 10px 28px rgba(92, 69, 51, 0.45) !important;
   filter: brightness(1.05);
 }
 
@@ -362,19 +415,19 @@ body {
 }
 
 .countdown-box {
-  background: white;
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: var(--card-bg) !important;
+  border: 1.5px solid var(--card-border) !important;
   border-radius: 12px;
   padding: 1.2rem 1.5rem;
   min-width: 90px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 15px rgba(92, 69, 51, 0.08);
   transition: transform 0.3s ease;
 }
 
 .countdown-box:hover {
   transform: translateY(-4px);
-  border-color: var(--secondary-color);
+  border-color: var(--secondary-color) !important;
 }
 
 .countdown-value {
@@ -382,14 +435,15 @@ body {
   font-size: 2.5rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--primary-color);
+  color: var(--primary-color) !important;
 }
 
 .countdown-label {
   font-size: 0.75rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--secondary-color) !important;
+  font-weight: 600;
   margin-top: 6px;
 }
 
@@ -466,25 +520,25 @@ body {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--card-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(197, 160, 89, 0.6);
-  color: #2B211E;
+  border: 1px solid var(--card-border);
+  color: var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 15px rgba(92, 69, 51, 0.18);
   z-index: 20;
 }
 
 .story-slider-btn:hover {
-  background: #C5A059;
+  background: var(--secondary-color);
   color: #fff;
-  border-color: #C5A059;
+  border-color: var(--secondary-color);
   transform: translateY(-50%) scale(1.08);
 }
 
@@ -512,24 +566,24 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #78716c;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(197, 160, 89, 0.35);
+  color: var(--text-muted);
+  background: rgba(246, 241, 235, 0.7);
+  border: 1px solid var(--card-border);
   transition: all 0.25s ease;
   cursor: pointer;
 }
 
 .story-tab-btn:hover {
-  color: #7B2433;
-  border-color: #C5A059;
-  background: rgba(255, 255, 255, 0.9);
+  color: var(--primary-color);
+  border-color: var(--secondary-color);
+  background: rgba(246, 241, 235, 0.95);
 }
 
 .story-tab-btn.active {
-  background: #7B2433;
-  color: #FAF6ED;
-  border-color: #7B2433;
-  box-shadow: 0 2px 8px rgba(123, 36, 51, 0.25);
+  background: var(--primary-color);
+  color: #FAF5EF;
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(92, 69, 51, 0.25);
 }
 
 /* Compact Timeline (All-In-One View, Zero Scrolling) */
@@ -543,22 +597,22 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #FFFDF9;
-  border: 1.5px solid var(--secondary-color);
-  color: var(--secondary-color);
+  background: #FAF7F2;
+  border: 2px solid var(--timeline-dot);
+  color: var(--timeline-dot);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(197, 160, 89, 0.2);
+  box-shadow: 0 2px 8px rgba(112, 86, 61, 0.2);
   z-index: 2;
   transition: all 0.3s ease;
 }
 
 .timeline-dot:hover {
   transform: scale(1.15);
-  background: var(--secondary-color);
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.35);
+  background: var(--timeline-dot);
+  color: #FAF5EF;
+  box-shadow: 0 4px 12px rgba(112, 86, 61, 0.35);
 }
 
 @media (max-width: 768px) {
@@ -1081,13 +1135,13 @@ body {
    SINGLE-CONTAINER BALANCED WEDDING ENTOURAGE STYLING
    ======================================================== */
 .entourage-single-container {
-  background: var(--capiz-bg);
+  background: var(--card-bg) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(197, 160, 89, 0.45);
+  border: 1.5px solid var(--card-border) !important;
   border-radius: 20px;
   position: relative;
-  box-shadow: 0 0 0 5px rgba(197, 160, 89, 0.08), 0 20px 45px -10px rgba(43, 33, 30, 0.1);
+  box-shadow: 0 0 0 5px rgba(199, 178, 161, 0.2), 0 20px 45px -10px rgba(92, 69, 51, 0.12) !important;
 }
 
 .entourage-tier {
@@ -1134,7 +1188,7 @@ body {
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2B211E;
+  color: var(--text-dark) !important;
   line-height: 1.35;
   transition: color 0.2s ease;
 }
@@ -1147,7 +1201,7 @@ body {
 
 .entourage-person-subrole {
   font-size: 0.75rem;
-  color: #78716c;
+  color: var(--text-muted) !important;
   font-style: italic;
   font-family: 'Montserrat', sans-serif;
   margin-top: 0.15rem;
@@ -1167,7 +1221,7 @@ body {
   content: "";
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(140, 104, 73, 0.6), transparent);
 }
 
 .entourage-divider-symbol {
@@ -1176,4 +1230,36 @@ body {
   font-size: 0.75rem;
   line-height: 1;
 }
+
+/* Form Inputs & Controls in Warm Gold-Brown Aesthetic */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  background-color: #FAF7F2 !important;
+  border-color: var(--card-border) !important;
+  color: var(--primary-color) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--secondary-color) !important;
+  box-shadow: 0 0 0 3px rgba(140, 104, 73, 0.2) !important;
+}
+
+/* Footer in Deep Espresso Gold-Brown */
+footer {
+  background-color: #3D2C20 !important;
+  color: #D8C8B8 !important;
+  border-top: 1px solid rgba(199, 178, 161, 0.3) !important;
+}
+
+footer h3,
+footer h4 {
+  color: #FAF5EF !important;
+}
+
 
