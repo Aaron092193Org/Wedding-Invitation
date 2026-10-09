@@ -532,89 +532,16 @@ body {
   box-shadow: 0 2px 8px rgba(123, 36, 51, 0.25);
 }
 
-/* Horizontal Timeline */
-.timeline-horizontal-container {
-  position: relative;
+/* Compact Timeline (All-In-One View, Zero Scrolling) */
+.timeline-compact-wrapper {
   width: 100%;
-}
-
-.timeline-horizontal-viewport {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity;
-  padding: 1.5rem 0.5rem 1rem;
-}
-
-.timeline-horizontal-viewport::-webkit-scrollbar {
-  height: 6px;
-}
-
-.timeline-horizontal-viewport::-webkit-scrollbar-track {
-  background: rgba(197, 160, 89, 0.12);
-  border-radius: 9999px;
-}
-
-.timeline-horizontal-viewport::-webkit-scrollbar-thumb {
-  background: #C5A059;
-  border-radius: 9999px;
-}
-
-.timeline-horizontal-track {
-  display: flex;
-  align-items: flex-start;
   position: relative;
-  min-width: max-content;
-  padding: 0.5rem 1rem 1rem;
-}
-
-.timeline-step-item {
-  width: 250px;
-  position: relative;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  scroll-snap-align: center;
-  padding: 0 12px;
-}
-
-/* Horizontal Connector Line directly through the center of dots */
-.timeline-step-line {
-  position: absolute;
-  top: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, #E7D2C4, #C5A059, #E7D2C4);
-  z-index: 1;
-}
-
-.timeline-step-line.line-first {
-  left: 50%;
-  right: 0;
-}
-
-.timeline-step-line.line-middle {
-  left: 0;
-  right: 0;
-}
-
-.timeline-step-line.line-last {
-  left: 0;
-  right: 50%;
-}
-
-.timeline-step-card {
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.timeline-step-card:hover {
-  transform: translateY(-4px);
+  overflow: visible;
 }
 
 .timeline-dot {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #FFFDF9;
   border: 1.5px solid var(--secondary-color);
@@ -622,27 +549,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(197, 160, 89, 0.2);
+  box-shadow: 0 2px 8px rgba(197, 160, 89, 0.2);
   z-index: 2;
   transition: all 0.3s ease;
 }
 
 .timeline-dot:hover {
-  transform: scale(1.12);
+  transform: scale(1.15);
   background: var(--secondary-color);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(197, 160, 89, 0.35);
+  box-shadow: 0 4px 12px rgba(197, 160, 89, 0.35);
 }
 
 @media (max-width: 768px) {
-  .timeline-step-item {
-    width: 220px;
-    padding: 0 8px;
-  }
   .timeline-dot {
-    width: 44px;
-    height: 44px;
-    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
   }
 }
 

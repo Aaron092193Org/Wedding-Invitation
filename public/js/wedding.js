@@ -504,47 +504,7 @@ function openInvitation() {
     }
 }
 
-// 5. Load Timeline (Horizontal Order)
-function scrollTimeline(direction) {
-    const el = document.getElementById('timeline-horizontal-viewport');
-    if (!el) return;
-    const scrollAmount = 260;
-    el.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-    });
-}
-
-function attachTimelineTouchEvents() {
-    const slider = document.getElementById('timeline-horizontal-viewport');
-    if (!slider) return;
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.style.cursor = 'grabbing';
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-    slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.style.cursor = '';
-    });
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.style.cursor = '';
-    });
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        slider.scrollLeft = scrollLeft - walk;
-    });
-}
-
+// 5. Load Timeline (Compact Horizontal Layout - No Scrolling Required)
 async function loadTimeline() {
     try {
         const res = await fetch('/api/public/timeline');
@@ -554,76 +514,114 @@ async function loadTimeline() {
         const container = document.getElementById('timeline-container');
         if (!container) return;
 
+        // Desktop / Tablet (>= 768px): All items in 1 single horizontal row across the card
+        const desktopLineLeft = (100 / (items.length * 2)).toFixed(2);
+        const desktopLineRight = (100 / (items.length * 2)).toFixed(2);
+
+        // Mobile (< 768px): 2 compact horizontal rows (Row 1: 4 items, Row 2: 3 items) - 100% visible on screen without scrolling
+        const row1Items = items.slice(0, 4);
+        const row2Items = items.slice(4);
+        const row1LinePct = (100 / (row1Items.length * 2)).toFixed(2);
+        const row2LinePct = (100 / (row2Items.length * 2)).toFixed(2);
+
         const timelineHtml = `
-          <div class="timeline-horizontal-container relative">
-            <!-- Left & Right Arrow Navigation Buttons -->
-            <button type="button" class="hidden sm:flex absolute -left-2 sm:-left-3 top-[54px] z-20 w-9 h-9 rounded-full bg-white/95 border border-amber-300 text-wedding-primary shadow-md items-center justify-center hover:bg-wedding-primary hover:text-white transition-all cursor-pointer" onclick="scrollTimeline('left')" aria-label="Previous events">
-              <i class="fas fa-chevron-left text-xs"></i>
-            </button>
-            <button type="button" class="hidden sm:flex absolute -right-2 sm:-right-3 top-[54px] z-20 w-9 h-9 rounded-full bg-white/95 border border-amber-300 text-wedding-primary shadow-md items-center justify-center hover:bg-wedding-primary hover:text-white transition-all cursor-pointer" onclick="scrollTimeline('right')" aria-label="Next events">
-              <i class="fas fa-chevron-right text-xs"></i>
-            </button>
+          <div class="timeline-compact-wrapper w-full select-none">
+            <!-- ================= DESKTOP & TABLET (SINGLE HORIZONTAL ROW - NO SCROLL) ================= -->
+            <div class="hidden md:block w-full relative pt-2 pb-2">
+              <!-- Continuous Horizontal Golden Line -->
+              <div class="absolute h-0.5 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 z-0" 
+                   style="top: 48px; left: ${desktopLineLeft}%; right: ${desktopLineRight}%;"></div>
 
-            <!-- Scrollable Track Viewport -->
-            <div class="timeline-horizontal-viewport" id="timeline-horizontal-viewport">
-              <div class="timeline-horizontal-track">
-                ${items.map((item, index) => {
-                    let lineClass = 'line-middle';
-                    if (index === 0) lineClass = 'line-first';
-                    else if (index === items.length - 1) lineClass = 'line-last';
-                    if (items.length === 1) lineClass = 'hidden';
+              <!-- 7 Items in 1 Single Horizontal Row (Fits 100% Card Width) -->
+              <div class="grid grid-cols-${items.length} gap-1 lg:gap-2 relative z-10 w-full items-start">
+                ${items.map(item => `
+                  <div class="flex flex-col items-center text-center group px-1">
+                    <!-- Compact Time Badge -->
+                    <span class="inline-block font-cinzel text-[10px] lg:text-[11px] font-bold text-wedding-primary tracking-wider uppercase bg-amber-50/95 border border-amber-200/80 px-2 py-0.5 rounded-full shadow-2xs mb-2 z-10 whitespace-nowrap">
+                      ${escapeHtml(item.time)}
+                    </span>
 
-                    return `
-                    <div class="timeline-step-item group">
-                      <!-- Connector Line Segment -->
-                      <div class="timeline-step-line ${lineClass}"></div>
+                    <!-- Refined Circular Icon Dot (36px) -->
+                    <div class="w-9 h-9 rounded-full bg-[#FFFDF9] border border-wedding-secondary text-wedding-secondary flex items-center justify-center text-xs shadow-xs z-10 mb-2 transition-all duration-300 group-hover:scale-115 group-hover:bg-wedding-secondary group-hover:text-white">
+                      <i class="fas fa-${getTimelineIcon(item.icon)}"></i>
+                    </div>
 
-                      <!-- Step Card Content -->
-                      <div class="timeline-step-card flex flex-col items-center">
-                        <!-- Time Badge -->
-                        <span class="inline-block font-cinzel text-xs font-bold text-wedding-primary tracking-[0.18em] uppercase bg-amber-50/90 border border-amber-200/70 px-3 py-1 rounded-full shadow-2xs mb-2.5 z-10">
-                          ${escapeHtml(item.time)}
-                        </span>
+                    <!-- Title -->
+                    <h4 class="font-cinzel text-xs lg:text-[13px] font-bold text-stone-900 tracking-wide leading-tight mb-1">
+                      ${escapeHtml(item.title)}
+                    </h4>
 
-                        <!-- Circular Dot on Connector Line -->
-                        <div class="timeline-dot mb-3">
-                          <i class="fas fa-${getTimelineIcon(item.icon)}"></i>
-                        </div>
-
-                        <!-- Event Title & Description -->
-                        <h4 class="font-cinzel text-sm sm:text-base font-bold text-stone-900 tracking-wide mb-1 leading-snug">
-                          ${escapeHtml(item.title)}
-                        </h4>
-                        ${item.description ? `
-                          <p class="font-serif italic text-stone-600 text-xs sm:text-sm leading-relaxed max-w-[210px] mx-auto">
-                            ${escapeHtml(item.description)}
-                          </p>` : ''}
-                      </div>
-                    </div>`;
-                }).join('')}
+                    <!-- Description -->
+                    ${item.description ? `
+                      <p class="font-serif italic text-stone-600 text-[10px] lg:text-[11px] leading-tight max-w-[130px] line-clamp-2">
+                        ${escapeHtml(item.description)}
+                      </p>` : ''}
+                  </div>
+                `).join('')}
               </div>
             </div>
 
-            <!-- Mobile Scroll Hint -->
-            <p class="text-center text-[11px] sm:text-xs text-stone-400 italic mt-1 font-serif">
-              <i class="fas fa-arrows-alt-h mr-1 text-wedding-secondary"></i> Scroll or swipe horizontally to view all events
-            </p>
+            <!-- ================= MOBILE (< 768px: 2 COMPACT HORIZONTAL ROWS - NO SCROLL) ================= -->
+            <div class="block md:hidden w-full space-y-6 pt-1 pb-2">
+              <!-- Row 1: Afternoon Milestones (4 items) -->
+              <div class="relative w-full">
+                <div class="absolute h-0.5 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 z-0" 
+                     style="top: 40px; left: ${row1LinePct}%; right: ${row1LinePct}%;"></div>
+
+                <div class="grid grid-cols-4 gap-1 relative z-10 w-full items-start">
+                  ${row1Items.map(item => `
+                    <div class="flex flex-col items-center text-center group px-0.5">
+                      <span class="inline-block font-cinzel text-[9px] font-bold text-wedding-primary uppercase bg-amber-50/95 border border-amber-200/80 px-1.5 py-0.5 rounded-full shadow-2xs mb-1.5 z-10 whitespace-nowrap">
+                        ${escapeHtml(item.time)}
+                      </span>
+                      <div class="w-7 h-7 rounded-full bg-[#FFFDF9] border border-wedding-secondary text-wedding-secondary flex items-center justify-center text-[10px] shadow-xs z-10 mb-1.5">
+                        <i class="fas fa-${getTimelineIcon(item.icon)}"></i>
+                      </div>
+                      <h4 class="font-cinzel text-[10px] font-bold text-stone-900 tracking-wide leading-tight mb-0.5">
+                        ${escapeHtml(item.title)}
+                      </h4>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- Row 2: Evening Celebrations (3 items) -->
+              <div class="relative w-full max-w-[320px] mx-auto">
+                <div class="absolute h-0.5 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 z-0" 
+                     style="top: 40px; left: ${row2LinePct}%; right: ${row2LinePct}%;"></div>
+
+                <div class="grid grid-cols-3 gap-1 relative z-10 w-full items-start">
+                  ${row2Items.map(item => `
+                    <div class="flex flex-col items-center text-center group px-1">
+                      <span class="inline-block font-cinzel text-[9px] font-bold text-wedding-primary uppercase bg-amber-50/95 border border-amber-200/80 px-1.5 py-0.5 rounded-full shadow-2xs mb-1.5 z-10 whitespace-nowrap">
+                        ${escapeHtml(item.time)}
+                      </span>
+                      <div class="w-7 h-7 rounded-full bg-[#FFFDF9] border border-wedding-secondary text-wedding-secondary flex items-center justify-center text-[10px] shadow-xs z-10 mb-1.5">
+                        <i class="fas fa-${getTimelineIcon(item.icon)}"></i>
+                      </div>
+                      <h4 class="font-cinzel text-[10px] font-bold text-stone-900 tracking-wide leading-tight mb-0.5">
+                        ${escapeHtml(item.title)}
+                      </h4>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
           </div>
         `;
 
         const bottomFlourish = `
-          <div class="text-center mt-8 pt-8 border-t border-amber-200/50">
-            <p class="font-script text-3xl sm:text-4xl text-wedding-secondary mb-2">Thank you for being here!</p>
-            <div class="flex items-center justify-center gap-3 text-wedding-secondary text-xs">
+          <div class="text-center mt-6 pt-4 border-t border-amber-200/50">
+            <p class="font-script text-2xl sm:text-3xl text-wedding-secondary mb-1">Thank you for being here!</p>
+            <div class="flex items-center justify-center gap-2 text-wedding-secondary text-xs">
               <span class="text-stone-400">—— ❧</span>
-              <span class="font-cinzel text-xs font-semibold tracking-[0.25em] uppercase text-stone-700">We Love You!</span>
+              <span class="font-cinzel text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-stone-700">We Love You!</span>
               <span class="text-stone-400">☙ ——</span>
             </div>
           </div>
         `;
 
         container.innerHTML = timelineHtml + bottomFlourish;
-        attachTimelineTouchEvents();
     } catch (e) {
         console.error('Failed to load timeline:', e);
     }
