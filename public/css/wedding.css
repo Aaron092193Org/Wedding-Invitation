@@ -5,12 +5,12 @@
    ========================================================================== */
 
 :root {
-  /* Warm Gold-Brown & Champagne Palette (Sampled from Reference Image) */
-  --primary-color: #5C4533;       /* Rich Golden Brown / Warm Mocha (Headings, primary accents) */
-  --primary-dark: #453325;        /* Deep Golden Espresso */
-  --secondary-color: #8C6849;     /* Warm Caramel Gold / Hazelnut (Script, lines, icons) */
-  --secondary-light: #B89674;     /* Soft Honey Gold */
-  --accent-color: #DFD3C4;        /* Warm Gold-Brown Canvas (sampled from reference photo border) */
+  /* Warm Light Brown & Champagne Palette (Inspired by Reference Inspo) */
+  --primary-color: #845E3E;       /* Warm Light Brown (Headings, titles, couple names, primary accents) */
+  --primary-dark: #6E4D31;        /* Medium Warm Light Brown */
+  --secondary-color: #A67C52;     /* Soft Light Honey/Tan Brown (Script, badges, accents) */
+  --secondary-light: #C4A482;     /* Pale Golden Sand */
+  --accent-color: #DFD3C4;        /* Warm Gold-Brown Canvas */
   
   --section-bg-1: #E6DACD;        /* Section Gold-Brown Tone 1 */
   --section-bg-2: #DCCDC0;        /* Section Gold-Brown Tone 2 */
@@ -20,18 +20,18 @@
   --card-border: #C7B2A1;         /* Card Outline Border */
   --capiz-bg: rgba(246, 241, 235, 0.96);
   
-  --timeline-line: #70563D;       /* Sampled timeline track color */
-  --timeline-dot: #70563D;        /* Sampled timeline dot color */
+  --timeline-line: #9C7A5B;       /* Light Brown timeline line */
+  --timeline-dot: #845E3E;        /* Light Brown timeline dot */
   
-  --text-dark: #453325;           /* Deep Golden Brown text */
-  --text-heading: #5C4533;        /* Golden Brown Headings */
-  --text-subheading: #7A5E48;     /* Warm Caramel Subtitles & Category Badges */
-  --text-body: #5C5449;           /* Soft Earthy Warm Brown Body Text */
-  --text-muted: #746050;          /* Warm Muted Brown */
+  --text-dark: #5A4230;           /* Soft Deep Brown text (no red) */
+  --text-heading: #845E3E;        /* Warm Light Brown Headings */
+  --text-subheading: #9E7A5A;     /* Soft Caramel Light Brown Subtitles */
+  --text-body: #614D3C;           /* Soft Earthy Warm Brown Body Text */
+  --text-muted: #857262;          /* Light Muted Brown */
   
-  --gold-gradient: linear-gradient(135deg, #B89674 0%, #8C6849 50%, #5C4533 100%);
-  --gold-glow: rgba(140, 104, 73, 0.25);
-  --burgundy-glow: rgba(92, 69, 51, 0.2);
+  --gold-gradient: linear-gradient(135deg, #C4A482 0%, #A67C52 50%, #845E3E 100%);
+  --gold-glow: rgba(132, 94, 62, 0.25);
+  --burgundy-glow: rgba(132, 94, 62, 0.18);
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -325,13 +325,13 @@ h1, h2, h3, h4, h5, h6 {
   width: 76px;
   height: 76px;
   margin: -62px auto 1.5rem auto;
-  background: radial-gradient(circle at 35% 35%, #8C6849 0%, #5C4533 70%, #3D2C20 100%);
+  background: radial-gradient(circle at 35% 35%, #A67C52 0%, #845E3E 70%, #6E4D31 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(61, 44, 32, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.35);
-  border: 2.5px solid #B89674;
+  box-shadow: 0 8px 20px rgba(110, 77, 49, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  border: 2.5px solid #C4A482;
   color: #FFFDF8;
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 23px;
@@ -350,7 +350,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-open-invitation {
-  background: linear-gradient(135deg, #8C6849 0%, #6A5343 50%, #5C4533 100%) !important;
+  background: linear-gradient(135deg, #A67C52 0%, #845E3E 50%, #6E4D31 100%) !important;
   color: #FAF5EF !important;
   font-weight: 600;
   letter-spacing: 2px;
@@ -362,8 +362,8 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 10px;
   transition: var(--transition-smooth);
-  box-shadow: 0 6px 20px rgba(92, 69, 51, 0.3) !important;
-  border: 1px solid #B89674 !important;
+  box-shadow: 0 6px 20px rgba(132, 94, 62, 0.3) !important;
+  border: 1px solid #C4A482 !important;
   cursor: pointer;
 }
 
@@ -385,8 +385,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-open-invitation:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #9C7859 0%, #7A6150 50%, #6A5343 100%) !important;
-  box-shadow: 0 10px 28px rgba(92, 69, 51, 0.45) !important;
+  background: linear-gradient(135deg, #B58B61 0%, #936D4D 50%, #7D5C40 100%) !important;
+  box-shadow: 0 10px 28px rgba(132, 94, 62, 0.45) !important;
   filter: brightness(1.05);
 }
 
@@ -481,7 +481,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .story-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(122, 59, 77, 0.12);
+  box-shadow: 0 16px 40px rgba(132, 94, 62, 0.16);
 }
 
 /* ========================================================
@@ -1004,7 +1004,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .tradition-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 16px 35px rgba(123, 36, 51, 0.1);
+  box-shadow: 0 16px 35px rgba(132, 94, 62, 0.15);
   border-color: var(--secondary-color);
 }
 

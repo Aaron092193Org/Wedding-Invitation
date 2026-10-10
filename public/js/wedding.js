@@ -1513,7 +1513,7 @@ function updateCompanionFields(totalGuests) {
         html += `
         <div class="space-y-1.5">
           <label class="block text-xs font-bold uppercase tracking-wider text-stone-700">
-            Companion ${i} (Guest ${i + 1}) Full Name <span class="text-red-500">*</span>
+            Companion ${i} (Guest ${i + 1}) Full Name <span class="text-[#845E3E] font-bold">*</span>
           </label>
           <input type="text" class="companion-name w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm bg-white focus:ring-2 focus:ring-wedding-primary focus:border-transparent outline-none transition" placeholder="Enter companion's full name" value="${escapeHtml(prevName)}" required />
         </div>`;
@@ -1752,7 +1752,7 @@ function triggerConfettiCelebration() {
             particleCount: 80,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#D4AF37', '#7A3B4D', '#F9F6F0', '#E5C07B']
+            colors: ['#D4AF37', '#845E3E', '#F9F6F0', '#C4A482']
         });
         setTimeout(() => {
             confetti({
@@ -1760,14 +1760,14 @@ function triggerConfettiCelebration() {
                 angle: 60,
                 spread: 55,
                 origin: { x: 0 },
-                colors: ['#D4AF37', '#7A3B4D']
+                colors: ['#D4AF37', '#845E3E']
             });
             confetti({
                 particleCount: 50,
                 angle: 120,
                 spread: 55,
                 origin: { x: 1 },
-                colors: ['#D4AF37', '#7A3B4D']
+                colors: ['#D4AF37', '#845E3E']
             });
         }, 250);
     }
