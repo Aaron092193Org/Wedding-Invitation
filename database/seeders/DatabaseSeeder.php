@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
                 ['Key' => 'ReceptionGoogleMapsUrl', 'Value' => 'https://maps.app.goo.gl/1yj3RXyGy8ZQ5sEu8', 'Category' => 'Venue', 'Description' => 'Reception Google Maps link'],
                 ['Key' => 'BackgroundMusic', 'Value' => '/audio/wedding-ambient.mp3', 'Category' => 'Media', 'Description' => 'Audio file path or URL (Wedding Ambient)'],
                 ['Key' => 'WeddingTheme', 'Value' => 'Warm Light Brown & Champagne Silk', 'Category' => 'Theme', 'Description' => 'Wedding aesthetic theme'],
-                ['Key' => 'PrimaryColor', 'Value' => '#845E3E', 'Category' => 'Theme', 'Description' => 'Primary color hex (Warm Light Blue)'],
+                ['Key' => 'PrimaryColor', 'Value' => '#845E3E', 'Category' => 'Theme', 'Description' => 'Primary color hex (Warm Light Brown)'],
                 ['Key' => 'SecondaryColor', 'Value' => '#A67C52', 'Category' => 'Theme', 'Description' => 'Secondary color hex (Golden Light Brown)'],
                 ['Key' => 'AccentColor', 'Value' => '#DFD3C4', 'Category' => 'Theme', 'Description' => 'Accent/background color hex (Warm Gold-Brown Canvas)'],
                 ['Key' => 'AllowPlusOne', 'Value' => 'true', 'Category' => 'RSVP', 'Description' => 'Allow plus one / companion guests'],
