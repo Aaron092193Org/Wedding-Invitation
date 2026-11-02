@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder
                 ['Key' => 'ReceptionVenue', 'Value' => 'The Grounds Events', 'Category' => 'Venue', 'Description' => 'Reception venue name'],
                 ['Key' => 'ReceptionAddress', 'Value' => '9022 Provincial Road, Sitio Gulod, Sapang Palay Proper, City of San Jose del Monte, Bulacan', 'Category' => 'Venue', 'Description' => 'Reception physical address'],
                 ['Key' => 'WeddingHashtag', 'Value' => '#MajhMadeForAaron', 'Category' => 'Social', 'Description' => 'Official wedding hashtag'],
-                ['Key' => 'DressCode', 'Value' => 'Traditional Barong Tagalog with dark dress slacks for Gentlemen; Formal Long Gowns or Evening Dresses in Themed Earthy & Warm Champagne Tones for Ladies.', 'Category' => 'Details', 'Description' => 'Guest dress code instructions'],
+                ['Key' => 'DressCode', 'Value' => 'Formal floor-length evening gowns in earthy or warm champagne tones for Ladies; Traditional Barong Tagalog or formal dress shirts with trousers for Gentlemen.', 'Category' => 'Details', 'Description' => 'Guest dress code instructions'],
                 ['Key' => 'GoogleMapsUrl', 'Value' => 'https://maps.app.goo.gl/zTNEPZgL3Nvw2beD8', 'Category' => 'Venue', 'Description' => 'Ceremony Google Maps link'],
                 ['Key' => 'ReceptionGoogleMapsUrl', 'Value' => 'https://maps.app.goo.gl/1yj3RXyGy8ZQ5sEu8', 'Category' => 'Venue', 'Description' => 'Reception Google Maps link'],
                 ['Key' => 'BackgroundMusic', 'Value' => '/audio/wedding-ambient.mp3', 'Category' => 'Media', 'Description' => 'Audio file path or URL (Wedding Ambient)'],
