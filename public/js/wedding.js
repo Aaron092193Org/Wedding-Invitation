@@ -937,11 +937,9 @@ function renderSymmetricalEntourage(items, container) {
                 if (role) {
                     role = role.replace(/\s*[·•-]\s*To\s+(?:Light Our Path|Clothe Us in Unity|Bind Us in Love).*/i, '').trim();
                 }
-                const isLong = name.length >= 24;
-                const isVeryLong = name.length >= 28;
                 return `
                   <div class="py-[2px]">
-                    <div class="entourage-person-name ${isVeryLong ? 'is-very-long-name' : (isLong ? 'is-long-name' : '')}">${escapeHtml(name)}</div>
+                    <div class="entourage-person-name">${escapeHtml(name)}</div>
                     ${role ? `<div class="entourage-person-subrole">${escapeHtml(role)}</div>` : ''}
                   </div>
                 `;
