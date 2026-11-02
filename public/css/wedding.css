@@ -1195,9 +1195,31 @@ h1, h2, h3, h4, h5, h6 {
   transition: color 0.2s ease;
 }
 
+.entourage-person-name.is-long-name {
+  font-size: clamp(0.72rem, 2.5vw, 0.88rem);
+  white-space: nowrap !important;
+  letter-spacing: -0.015em;
+  display: block;
+}
+
+.entourage-person-name.is-very-long-name {
+  font-size: clamp(0.64rem, 2.25vw, 0.82rem);
+  white-space: nowrap !important;
+  letter-spacing: -0.022em;
+  display: block;
+}
+
 @media (min-width: 640px) {
   .entourage-person-name {
     font-size: 0.98rem;
+  }
+  .entourage-person-name.is-long-name {
+    font-size: 0.9rem;
+    letter-spacing: normal;
+  }
+  .entourage-person-name.is-very-long-name {
+    font-size: 0.84rem;
+    letter-spacing: -0.01em;
   }
 }
 

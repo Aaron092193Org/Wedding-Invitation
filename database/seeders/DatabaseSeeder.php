@@ -137,28 +137,46 @@ class DatabaseSeeder extends Seeder
                 ['Category' => 'Best Man', 'Name' => 'Armando S. Avendaño, Jr.', 'Role' => 'Best Man', 'DisplayOrder' => 25],
                 ['Category' => 'Maid of Honor', 'Name' => 'Jamesy Yvonne G. Medrano', 'Role' => 'Maid of Honor', 'DisplayOrder' => 26],
 
-                // 4. Secondary Sponsors (Candle, Veil, Cord)
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Marco Bautista', 'Role' => 'Candle Sponsor · To Light Our Path', 'DisplayOrder' => 27],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Camille Fernandez', 'Role' => 'Candle Sponsor · To Light Our Path', 'DisplayOrder' => 28],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Daniel Aquino', 'Role' => 'Veil Sponsor · To Clothe Us in Unity', 'DisplayOrder' => 29],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Kristine Villanueva', 'Role' => 'Veil Sponsor · To Clothe Us in Unity', 'DisplayOrder' => 30],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Christian Lee', 'Role' => 'Cord Sponsor · To Bind Us in Love', 'DisplayOrder' => 31],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Alyssa Ramos', 'Role' => 'Cord Sponsor · To Bind Us in Love', 'DisplayOrder' => 32],
+                // 4. Secondary Sponsors (Authentic list from user - No description subtitles)
+                // Row 1: Candle
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Matt Daniel A. Masadre', 'Role' => 'Candle Sponsor', 'DisplayOrder' => 27],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Maria Theresa Mariella M. Acob', 'Role' => 'Candle Sponsor', 'DisplayOrder' => 28],
+                // Row 2: Veil
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Alain Matthew S. Deala', 'Role' => 'Veil Sponsor', 'DisplayOrder' => 29],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Allea Louise A. Masadre', 'Role' => 'Veil Sponsor', 'DisplayOrder' => 30],
+                // Row 3: Cord
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Reynaldo L. Pabilico', 'Role' => 'Cord Sponsor', 'DisplayOrder' => 31],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Francesca D. Sahagun', 'Role' => 'Cord Sponsor', 'DisplayOrder' => 32],
+                // Row 4: Secondary Sponsors
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Francisco L. Pabilico II', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 33],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Ro-ann Alexis B. Balecha', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 34],
+                // Row 5: Secondary Sponsors
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Maveen O. Paitan', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 35],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Jennifer L. Sevilla-Sinson', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 36],
+                // Row 6: Secondary Sponsors
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Rafael Carlos D. Sahagun', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 37],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Alyssa Beatrice D. Sahagun', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 38],
+                // Row 7: Secondary Sponsors
+                ['Category' => 'Secondary Sponsors', 'Name' => 'John Arvee C. Arevalo', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 39],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Jannah Marceline S. Nicolas', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 40],
+                // Row 8: Secondary Sponsors
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Angelo A. De Vera', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 41],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Miles Angel A. Devera', 'Role' => 'Secondary Sponsor', 'DisplayOrder' => 42],
 
                 // 5. Groomsmen & Bridesmaids
-                ['Category' => 'Groomsmen', 'Name' => 'Joshua Fernandez', 'Role' => 'Groomsman', 'DisplayOrder' => 33],
-                ['Category' => 'Groomsmen', 'Name' => 'Paolo Avendaño', 'Role' => 'Groomsman', 'DisplayOrder' => 34],
-                ['Category' => 'Groomsmen', 'Name' => 'Miguel Castro', 'Role' => 'Groomsman', 'DisplayOrder' => 35],
-                ['Category' => 'Bridesmaids', 'Name' => 'Bea Alonzo-Santos', 'Role' => 'Bridesmaid', 'DisplayOrder' => 36],
-                ['Category' => 'Bridesmaids', 'Name' => 'Katrina Cruz', 'Role' => 'Bridesmaid', 'DisplayOrder' => 37],
-                ['Category' => 'Bridesmaids', 'Name' => 'Clarisse Reyes', 'Role' => 'Bridesmaid', 'DisplayOrder' => 38],
+                ['Category' => 'Groomsmen', 'Name' => 'Joshua Fernandez', 'Role' => 'Groomsman', 'DisplayOrder' => 43],
+                ['Category' => 'Groomsmen', 'Name' => 'Paolo Avendaño', 'Role' => 'Groomsman', 'DisplayOrder' => 44],
+                ['Category' => 'Groomsmen', 'Name' => 'Miguel Castro', 'Role' => 'Groomsman', 'DisplayOrder' => 45],
+                ['Category' => 'Bridesmaids', 'Name' => 'Bea Alonzo-Santos', 'Role' => 'Bridesmaid', 'DisplayOrder' => 46],
+                ['Category' => 'Bridesmaids', 'Name' => 'Katrina Cruz', 'Role' => 'Bridesmaid', 'DisplayOrder' => 47],
+                ['Category' => 'Bridesmaids', 'Name' => 'Clarisse Reyes', 'Role' => 'Bridesmaid', 'DisplayOrder' => 48],
 
                 // 6. Bearers & Flower Girls
-                ['Category' => 'Bearers', 'Name' => 'Lucas Alexander Santos', 'Role' => 'Ring Bearer', 'DisplayOrder' => 39],
-                ['Category' => 'Bearers', 'Name' => 'Mateo Inigo Santos', 'Role' => 'Coin Bearer (Arrhas)', 'DisplayOrder' => 40],
-                ['Category' => 'Bearers', 'Name' => 'Ethan James Avendaño', 'Role' => 'Bible Bearer', 'DisplayOrder' => 41],
-                ['Category' => 'Flower Girls', 'Name' => 'Mia Isabella Santos', 'Role' => 'Flower Girl', 'DisplayOrder' => 42],
-                ['Category' => 'Flower Girls', 'Name' => 'Chloe Rose Dela Cruz', 'Role' => 'Flower Girl', 'DisplayOrder' => 43],
+                ['Category' => 'Bearers', 'Name' => 'Lucas Alexander Santos', 'Role' => 'Ring Bearer', 'DisplayOrder' => 49],
+                ['Category' => 'Bearers', 'Name' => 'Mateo Inigo Santos', 'Role' => 'Coin Bearer (Arrhas)', 'DisplayOrder' => 50],
+                ['Category' => 'Bearers', 'Name' => 'Ethan James Avendaño', 'Role' => 'Bible Bearer', 'DisplayOrder' => 51],
+                ['Category' => 'Flower Girls', 'Name' => 'Mia Isabella Santos', 'Role' => 'Flower Girl', 'DisplayOrder' => 52],
+                ['Category' => 'Flower Girls', 'Name' => 'Chloe Rose Dela Cruz', 'Role' => 'Flower Girl', 'DisplayOrder' => 53],
             ];
 
             foreach ($entourage as $item) {

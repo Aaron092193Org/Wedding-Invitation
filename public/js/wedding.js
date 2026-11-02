@@ -787,7 +787,9 @@ function renderSymmetricalEntourage(items, container) {
     const expandSecondaryItem = (item, defaultRole) => {
         const rawName = (item.name || '').trim();
         const pairSplit = rawName.split(/\s*(?:&|\band\b|\bat\b|[/+])\s*/i).filter(Boolean);
-        const role = item.role && !/^(secondary sponsor|secondary sponsors)$/i.test(item.role.trim()) ? item.role : defaultRole;
+        let role = item.role && !/^(secondary sponsor|secondary sponsors)$/i.test(item.role.trim()) ? item.role.trim() : defaultRole;
+        // Strip any verbose poetic descriptions (e.g. "· To Light Our Path", "· To Clothe Us in Unity", "· To Bind Us in Love")
+        role = role.replace(/\s*[·•-]\s*To\s+(?:Light Our Path|Clothe Us in Unity|Bind Us in Love).*/i, '').trim();
 
         if (pairSplit.length >= 2) {
             return [
@@ -801,11 +803,11 @@ function renderSymmetricalEntourage(items, container) {
     secondaryRaw.forEach(i => {
         const cr = getCatRole(i);
         if (cr.includes('candle') || cr.includes('kandila')) {
-            candleItems.push(...expandSecondaryItem(i, 'Candle Sponsor · To Light Our Path'));
+            candleItems.push(...expandSecondaryItem(i, 'Candle Sponsor'));
         } else if (cr.includes('veil') || cr.includes('belo')) {
-            veilItems.push(...expandSecondaryItem(i, 'Veil Sponsor · To Clothe Us in Unity'));
+            veilItems.push(...expandSecondaryItem(i, 'Veil Sponsor'));
         } else if (cr.includes('cord') || cr.includes('yugal')) {
-            cordItems.push(...expandSecondaryItem(i, 'Cord Sponsor · To Bind Us in Love'));
+            cordItems.push(...expandSecondaryItem(i, 'Cord Sponsor'));
         } else {
             generalSecondaryItems.push(...expandSecondaryItem(i, 'Secondary Sponsor'));
         }
@@ -931,19 +933,24 @@ function renderSymmetricalEntourage(items, container) {
             const renderCell = (item, defaultRole) => {
                 if (!item) return '<div class="text-stone-300 text-xs select-none leading-none py-0.5">—</div>';
                 const name = typeof item === 'string' ? item : item.name;
-                const role = typeof item === 'object' && item.role && item.role !== defaultRole ? item.role : '';
+                let role = typeof item === 'object' && item.role && item.role !== defaultRole ? item.role : '';
+                if (role) {
+                    role = role.replace(/\s*[·•-]\s*To\s+(?:Light Our Path|Clothe Us in Unity|Bind Us in Love).*/i, '').trim();
+                }
+                const isLong = name.length >= 24;
+                const isVeryLong = name.length >= 28;
                 return `
                   <div class="py-[2px]">
-                    <div class="entourage-person-name">${escapeHtml(name)}</div>
+                    <div class="entourage-person-name ${isVeryLong ? 'is-very-long-name' : (isLong ? 'is-long-name' : '')}">${escapeHtml(name)}</div>
                     ${role ? `<div class="entourage-person-subrole">${escapeHtml(role)}</div>` : ''}
                   </div>
                 `;
             };
 
             rowsHtml += `
-              <div class="grid grid-cols-2 gap-2 sm:gap-4 text-center items-center">
-                <div class="px-1">${renderCell(left, leftHeader)}</div>
-                <div class="px-1">${renderCell(right, rightHeader)}</div>
+              <div class="grid grid-cols-2 gap-1.5 sm:gap-4 text-center items-center">
+                <div class="px-0.5 sm:px-1 overflow-hidden">${renderCell(left, leftHeader)}</div>
+                <div class="px-0.5 sm:px-1 overflow-hidden">${renderCell(right, rightHeader)}</div>
               </div>
             `;
         }
