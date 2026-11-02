@@ -108,10 +108,6 @@ function applyThemeAndConfig(cfg) {
         swSecondaryLadies.style.backgroundColor = secLadiesColor;
         setText('hex-secondary-sponsor-ladies', secLadiesColor);
     }
-    const swSecondary = document.getElementById('palette-secondary');
-    const swAccent = document.getElementById('palette-accent');
-    if (swSecondary) { swSecondary.style.backgroundColor = cfg.secondaryColor || '#8C6849'; setText('hex-secondary', cfg.secondaryColor || '#8C6849'); }
-    if (swAccent) { swAccent.style.backgroundColor = cfg.accentColor || '#F6F1EB'; setText('hex-accent', cfg.accentColor || '#F6F1EB'); }
 
     // 6. Hashtag
     setText('wedding-hashtag-display', cfg.weddingHashtag);
