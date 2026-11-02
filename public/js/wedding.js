@@ -651,16 +651,36 @@ async function loadEntourage() {
 function renderSymmetricalEntourage(items, container) {
     const claimedIds = new Set();
 
+    // Helper to safely check category & role text
+    const getCatRole = (i) => `${i.category || ''} ${i.role || ''}`.toLowerCase();
+
+    // Helpers to classify Filipino honorifics & names
+    const isFemaleName = (str) => {
+        const s = ' ' + (str || '').toLowerCase() + ' ';
+        return /\b(mrs|dra|ms|miss|gng|madam|lady|sister|ninang|ina|nanay|tita)\b/i.test(s) ||
+               /\b(teresa|patricia|cynthia|maria|ma\.|carmela|elena|sofia|kristine|alyssa|camille|claudine|bea|katrina|clarisse|leah|carmen|julita|nora|rizalinda|roselyn|grace|marianne|emma|fatima|narcisa|jamesy)\b/i.test(s);
+    };
+
+    const isMaleName = (str) => {
+        const s = ' ' + (str || '').toLowerCase() + ' ';
+        return /\b(mr|engr|atty|dr|g\.|sir|bro|fr|ninong|ama|tatay|tito)\b/i.test(s) ||
+               /\b(fernando|benjamin|carlos|roberto|antonio|gabriel|marco|daniel|christian|joshua|paolo|miguel|ethan|lucas|mateo|alex|edwin|elmer|vanni|jaime|rosendo|erlante|julio|elli|venerando|armando|joel|aaron)\b/i.test(s);
+    };
+
     // 1. Extract Groom & Bride Parents
     let groomParents = items.filter(i => {
-        const catRole = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        return catRole.includes('groom') && (catRole.includes('parent') || catRole.includes('magulang') || catRole.includes('ama') || catRole.includes('ina'));
+        const cr = getCatRole(i);
+        const cat = (i.category || '').toLowerCase();
+        return (cat.includes('groom') && cat.includes('parent')) ||
+               (cr.includes('groom') && (cr.includes('parent') || cr.includes('magulang') || cr.includes('ama') || cr.includes('ina') || cr.includes('father') || cr.includes('mother')));
     });
     let brideParents = items.filter(i => {
-        const catRole = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        return catRole.includes('bride') && (catRole.includes('parent') || catRole.includes('magulang') || catRole.includes('ama') || catRole.includes('ina'));
+        const cr = getCatRole(i);
+        const cat = (i.category || '').toLowerCase();
+        return (cat.includes('bride') && cat.includes('parent')) ||
+               (cr.includes('bride') && (cr.includes('parent') || cr.includes('magulang') || cr.includes('ama') || cr.includes('ina') || cr.includes('father') || cr.includes('mother')));
     });
-    
+
     // Fallback if named with Avendaño / Fernandez
     if (groomParents.length === 0) {
         groomParents = items.filter(i => /avendaño|avendano/i.test(i.name) && /parent/i.test(i.category || ''));
@@ -674,31 +694,16 @@ function renderSymmetricalEntourage(items, container) {
     let ninongs = [];
     let ninangs = [];
 
-    // Helpers to classify Filipino honorifics & names
-    const isFemaleName = (str) => {
-        const s = ' ' + (str || '').toLowerCase() + ' ';
-        return /\b(mrs|dra|ms|miss|gng|madam|lady|sister|ninang|ina|nanay|tita)\b/i.test(s) ||
-               /\b(teresa|patricia|cynthia|maria|ma\.|carmela|elena|sofia|kristine|alyssa|camille|claudine|bea|katrina|clarisse)\b/i.test(s);
-    };
-
-    const isMaleName = (str) => {
-        const s = ' ' + (str || '').toLowerCase() + ' ';
-        return /\b(mr|engr|atty|dr|g\.|sir|bro|fr|ninong|ama|tatay|tito)\b/i.test(s) ||
-               /\b(fernando|benjamin|carlos|roberto|antonio|gabriel|marco|daniel|christian|joshua|paolo|miguel|ethan|lucas|mateo)\b/i.test(s);
-    };
-
     const sponsorCandidates = items.filter(i => {
         if (claimedIds.has(i.id)) return false;
-        const cat = (i.category || '').toLowerCase();
-        const role = (i.role || '').toLowerCase();
-        const cr = `${cat} ${role}`;
+        const cr = getCatRole(i);
 
         if (cr.includes('secondary') || cr.includes('candle') || cr.includes('veil') || cr.includes('cord') ||
             cr.includes('bearer') || cr.includes('flower') || cr.includes('best man') || cr.includes('maid of honor') ||
             cr.includes('matron of honor') || cr.includes('bridesmaid') || cr.includes('groomsman') || cr.includes('parent')) {
             return false;
         }
-        return cr.includes('sponsor') || cr.includes('ninong') || cr.includes('ninang') || cr.includes('principal') || cr.includes('godparent');
+        return cr.includes('sponsor') || cr.includes('ninong') || cr.includes('ninang') || cr.includes('principal') || cr.includes('godparent') || cr.includes('witness');
     });
 
     sponsorCandidates.forEach(i => {
@@ -713,7 +718,6 @@ function renderSymmetricalEntourage(items, container) {
             let leftPerson = pairSplit[0].trim();
             let rightPerson = pairSplit[1].trim();
 
-            // If left is female and right is male, swap so Ninong stays on left and Ninang on right
             if (isFemaleName(leftPerson) && !isFemaleName(rightPerson)) {
                 ninongs.push({ name: rightPerson, role: 'Ninong' });
                 ninangs.push({ name: leftPerson, role: 'Ninang' });
@@ -735,7 +739,6 @@ function renderSymmetricalEntourage(items, container) {
         } else if (roleHasNinong || catHasNinong || isMaleName(rawName)) {
             ninongs.push({ name: rawName, role: 'Ninong' });
         } else {
-            // Unspecified: balance equally between left and right columns
             if (ninongs.length <= ninangs.length) {
                 ninongs.push({ name: rawName, role: 'Ninong' });
             } else {
@@ -744,7 +747,7 @@ function renderSymmetricalEntourage(items, container) {
         }
     });
 
-    // Safeguard: If somehow one side ended up empty and the other has multiple items, rebalance
+    // Rebalance safeguard
     if (ninongs.length === 0 && ninangs.length > 1) {
         const half = Math.ceil(ninangs.length / 2);
         ninongs = ninangs.splice(0, half).map(x => ({ ...x, role: 'Ninong' }));
@@ -753,112 +756,140 @@ function renderSymmetricalEntourage(items, container) {
         ninangs = ninongs.splice(half).map(x => ({ ...x, role: 'Ninang' }));
     }
 
-    // 3. Best Man & Maid of Honor
+    // 3. Best Man & Maid / Matron of Honor
     const bestMan = items.filter(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        if (claimedIds.has(i.id)) return false;
+        const cr = getCatRole(i);
         return cr.includes('best man') || cr.includes('bestman');
     });
     const maidOfHonor = items.filter(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
+        if (claimedIds.has(i.id)) return false;
+        const cr = getCatRole(i);
         return cr.includes('maid of honor') || cr.includes('matron of honor') || cr.includes('maid-of-honor');
     });
     [...bestMan, ...maidOfHonor].forEach(i => i.id && claimedIds.add(i.id));
 
-    // 4. Groomsmen & Bridesmaids
-    const groomsmen = items.filter(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        return cr.includes('groomsman') || cr.includes('groomsmen');
+    // 4. Secondary Sponsors (Candle, Veil, Cord & General Secondary)
+    const secondaryRaw = items.filter(i => {
+        if (claimedIds.has(i.id)) return false;
+        const cr = getCatRole(i);
+        return cr.includes('secondary') || cr.includes('candle') || cr.includes('kandila') ||
+               cr.includes('veil') || cr.includes('belo') || cr.includes('cord') || cr.includes('yugal');
     });
-    const bridesmaids = items.filter(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        return cr.includes('bridesmaid');
-    });
-    [...groomsmen, ...bridesmaids].forEach(i => i.id && claimedIds.add(i.id));
+    secondaryRaw.forEach(i => i.id && claimedIds.add(i.id));
 
-    // 5. Secondary Sponsors (Candle, Veil, Cord)
-    let candleLeft = null, candleRight = null;
-    let veilLeft = null, veilRight = null;
-    let cordLeft = null, cordRight = null;
+    // Expand pairs (e.g. 'Marco Bautista & Camille Fernandez') and categorize
+    const candleItems = [];
+    const veilItems = [];
+    const cordItems = [];
+    const generalSecondaryItems = [];
 
-    const secondaryItems = items.filter(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        return cr.includes('secondary') || cr.includes('candle') || cr.includes('veil') || cr.includes('cord');
-    });
-    secondaryItems.forEach(i => i.id && claimedIds.add(i.id));
+    const expandSecondaryItem = (item, defaultRole) => {
+        const rawName = (item.name || '').trim();
+        const pairSplit = rawName.split(/\s*(?:&|\band\b|\bat\b|[/+])\s*/i).filter(Boolean);
+        const role = item.role && !/^(secondary sponsor|secondary sponsors)$/i.test(item.role.trim()) ? item.role : defaultRole;
 
-    secondaryItems.forEach(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        const hasGroom = cr.includes('groom') || cr.includes('male');
-        const hasBride = cr.includes('bride') || cr.includes('female');
+        if (pairSplit.length >= 2) {
+            return [
+                { name: pairSplit[0].trim(), role },
+                { name: pairSplit[1].trim(), role }
+            ];
+        }
+        return [{ name: rawName, role }];
+    };
 
-        if (cr.includes('candle')) {
-            if (hasGroom) candleLeft = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
-            else if (hasBride) candleRight = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
-            else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
-                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
-                candleLeft = { name: parts[0].trim(), role: 'Candle Sponsor · To Light Our Path' };
-                candleRight = { name: parts[1].trim(), role: 'Candle Sponsor · To Light Our Path' };
-            } else if (!candleLeft) {
-                candleLeft = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
-            } else {
-                candleRight = { name: i.name, role: 'Candle Sponsor · To Light Our Path' };
-            }
-        } else if (cr.includes('veil')) {
-            if (hasGroom) veilLeft = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
-            else if (hasBride) veilRight = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
-            else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
-                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
-                veilLeft = { name: parts[0].trim(), role: 'Veil Sponsor · To Clothe Us in Unity' };
-                veilRight = { name: parts[1].trim(), role: 'Veil Sponsor · To Clothe Us in Unity' };
-            } else if (!veilLeft) {
-                veilLeft = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
-            } else {
-                veilRight = { name: i.name, role: 'Veil Sponsor · To Clothe Us in Unity' };
-            }
-        } else if (cr.includes('cord')) {
-            if (hasGroom) cordLeft = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
-            else if (hasBride) cordRight = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
-            else if (i.name.includes('&') || /\band\b/i.test(i.name)) {
-                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
-                cordLeft = { name: parts[0].trim(), role: 'Cord Sponsor · To Bind Us in Love' };
-                cordRight = { name: parts[1].trim(), role: 'Cord Sponsor · To Bind Us in Love' };
-            } else if (!cordLeft) {
-                cordLeft = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
-            } else {
-                cordRight = { name: i.name, role: 'Cord Sponsor · To Bind Us in Love' };
-            }
+    secondaryRaw.forEach(i => {
+        const cr = getCatRole(i);
+        if (cr.includes('candle') || cr.includes('kandila')) {
+            candleItems.push(...expandSecondaryItem(i, 'Candle Sponsor · To Light Our Path'));
+        } else if (cr.includes('veil') || cr.includes('belo')) {
+            veilItems.push(...expandSecondaryItem(i, 'Veil Sponsor · To Clothe Us in Unity'));
+        } else if (cr.includes('cord') || cr.includes('yugal')) {
+            cordItems.push(...expandSecondaryItem(i, 'Cord Sponsor · To Bind Us in Love'));
+        } else {
+            generalSecondaryItems.push(...expandSecondaryItem(i, 'Secondary Sponsor'));
         }
     });
 
-    const secondaryLeft = [candleLeft, veilLeft, cordLeft].filter(Boolean);
-    const secondaryRight = [candleRight, veilRight, cordRight].filter(Boolean);
+    // Pair secondary sponsors into balanced Left (Gentlemen/Left) & Right (Ladies/Right) lists
+    const secondaryLeft = [];
+    const secondaryRight = [];
+
+    const distributePairList = (list) => {
+        if (list.length === 1) {
+            secondaryLeft.push(list[0]);
+            secondaryRight.push(null);
+            return;
+        }
+        for (let idx = 0; idx < list.length; idx += 2) {
+            const first = list[idx];
+            const second = list[idx + 1] || null;
+            // Place female on right if identifiable
+            if (second && isFemaleName(first.name) && !isFemaleName(second.name)) {
+                secondaryLeft.push(second);
+                secondaryRight.push(first);
+            } else {
+                secondaryLeft.push(first);
+                secondaryRight.push(second);
+            }
+        }
+    };
+
+    distributePairList(candleItems);
+    distributePairList(veilItems);
+    distributePairList(cordItems);
+    distributePairList(generalSecondaryItems);
+
+    // 5. Groomsmen & Bridesmaids
+    const groomsmen = items.filter(i => {
+        if (claimedIds.has(i.id)) return false;
+        const cr = getCatRole(i);
+        return cr.includes('groomsman') || cr.includes('groomsmen');
+    });
+    const bridesmaids = items.filter(i => {
+        if (claimedIds.has(i.id)) return false;
+        const cr = getCatRole(i);
+        return cr.includes('bridesmaid');
+    });
+    [...groomsmen, ...bridesmaids].forEach(i => i.id && claimedIds.add(i.id));
 
     // 6. Bearers & Flower Girls
     let bearers = [];
     let flowerGirls = [];
 
     items.forEach(i => {
-        const cr = `${i.category || ''} ${i.role || ''}`.toLowerCase();
-        if (cr.includes('bearer') || cr.includes('ring') || cr.includes('coin') || cr.includes('arrhas') || cr.includes('bible')) {
-            if (i.id) claimedIds.add(i.id);
+        if (claimedIds.has(i.id)) return;
+        const cr = getCatRole(i);
+
+        if (cr.includes('bearer') || cr.includes('ring') || cr.includes('coin') || cr.includes('arrhas') || cr.includes('arras') || cr.includes('bible')) {
+            claimedIds.add(i.id);
             let subrole = 'Bearer';
             if (cr.includes('ring')) subrole = 'Ring Bearer';
-            else if (cr.includes('coin') || cr.includes('arrhas')) subrole = 'Coin Bearer (Arrhas)';
+            else if (cr.includes('coin') || cr.includes('arrhas') || cr.includes('arras')) subrole = 'Coin Bearer (Arrhas)';
             else if (cr.includes('bible')) subrole = 'Bible Bearer';
-            bearers.push({ name: i.name, role: subrole });
+            bearers.push({ name: i.name, role: i.role || subrole });
         } else if (cr.includes('flower')) {
-            if (i.id) claimedIds.add(i.id);
-            if (i.name.includes('&') || /\band\b/i.test(i.name)) {
-                const parts = i.name.split(/\s*&\s*|\s+and\s+/i);
-                parts.forEach(p => flowerGirls.push({ name: p.trim(), role: 'Flower Girl' }));
+            claimedIds.add(i.id);
+            const pairSplit = (i.name || '').split(/\s*(?:&|\band\b)\s*/i).filter(Boolean);
+            if (pairSplit.length >= 2) {
+                pairSplit.forEach(p => flowerGirls.push({ name: p.trim(), role: i.role || 'Flower Girl' }));
             } else {
-                flowerGirls.push({ name: i.name, role: 'Flower Girl' });
+                flowerGirls.push({ name: i.name, role: i.role || 'Flower Girl' });
             }
         }
     });
 
-    // 7. Other Unclaimed Items
-    const otherItems = items.filter(i => !claimedIds.has(i.id));
+    // 7. Other Custom Categories (e.g. Lectors, Ushers, Offertory, Honored Guests)
+    const customCategoryMap = new Map();
+    items.forEach(i => {
+        if (claimedIds.has(i.id)) return;
+        claimedIds.add(i.id);
+        const catName = (i.category || 'Honored Attendants').trim();
+        if (!customCategoryMap.has(catName)) {
+            customCategoryMap.set(catName, []);
+        }
+        customCategoryMap.get(catName).push(i);
+    });
 
     // Divider HTML (Ultra-Compact)
     const dividerHtml = `
@@ -878,6 +909,16 @@ function renderSymmetricalEntourage(items, container) {
               <div class="text-center mb-1 sm:mb-1.5">
                 <h4 class="entourage-section-heading">${escapeHtml(sectionHeading)}</h4>
                 ${sectionSub ? `<p class="text-[10px] sm:text-[11px] text-stone-500 italic font-serif mt-0 leading-none">${escapeHtml(sectionSub)}</p>` : ''}
+              </div>
+            `;
+        }
+
+        let headerRow = '';
+        if (leftHeader || rightHeader) {
+            headerRow = `
+              <div class="grid grid-cols-2 gap-2 sm:gap-4 text-center mb-0.5">
+                <div><span class="entourage-role-title">${escapeHtml(leftHeader || '')}</span></div>
+                <div><span class="entourage-role-title">${escapeHtml(rightHeader || '')}</span></div>
               </div>
             `;
         }
@@ -910,10 +951,7 @@ function renderSymmetricalEntourage(items, container) {
         return `
           <div class="entourage-tier">
             ${headingBlock}
-            <div class="grid grid-cols-2 gap-2 sm:gap-4 text-center mb-0.5">
-              <div><span class="entourage-role-title">${escapeHtml(leftHeader)}</span></div>
-              <div><span class="entourage-role-title">${escapeHtml(rightHeader)}</span></div>
-            </div>
+            ${headerRow}
             <div class="space-y-0">
               ${rowsHtml}
             </div>
@@ -969,19 +1007,7 @@ function renderSymmetricalEntourage(items, container) {
         ));
     }
 
-    // Tier 4: Groomsmen & Bridesmaids
-    if (groomsmen.length > 0 || bridesmaids.length > 0) {
-        tiers.push(buildAlignedTier(
-            '',
-            '',
-            'Groomsmen',
-            'Bridesmaids',
-            groomsmen,
-            bridesmaids
-        ));
-    }
-
-    // Tier 5: Secondary Sponsors (Candle, Veil, Cord)
+    // Tier 4: Secondary Sponsors (Candle, Veil, Cord)
     if (secondaryLeft.length > 0 || secondaryRight.length > 0) {
         tiers.push(buildAlignedTier(
             'Secondary Sponsors',
@@ -990,6 +1016,18 @@ function renderSymmetricalEntourage(items, container) {
             'Ladies',
             secondaryLeft,
             secondaryRight
+        ));
+    }
+
+    // Tier 5: Groomsmen & Bridesmaids
+    if (groomsmen.length > 0 || bridesmaids.length > 0) {
+        tiers.push(buildAlignedTier(
+            '',
+            '',
+            'Groomsmen',
+            'Bridesmaids',
+            groomsmen,
+            bridesmaids
         ));
     }
 
@@ -1005,20 +1043,22 @@ function renderSymmetricalEntourage(items, container) {
         ));
     }
 
-    // Tier 7: Other Unclaimed Entourage Items (if any)
-    if (otherItems.length > 0) {
-        const half = Math.ceil(otherItems.length / 2);
-        const leftOther = otherItems.slice(0, half);
-        const rightOther = otherItems.slice(half);
+    // Tier 7+: Custom User Categories (e.g. Lectors, Ushers, etc.)
+    customCategoryMap.forEach((categoryMembers, categoryName) => {
+        if (!categoryMembers || categoryMembers.length === 0) return;
+        const half = Math.ceil(categoryMembers.length / 2);
+        const leftSub = categoryMembers.slice(0, half);
+        const rightSub = categoryMembers.slice(half);
+
         tiers.push(buildAlignedTier(
-            'Special Honored Attendants',
+            categoryName,
             '',
-            'Honored Members',
-            'Honored Members',
-            leftOther,
-            rightOther
+            '',
+            '',
+            leftSub,
+            rightSub
         ));
-    }
+    });
 
     // Assemble all tiers separated by decorative Filipino divider
     container.innerHTML = programHeader + tiers.join(dividerHtml);

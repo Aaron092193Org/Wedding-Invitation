@@ -105,40 +105,60 @@ class DatabaseSeeder extends Seeder
         // 3. Seed Entourage
         if (EntourageItem::count() === 0) {
             $entourage = [
-                ['Category' => 'Parents of the Groom', 'Name' => 'Mr. & Mrs. Avendaño', 'Role' => 'Parents of the Groom', 'DisplayOrder' => 1],
-                ['Category' => 'Parents of the Bride', 'Name' => 'Mr. & Mrs. Fernandez', 'Role' => 'Parents of the Bride', 'DisplayOrder' => 2],
-                
-                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Atty. Fernando Gomez', 'Role' => 'Ninong', 'DisplayOrder' => 3],
-                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Hon. Teresa Gomez', 'Role' => 'Ninang', 'DisplayOrder' => 4],
-                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Dr. Benjamin Reyes', 'Role' => 'Ninong', 'DisplayOrder' => 5],
-                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Dra. Patricia Reyes', 'Role' => 'Ninang', 'DisplayOrder' => 6],
-                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Engr. Carlos Mendoza', 'Role' => 'Ninong', 'DisplayOrder' => 7],
-                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Mrs. Cynthia Mendoza', 'Role' => 'Ninang', 'DisplayOrder' => 8],
-                
-                ['Category' => 'Best Man', 'Name' => 'Gabriel Dela Cruz', 'Role' => 'Best Man', 'DisplayOrder' => 9],
-                ['Category' => 'Maid of Honor', 'Name' => 'Sofia Santos', 'Role' => 'Maid of Honor', 'DisplayOrder' => 10],
-                
-                ['Category' => 'Groomsmen', 'Name' => 'Joshua Fernandez', 'Role' => 'Groomsman', 'DisplayOrder' => 11],
-                ['Category' => 'Groomsmen', 'Name' => 'Paolo Avendaño', 'Role' => 'Groomsman', 'DisplayOrder' => 12],
-                ['Category' => 'Groomsmen', 'Name' => 'Miguel Castro', 'Role' => 'Groomsman', 'DisplayOrder' => 13],
-                
-                ['Category' => 'Bridesmaids', 'Name' => 'Bea Alonzo-Santos', 'Role' => 'Bridesmaid', 'DisplayOrder' => 14],
-                ['Category' => 'Bridesmaids', 'Name' => 'Katrina Cruz', 'Role' => 'Bridesmaid', 'DisplayOrder' => 15],
-                ['Category' => 'Bridesmaids', 'Name' => 'Clarisse Reyes', 'Role' => 'Bridesmaid', 'DisplayOrder' => 16],
-                
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Marco Bautista', 'Role' => 'Candle Sponsor (Groom)', 'DisplayOrder' => 17],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Camille Fernandez', 'Role' => 'Candle Sponsor (Bride)', 'DisplayOrder' => 18],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Daniel Aquino', 'Role' => 'Veil Sponsor (Groom)', 'DisplayOrder' => 19],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Kristine Villanueva', 'Role' => 'Veil Sponsor (Bride)', 'DisplayOrder' => 20],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Christian Lee', 'Role' => 'Cord Sponsor (Groom)', 'DisplayOrder' => 21],
-                ['Category' => 'Secondary Sponsors', 'Name' => 'Alyssa Ramos', 'Role' => 'Cord Sponsor (Bride)', 'DisplayOrder' => 22],
-                
-                ['Category' => 'Ring Bearer', 'Name' => 'Lucas Alexander Santos', 'Role' => 'Ring Bearer', 'DisplayOrder' => 23],
-                ['Category' => 'Coin Bearer', 'Name' => 'Mateo Inigo Santos', 'Role' => 'Coin Bearer (Arrhas)', 'DisplayOrder' => 24],
-                ['Category' => 'Bible Bearer', 'Name' => 'Ethan James Avendaño', 'Role' => 'Bible Bearer', 'DisplayOrder' => 25],
-                
-                ['Category' => 'Flower Girls', 'Name' => 'Mia Isabella Santos', 'Role' => 'Flower Girl', 'DisplayOrder' => 26],
-                ['Category' => 'Flower Girls', 'Name' => 'Chloe Rose Dela Cruz', 'Role' => 'Flower Girl', 'DisplayOrder' => 27],
+                // 1. Parents
+                ['Category' => 'Parents of the Groom', 'Name' => 'Armando G. Avendaño', 'Role' => 'Father of the Groom', 'DisplayOrder' => 1],
+                ['Category' => 'Parents of the Groom', 'Name' => 'Narcisa S. Avendaño', 'Role' => 'Mother of the Groom', 'DisplayOrder' => 2],
+                ['Category' => 'Parents of the Bride', 'Name' => 'Joel B. Fernandez', 'Role' => 'Father of the Bride', 'DisplayOrder' => 3],
+                ['Category' => 'Parents of the Bride', 'Name' => 'Fatima A. Fernandez', 'Role' => 'Mother of the Bride', 'DisplayOrder' => 4],
+
+                // 2. Principal Sponsors (10 Ninongs & 10 Ninangs from user's list)
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Alex D. Masadre', 'Role' => 'Ninong', 'DisplayOrder' => 5],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Leah A. Masadre', 'Role' => 'Ninang', 'DisplayOrder' => 6],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Edwin Castillo', 'Role' => 'Ninong', 'DisplayOrder' => 7],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Carmen A. Francisco', 'Role' => 'Ninang', 'DisplayOrder' => 8],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Elmer G. Ramos', 'Role' => 'Ninong', 'DisplayOrder' => 9],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Julita A. Cirilo', 'Role' => 'Ninang', 'DisplayOrder' => 10],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Vanni Tiu', 'Role' => 'Ninong', 'DisplayOrder' => 11],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Ma. Nora Samiento Tiu', 'Role' => 'Ninang', 'DisplayOrder' => 12],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Jaime Daito', 'Role' => 'Ninong', 'DisplayOrder' => 13],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Rizalinda F. Apolinario', 'Role' => 'Ninang', 'DisplayOrder' => 14],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Rosendo A. Mediavillo', 'Role' => 'Ninong', 'DisplayOrder' => 15],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Nora D. Mediavillo', 'Role' => 'Ninang', 'DisplayOrder' => 16],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Erlante S. Acob Jr.', 'Role' => 'Ninong', 'DisplayOrder' => 17],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Maria Roselyn M. Acob', 'Role' => 'Ninang', 'DisplayOrder' => 18],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Julio Z. Abad', 'Role' => 'Ninong', 'DisplayOrder' => 19],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Grace S. Deala', 'Role' => 'Ninang', 'DisplayOrder' => 20],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Elli Del Rosario', 'Role' => 'Ninong', 'DisplayOrder' => 21],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Marianne S. Nicolas', 'Role' => 'Ninang', 'DisplayOrder' => 22],
+                ['Category' => 'Principal Sponsors (Ninong)', 'Name' => 'Venerando D. Sahagun', 'Role' => 'Ninong', 'DisplayOrder' => 23],
+                ['Category' => 'Principal Sponsors (Ninang)', 'Name' => 'Emma Del Fierro', 'Role' => 'Ninang', 'DisplayOrder' => 24],
+
+                // 3. Best Man & Maid of Honor
+                ['Category' => 'Best Man', 'Name' => 'Armando S. Avendaño, Jr.', 'Role' => 'Best Man', 'DisplayOrder' => 25],
+                ['Category' => 'Maid of Honor', 'Name' => 'Jamesy Yvonne G. Medrano', 'Role' => 'Maid of Honor', 'DisplayOrder' => 26],
+
+                // 4. Secondary Sponsors (Candle, Veil, Cord)
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Marco Bautista', 'Role' => 'Candle Sponsor · To Light Our Path', 'DisplayOrder' => 27],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Camille Fernandez', 'Role' => 'Candle Sponsor · To Light Our Path', 'DisplayOrder' => 28],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Daniel Aquino', 'Role' => 'Veil Sponsor · To Clothe Us in Unity', 'DisplayOrder' => 29],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Kristine Villanueva', 'Role' => 'Veil Sponsor · To Clothe Us in Unity', 'DisplayOrder' => 30],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Christian Lee', 'Role' => 'Cord Sponsor · To Bind Us in Love', 'DisplayOrder' => 31],
+                ['Category' => 'Secondary Sponsors', 'Name' => 'Alyssa Ramos', 'Role' => 'Cord Sponsor · To Bind Us in Love', 'DisplayOrder' => 32],
+
+                // 5. Groomsmen & Bridesmaids
+                ['Category' => 'Groomsmen', 'Name' => 'Joshua Fernandez', 'Role' => 'Groomsman', 'DisplayOrder' => 33],
+                ['Category' => 'Groomsmen', 'Name' => 'Paolo Avendaño', 'Role' => 'Groomsman', 'DisplayOrder' => 34],
+                ['Category' => 'Groomsmen', 'Name' => 'Miguel Castro', 'Role' => 'Groomsman', 'DisplayOrder' => 35],
+                ['Category' => 'Bridesmaids', 'Name' => 'Bea Alonzo-Santos', 'Role' => 'Bridesmaid', 'DisplayOrder' => 36],
+                ['Category' => 'Bridesmaids', 'Name' => 'Katrina Cruz', 'Role' => 'Bridesmaid', 'DisplayOrder' => 37],
+                ['Category' => 'Bridesmaids', 'Name' => 'Clarisse Reyes', 'Role' => 'Bridesmaid', 'DisplayOrder' => 38],
+
+                // 6. Bearers & Flower Girls
+                ['Category' => 'Bearers', 'Name' => 'Lucas Alexander Santos', 'Role' => 'Ring Bearer', 'DisplayOrder' => 39],
+                ['Category' => 'Bearers', 'Name' => 'Mateo Inigo Santos', 'Role' => 'Coin Bearer (Arrhas)', 'DisplayOrder' => 40],
+                ['Category' => 'Bearers', 'Name' => 'Ethan James Avendaño', 'Role' => 'Bible Bearer', 'DisplayOrder' => 41],
+                ['Category' => 'Flower Girls', 'Name' => 'Mia Isabella Santos', 'Role' => 'Flower Girl', 'DisplayOrder' => 42],
+                ['Category' => 'Flower Girls', 'Name' => 'Chloe Rose Dela Cruz', 'Role' => 'Flower Girl', 'DisplayOrder' => 43],
             ];
 
             foreach ($entourage as $item) {

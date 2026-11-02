@@ -281,18 +281,28 @@
             <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Category / Group <span class="text-red-500">*</span></label>
             <input type="text" id="entourage-category" list="entourage-categories" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Principal Sponsors">
             <datalist id="entourage-categories">
-              <option value="Parents of the Bride">
               <option value="Parents of the Groom">
+              <option value="Parents of the Bride">
+              <option value="Principal Sponsors (Ninong)">
+              <option value="Principal Sponsors (Ninang)">
               <option value="Principal Sponsors">
-              <option value="Maid of Honor">
               <option value="Best Man">
-              <option value="Bridesmaids">
-              <option value="Groomsmen">
+              <option value="Maid of Honor">
+              <option value="Matron of Honor">
               <option value="Secondary Sponsors">
-              <option value="Flower Girls">
+              <option value="Secondary Sponsors (Candle)">
+              <option value="Secondary Sponsors (Veil)">
+              <option value="Secondary Sponsors (Cord)">
+              <option value="Groomsmen">
+              <option value="Bridesmaids">
+              <option value="Bearers">
               <option value="Ring Bearer">
               <option value="Coin Bearer">
               <option value="Bible Bearer">
+              <option value="Flower Girls">
+              <option value="Lectors & Readers">
+              <option value="Offertory Sponsors">
+              <option value="Ushers">
             </datalist>
           </div>
           <div>
@@ -303,12 +313,32 @@
 
         <div>
           <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Full Name <span class="text-red-500">*</span></label>
-          <input type="text" id="entourage-name" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Dr. Benjamin Reyes">
+          <input type="text" id="entourage-name" required class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Dr. Benjamin Reyes or Marco & Camille">
+          <p class="text-[11px] text-stone-400 mt-1">Tip: You can enter an individual name or pairs with an & (e.g. "Marco Bautista & Camille Fernandez").</p>
         </div>
 
         <div>
           <label class="block text-xs font-bold uppercase text-stone-600 mb-1">Specific Role / Designation (Optional)</label>
-          <input type="text" id="entourage-role" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Principal Sponsor, Veil Sponsor, Bridesmaid">
+          <input type="text" id="entourage-role" list="entourage-roles" class="w-full px-3 py-2 border rounded-xl text-sm" placeholder="e.g. Candle Sponsor, Veil Sponsor, Bridesmaid">
+          <datalist id="entourage-roles">
+            <option value="Candle Sponsor · To Light Our Path">
+            <option value="Veil Sponsor · To Clothe Us in Unity">
+            <option value="Cord Sponsor · To Bind Us in Love">
+            <option value="Ninong">
+            <option value="Ninang">
+            <option value="Best Man">
+            <option value="Maid of Honor">
+            <option value="Matron of Honor">
+            <option value="Groomsman">
+            <option value="Bridesmaid">
+            <option value="Ring Bearer">
+            <option value="Coin Bearer (Arrhas)">
+            <option value="Bible Bearer">
+            <option value="Flower Girl">
+            <option value="First Reading / Lector">
+            <option value="Second Reading / Lector">
+            <option value="Prayers of the Faithful">
+          </datalist>
         </div>
 
         <div class="flex justify-end gap-3 pt-2 border-t">
