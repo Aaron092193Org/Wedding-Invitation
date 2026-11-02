@@ -595,93 +595,206 @@
           <div class="calado-corner-br"></div>
 
           <!-- Top Guidance Description -->
-          <p id="dress-code-text" class="text-stone-700 text-sm sm:text-base max-w-2xl mx-auto text-center leading-relaxed mb-8 font-serif">
+          <p id="dress-code-text" class="text-stone-700 text-sm sm:text-base max-w-2xl mx-auto text-center leading-relaxed mb-6 font-serif">
             Formal floor-length evening gowns in earthy or warm champagne tones for Ladies; Traditional Barong Tagalog or formal dress shirts with trousers for Gentlemen.
           </p>
 
-          <!-- 3-Column Balanced Layout from Image 5: Sponsors | Illustrated Fashion Sketch | Guests -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8">
-            
-            <!-- Left: Principal Sponsors -->
-            <div class="lg:col-span-3 text-center lg:text-left space-y-4">
-              <div>
-                <span class="font-cinzel text-xs font-bold tracking-[0.2em] uppercase text-wedding-secondary block mb-1">Dress Code</span>
-                <h3 class="font-cinzel text-base sm:text-lg font-bold text-stone-900 tracking-wider uppercase">Principal Sponsors</h3>
-              </div>
-              <div class="space-y-3 font-serif">
-                <div class="p-3.5 rounded-xl bg-white/60 border border-amber-200/50">
-                  <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-wedding-primary mb-1">Ladies</p>
-                  <p class="text-stone-700 text-xs sm:text-sm leading-relaxed">Formal floor-length evening gowns in earthy or warm champagne tones.</p>
-                </div>
-                <div class="p-3.5 rounded-xl bg-white/60 border border-amber-200/50">
-                  <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-stone-800 mb-1">Gentlemen</p>
-                  <p class="text-stone-700 text-xs sm:text-sm leading-relaxed">Traditional Barong Tagalog paired with black formal trousers.</p>
-                </div>
-              </div>
-              <div class="p-3 rounded-lg bg-amber-50/70 border border-amber-200/60 text-xs text-stone-600 leading-relaxed font-sans">
-                <p class="font-medium text-amber-900 mb-0.5"><i class="fas fa-exclamation-circle mr-1 text-wedding-primary"></i> Note:</p>
-                Please do not wear shirt, jeans and shorts. Strictly follow the dress code.
-              </div>
-            </div>
+          <!-- Category Tabs: Principal Sponsors | Secondary Sponsors | Guests -->
+          <div class="flex items-center justify-center gap-2 sm:gap-3 flex-wrap mb-8">
+            <button type="button" class="attire-tab-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-cinzel font-bold tracking-wider is-active" data-target="attire-page-principal">
+              <i class="fas fa-crown text-wedding-secondary mr-1.5"></i> Principal Sponsors
+            </button>
+            <button type="button" class="attire-tab-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-cinzel font-bold tracking-wider" data-target="attire-page-secondary">
+              <i class="fas fa-gem text-wedding-secondary mr-1.5"></i> Secondary Sponsors
+            </button>
+            <button type="button" class="attire-tab-btn px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-cinzel font-bold tracking-wider" data-target="attire-page-guests">
+              <i class="fas fa-glass-cheers text-wedding-secondary mr-1.5"></i> Guests
+            </button>
+          </div>
 
-            <!-- Center: The Illustrated Fashion Sketch from Image 5 -->
-            <div class="lg:col-span-6 text-center">
-              <div class="relative mx-auto max-w-[340px] sm:max-w-[380px] bg-white/90 p-4 rounded-2xl border border-amber-200/70 shadow-sm">
-                <img src="/images/attire-sketch.png" alt="Formal Wedding Attire - Barong Tagalog & Formal Evening Gown" class="w-full h-auto object-contain rounded-xl">
-                <div class="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-center gap-2 text-[11px] font-cinzel font-semibold tracking-wider text-stone-700 uppercase">
-                  <span>Barong Tagalog</span>
-                  <span class="text-wedding-secondary">•</span>
-                  <span>Formal Evening Gown</span>
+          <!-- PAGE 1: Principal Sponsors -->
+          <div id="attire-page-principal" class="attire-page block transition-opacity duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-6">
+              
+              <!-- Left: Attire Requirements -->
+              <div class="lg:col-span-6 text-center lg:text-left space-y-4">
+                <div>
+                  <span class="font-cinzel text-xs font-bold tracking-[0.2em] uppercase text-wedding-secondary block mb-1">Dress Code</span>
+                  <h3 class="font-cinzel text-lg sm:text-xl font-bold text-stone-900 tracking-wider uppercase">Principal Sponsors</h3>
+                  <p class="text-xs sm:text-sm text-stone-600 font-serif italic mt-0.5">Strictly Formal Attire</p>
                 </div>
-              </div>
-            </div>
+                
+                <div class="space-y-3 font-serif">
+                  <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                    <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-wedding-primary mb-1">Ladies</p>
+                    <p class="text-stone-700 text-sm leading-relaxed">Formal floor-length evening gowns in earthy or warm champagne tones.</p>
+                  </div>
+                  <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                    <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-stone-800 mb-1">Gentlemen</p>
+                    <p class="text-stone-700 text-sm leading-relaxed">Traditional Barong Tagalog paired with black formal trousers.</p>
+                  </div>
+                </div>
 
-            <!-- Right: Guests & Color Palette Swatches -->
-            <div class="lg:col-span-3 text-center lg:text-right space-y-4">
-              <div>
-                <span class="font-cinzel text-xs font-bold tracking-[0.2em] uppercase text-wedding-secondary block mb-1">Dress Code</span>
-                <h3 class="font-cinzel text-base sm:text-lg font-bold text-stone-900 tracking-wider uppercase">Guests</h3>
-              </div>
-              <div class="space-y-3 font-serif">
-                <div class="p-3.5 rounded-xl bg-white/60 border border-amber-200/50">
-                  <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-wedding-primary mb-1">Ladies</p>
-                  <p class="text-stone-700 text-xs sm:text-sm leading-relaxed">Formal dresses or elegant separates in the wedding's color palette.</p>
-                </div>
-                <div class="p-3.5 rounded-xl bg-white/60 border border-amber-200/50">
-                  <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-stone-800 mb-1">Gentlemen</p>
-                  <p class="text-stone-700 text-xs sm:text-sm leading-relaxed">Formal polo or long-sleeved dress shirt paired with dress trousers.</p>
+                <div class="p-3.5 rounded-lg bg-amber-50/70 border border-amber-200/60 text-xs text-stone-600 leading-relaxed font-sans">
+                  <p class="font-medium text-amber-900 mb-0.5"><i class="fas fa-exclamation-circle mr-1 text-wedding-primary"></i> Note:</p>
+                  Please do not wear shirt, jeans and shorts. Strictly follow the dress code.
                 </div>
               </div>
 
-              <!-- Color Palette Swatches (Matching Gold Brown Reference Inspo) -->
-              <div class="pt-3 border-t border-amber-200/50">
-                <p class="text-xs font-serif italic text-stone-600 mb-3">We'd love to see you in these colors:</p>
-                <div class="flex justify-center lg:justify-end items-center gap-2.5 sm:gap-3 flex-wrap">
-                  <div class="group text-center">
-                    <div id="palette-primary" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #5C4533;" title="Golden Mocha Brown"></div>
-                    <span id="hex-primary" class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#5C4533</span>
-                  </div>
-                  <div class="group text-center">
-                    <div id="palette-secondary" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #8C6849;" title="Warm Caramel Gold"></div>
-                    <span id="hex-secondary" class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#8C6849</span>
-                  </div>
-                  <div class="group text-center">
-                    <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #C7B2A1;" title="Toasted Biscuit / Taupe"></div>
-                    <span class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#C7B2A1</span>
-                  </div>
-                  <div class="group text-center">
-                    <div id="palette-accent" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #F6F1EB;" title="Champagne Cream"></div>
-                    <span id="hex-accent" class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#F6F1EB</span>
+              <!-- Right: Fashion Illustration -->
+              <div class="lg:col-span-6 text-center">
+                <div class="relative mx-auto max-w-[340px] sm:max-w-[380px] bg-white/90 p-4 rounded-2xl border border-amber-200/70 shadow-sm">
+                  <img src="/images/attire-sketch.png" alt="Principal Sponsors Attire - Traditional Barong & Floor-Length Evening Gown" class="w-full h-auto object-contain rounded-xl">
+                  <div class="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-center gap-2 text-[11px] font-cinzel font-semibold tracking-wider text-stone-700 uppercase">
+                    <span>Traditional Barong</span>
+                    <span class="text-wedding-secondary">•</span>
+                    <span>Floor-Length Evening Gown</span>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 
-          <!-- Bottom gentle reminder -->
-          <p class="text-xs italic text-stone-500 text-center border-t border-amber-200/50 pt-4 max-w-lg mx-auto font-serif">
-            Gentle Note: We kindly request guests to reserve pure white and off-white shades for the bride.
-          </p>
+          <!-- PAGE 2: Secondary Sponsors (Next to Principal Sponsors) -->
+          <div id="attire-page-secondary" class="attire-page hidden transition-opacity duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-6">
+              
+              <!-- Left: Attire Requirements & Exclusive Color Swatch -->
+              <div class="lg:col-span-6 text-center lg:text-left space-y-4">
+                <div>
+                  <span class="font-cinzel text-xs font-bold tracking-[0.2em] uppercase text-wedding-secondary block mb-1">Dress Code</span>
+                  <h3 class="font-cinzel text-lg sm:text-xl font-bold text-stone-900 tracking-wider uppercase">Secondary Sponsors</h3>
+                  <p class="text-xs sm:text-sm text-stone-600 font-serif italic mt-0.5">Candle · Veil · Cord & Secondary Sponsors</p>
+                </div>
+                
+                <div class="space-y-3 font-serif">
+                  <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                    <div class="flex items-center justify-between mb-1">
+                      <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-wedding-primary">Ladies</p>
+                      <span class="text-[10px] font-cinzel tracking-wider uppercase bg-amber-100/80 text-amber-900 px-2 py-0.5 rounded-full font-semibold">Designated Palette</span>
+                    </div>
+                    <p class="text-stone-700 text-sm leading-relaxed mb-3">Formal floor-length evening gowns in our official entourage motif.</p>
+                    
+                    <!-- Exclusive Color Palette #845E3E for Ladies -->
+                    <div class="pt-2.5 border-t border-amber-200/50 flex items-center gap-3">
+                      <div id="palette-secondary-sponsor-ladies" class="w-11 h-11 rounded-xl shadow-md border-2 border-white ring-1 ring-stone-300 shrink-0" style="background-color: #845E3E;"></div>
+                      <div class="text-left">
+                        <div class="flex items-center gap-2">
+                          <span id="hex-secondary-sponsor-ladies" class="text-xs font-mono font-bold text-stone-800 uppercase tracking-wider">#845E3E</span>
+                          <span class="text-[10px] uppercase tracking-wider font-semibold text-wedding-primary bg-amber-100/60 px-1.5 py-0.5 rounded">Signature Motif</span>
+                        </div>
+                        <p class="text-[11px] text-stone-600 font-serif italic mt-0.5">Golden Mocha Brown · Dedicated for Secondary Sponsors (Ladies)</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                    <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-stone-800 mb-1">Gentlemen</p>
+                    <p class="text-stone-700 text-sm leading-relaxed">Traditional Barong Tagalog paired with black formal trousers.</p>
+                  </div>
+                </div>
+
+                <div class="p-3.5 rounded-lg bg-amber-50/70 border border-amber-200/60 text-xs text-stone-600 leading-relaxed font-sans">
+                  <p class="font-medium text-amber-900 mb-0.5"><i class="fas fa-palette mr-1 text-wedding-primary"></i> Entourage Palette Note:</p>
+                  The color palette <strong class="font-semibold text-stone-800 font-mono">#845E3E</strong> is dedicated exclusively for our secondary sponsor ladies.
+                </div>
+              </div>
+
+              <!-- Right: Fashion Illustration -->
+              <div class="lg:col-span-6 text-center">
+                <div class="relative mx-auto max-w-[340px] sm:max-w-[380px] bg-white/90 p-4 rounded-2xl border border-amber-200/70 shadow-sm">
+                  <img src="/images/attire-sketch.png" alt="Secondary Sponsors Attire - Traditional Barong & Formal Evening Gown" class="w-full h-auto object-contain rounded-xl">
+                  <div class="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-center gap-2 text-[11px] font-cinzel font-semibold tracking-wider text-stone-700 uppercase">
+                    <span>Traditional Barong</span>
+                    <span class="text-wedding-secondary">•</span>
+                    <span>Secondary Gown (#845E3E)</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- PAGE 3: Guests (With #845E3E Removed from Palette) -->
+          <div id="attire-page-guests" class="attire-page hidden transition-opacity duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-6">
+              
+              <!-- Left: Attire Requirements -->
+              <div class="lg:col-span-6 text-center lg:text-left space-y-4">
+                <div>
+                  <span class="font-cinzel text-xs font-bold tracking-[0.2em] uppercase text-wedding-secondary block mb-1">Dress Code</span>
+                  <h3 class="font-cinzel text-lg sm:text-xl font-bold text-stone-900 tracking-wider uppercase">Guests</h3>
+                  <p class="text-xs sm:text-sm text-stone-600 font-serif italic mt-0.5">Formal / Semi-Formal Attire</p>
+                </div>
+                
+                <div class="space-y-3 font-serif">
+                  <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                    <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-wedding-primary mb-1">Ladies</p>
+                    <p class="text-stone-700 text-sm leading-relaxed">Formal dresses or elegant separates in the wedding's color palette.</p>
+                  </div>
+                  <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                    <p class="font-cinzel text-xs font-bold tracking-[0.15em] uppercase text-stone-800 mb-1">Gentlemen</p>
+                    <p class="text-stone-700 text-sm leading-relaxed">Formal polo or long-sleeved dress shirt paired with dress trousers.</p>
+                  </div>
+                </div>
+
+                <!-- Guest Color Palette Swatches (WITH #845E3E REMOVED) -->
+                <div class="p-4 rounded-xl bg-white/70 border border-amber-200/60 shadow-xs">
+                  <p class="text-xs font-serif italic text-stone-600 mb-2.5">We'd love to see our guests in these wedding palette colors:</p>
+                  <div class="flex items-center gap-3 sm:gap-4 flex-wrap justify-center lg:justify-start">
+                    <div class="group text-center">
+                      <div id="palette-secondary" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #8C6849;" title="Warm Caramel Gold"></div>
+                      <span id="hex-secondary" class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#8C6849</span>
+                    </div>
+                    <div class="group text-center">
+                      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #C7B2A1;" title="Toasted Biscuit / Taupe"></div>
+                      <span class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#C7B2A1</span>
+                    </div>
+                    <div class="group text-center">
+                      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #E8D6B3;" title="Soft Champagne Cream"></div>
+                      <span class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#E8D6B3</span>
+                    </div>
+                    <div class="group text-center">
+                      <div id="palette-accent" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg shadow-xs border border-stone-300 transition-transform group-hover:scale-110" style="background-color: #F6F1EB;" title="Champagne Silk"></div>
+                      <span id="hex-accent" class="text-[9px] uppercase tracking-wider text-stone-500 font-mono mt-1 block">#F6F1EB</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-3 rounded-lg bg-amber-50/70 border border-amber-200/60 text-xs text-stone-600 leading-relaxed font-sans">
+                  <p class="font-medium text-amber-900 mb-0.5"><i class="fas fa-info-circle mr-1 text-wedding-primary"></i> Gentle Note:</p>
+                  We kindly request guests to reserve <strong class="font-semibold text-stone-800 font-mono">#845E3E</strong> for the entourage, and pure white and off-white shades for the bride.
+                </div>
+              </div>
+
+              <!-- Right: Fashion Illustration -->
+              <div class="lg:col-span-6 text-center">
+                <div class="relative mx-auto max-w-[340px] sm:max-w-[380px] bg-white/90 p-4 rounded-2xl border border-amber-200/70 shadow-sm">
+                  <img src="/images/attire-sketch.png" alt="Guest Attire - Formal Polo / Barong & Elegant Dress" class="w-full h-auto object-contain rounded-xl">
+                  <div class="mt-3 pt-2.5 border-t border-stone-200/60 flex items-center justify-center gap-2 text-[11px] font-cinzel font-semibold tracking-wider text-stone-700 uppercase">
+                    <span>Formal Polo / Barong</span>
+                    <span class="text-wedding-secondary">•</span>
+                    <span>Elegant Dress</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Pager / Navigation Footer -->
+          <div class="flex items-center justify-between max-w-md mx-auto pt-6 border-t border-amber-200/50 text-xs font-cinzel text-stone-600 mt-6">
+            <button type="button" id="attire-prev-btn" class="hover:text-wedding-primary flex items-center gap-1.5 transition-colors font-semibold py-1 px-3 rounded-lg hover:bg-amber-100/50 cursor-pointer">
+              <i class="fas fa-chevron-left text-[10px]"></i> Previous
+            </button>
+            <span id="attire-page-indicator" class="font-semibold uppercase tracking-widest text-[11px] text-wedding-primary">
+              1 / 3 · Principal Sponsors
+            </span>
+            <button type="button" id="attire-next-btn" class="hover:text-wedding-primary flex items-center gap-1.5 transition-colors font-semibold py-1 px-3 rounded-lg hover:bg-amber-100/50 cursor-pointer">
+              Next <i class="fas fa-chevron-right text-[10px]"></i>
+            </button>
+          </div>
         </div>
       </div>
     </section>

@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupRsvpForm();
     setupLightbox();
     initStoryCarousel();
+    initAttireTabs();
     createFloatingPetals();
 });
 
@@ -101,12 +102,16 @@ function applyThemeAndConfig(cfg) {
 
     // 5. Dress Code & Palette
     setText('dress-code-text', cfg.dressCode);
-    const swPrimary = document.getElementById('palette-primary');
+    const swSecondaryLadies = document.getElementById('palette-secondary-sponsor-ladies');
+    if (swSecondaryLadies) {
+        const secLadiesColor = cfg.primaryColor || '#845E3E';
+        swSecondaryLadies.style.backgroundColor = secLadiesColor;
+        setText('hex-secondary-sponsor-ladies', secLadiesColor);
+    }
     const swSecondary = document.getElementById('palette-secondary');
     const swAccent = document.getElementById('palette-accent');
-    if (swPrimary) { swPrimary.style.backgroundColor = cfg.primaryColor; setText('hex-primary', cfg.primaryColor); }
-    if (swSecondary) { swSecondary.style.backgroundColor = cfg.secondaryColor; setText('hex-secondary', cfg.secondaryColor); }
-    if (swAccent) { swAccent.style.backgroundColor = cfg.accentColor; setText('hex-accent', cfg.accentColor); }
+    if (swSecondary) { swSecondary.style.backgroundColor = cfg.secondaryColor || '#8C6849'; setText('hex-secondary', cfg.secondaryColor || '#8C6849'); }
+    if (swAccent) { swAccent.style.backgroundColor = cfg.accentColor || '#F6F1EB'; setText('hex-accent', cfg.accentColor || '#F6F1EB'); }
 
     // 6. Hashtag
     setText('wedding-hashtag-display', cfg.weddingHashtag);
@@ -339,6 +344,61 @@ function initStoryCarousel() {
 
     // Start 3-second auto-play!
     startStoryAutoPlay();
+}
+
+// Function to initialize interactive Attire Guide tabs
+function initAttireTabs() {
+    const tabBtns = document.querySelectorAll('.attire-tab-btn');
+    const pages = document.querySelectorAll('.attire-page');
+    const prevBtn = document.getElementById('attire-prev-btn');
+    const nextBtn = document.getElementById('attire-next-btn');
+    const indicator = document.getElementById('attire-page-indicator');
+    if (tabBtns.length === 0 || pages.length === 0) return;
+
+    const pageOrder = ['attire-page-principal', 'attire-page-secondary', 'attire-page-guests'];
+    const pageLabels = ['1 / 3 · Principal Sponsors', '2 / 3 · Secondary Sponsors', '3 / 3 · Guests'];
+    let currentIndex = 0;
+
+    const showPage = (index) => {
+        currentIndex = (index + pageOrder.length) % pageOrder.length;
+        const targetId = pageOrder[currentIndex];
+
+        pages.forEach(p => {
+            if (p.id === targetId) {
+                p.classList.remove('hidden');
+                p.classList.add('block');
+            } else {
+                p.classList.add('hidden');
+                p.classList.remove('block');
+            }
+        });
+
+        tabBtns.forEach(btn => {
+            if (btn.getAttribute('data-target') === targetId) {
+                btn.classList.add('is-active');
+            } else {
+                btn.classList.remove('is-active');
+            }
+        });
+
+        if (indicator) {
+            indicator.textContent = pageLabels[currentIndex];
+        }
+    };
+
+    tabBtns.forEach((btn, idx) => {
+        btn.addEventListener('click', () => showPage(idx));
+    });
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => showPage(currentIndex - 1));
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => showPage(currentIndex + 1));
+    }
+
+    // Default to first page
+    showPage(0);
 }
 
 // 3. Personalized Invitation Verification

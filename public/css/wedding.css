@@ -1062,6 +1062,44 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.1);
 }
 
+/* Attire Guide Tabbed Pages */
+.attire-tab-btn {
+  font-family: 'Cinzel', Georgia, serif;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(132, 94, 62, 0.25);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--text-dark, #2b211e);
+  cursor: pointer;
+}
+
+.attire-tab-btn:hover {
+  border-color: #845E3E;
+  color: #845E3E;
+  transform: translateY(-1px);
+}
+
+.attire-tab-btn.is-active {
+  background: #845E3E !important;
+  color: #FFFFFF !important;
+  border-color: #845E3E !important;
+  box-shadow: 0 4px 12px rgba(132, 94, 62, 0.25);
+}
+
+.attire-page {
+  animation: attireFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes attireFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Toast Notifications */
 .toast-notice {
   position: fixed;
