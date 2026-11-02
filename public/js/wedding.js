@@ -946,9 +946,9 @@ function renderSymmetricalEntourage(items, container) {
             };
 
             rowsHtml += `
-              <div class="grid grid-cols-2 gap-1.5 sm:gap-4 text-center items-center">
-                <div class="px-0.5 sm:px-1 overflow-hidden">${renderCell(left, leftHeader)}</div>
-                <div class="px-0.5 sm:px-1 overflow-hidden">${renderCell(right, rightHeader)}</div>
+              <div class="grid grid-cols-2 gap-1 sm:gap-4 text-center items-center">
+                <div class="px-0.5 sm:px-1 min-w-0">${renderCell(left, leftHeader)}</div>
+                <div class="px-0.5 sm:px-1 min-w-0">${renderCell(right, rightHeader)}</div>
               </div>
             `;
         }
@@ -1067,6 +1067,23 @@ function renderSymmetricalEntourage(items, container) {
 
     // Assemble all tiers separated by decorative Filipino divider
     container.innerHTML = programHeader + tiers.join(dividerHtml);
+
+    // Auto-fit guarantee: if any long name exceeds its cell width on narrow screens, scale it down just enough to fit
+    const adjustEntourageFit = () => {
+        if (!container) return;
+        container.querySelectorAll('.entourage-person-name').forEach(el => {
+            el.style.fontSize = '';
+            const parent = el.parentElement;
+            const maxW = parent ? parent.clientWidth : el.clientWidth;
+            if (maxW > 0 && el.scrollWidth > maxW + 1) {
+                const ratio = (maxW - 1) / el.scrollWidth;
+                const computed = parseFloat(window.getComputedStyle(el).fontSize);
+                el.style.fontSize = Math.max(9.5, Math.floor(computed * ratio * 100) / 100) + 'px';
+            }
+        });
+    };
+    requestAnimationFrame(adjustEntourageFit);
+    window.addEventListener('resize', adjustEntourageFit, { passive: true });
 }
 
 // ========================================================

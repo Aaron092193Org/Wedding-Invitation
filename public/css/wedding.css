@@ -1188,18 +1188,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .entourage-person-name {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(0.82rem, 2.5vw, 0.98rem);
+  font-size: clamp(0.74rem, 2.25vw, 0.95rem);
   font-weight: 600;
   color: var(--text-dark) !important;
   line-height: 1.18;
   white-space: nowrap !important;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
   transition: color 0.2s ease;
 }
 
 @media (min-width: 640px) {
   .entourage-person-name {
-    font-size: 0.98rem;
+    font-size: 0.95rem;
     letter-spacing: normal;
   }
 }

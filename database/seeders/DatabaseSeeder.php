@@ -172,11 +172,11 @@ class DatabaseSeeder extends Seeder
                 ['Category' => 'Bridesmaids', 'Name' => 'Clarisse Reyes', 'Role' => 'Bridesmaid', 'DisplayOrder' => 48],
 
                 // 6. Bearers & Flower Girls
-                ['Category' => 'Bearers', 'Name' => 'Lucas Alexander Santos', 'Role' => 'Ring Bearer', 'DisplayOrder' => 49],
-                ['Category' => 'Bearers', 'Name' => 'Mateo Inigo Santos', 'Role' => 'Coin Bearer (Arrhas)', 'DisplayOrder' => 50],
-                ['Category' => 'Bearers', 'Name' => 'Ethan James Avendaño', 'Role' => 'Bible Bearer', 'DisplayOrder' => 51],
-                ['Category' => 'Flower Girls', 'Name' => 'Mia Isabella Santos', 'Role' => 'Flower Girl', 'DisplayOrder' => 52],
-                ['Category' => 'Flower Girls', 'Name' => 'Chloe Rose Dela Cruz', 'Role' => 'Flower Girl', 'DisplayOrder' => 53],
+                ['Category' => 'Bearers', 'Name' => 'Alonzo Mateo S. Marquez', 'Role' => 'Ring Bearer', 'DisplayOrder' => 49],
+                ['Category' => 'Bearers', 'Name' => 'Dmitri Ares Yñaki E. Avendaño', 'Role' => 'Coin Bearer (Arrhas)', 'DisplayOrder' => 50],
+                ['Category' => 'Bearers', 'Name' => 'Caleb Jerico D. Borja', 'Role' => 'Bible Bearer', 'DisplayOrder' => 51],
+                ['Category' => 'Flower Girls', 'Name' => 'Lianna Amari A. Avendaño', 'Role' => 'Flower Girl', 'DisplayOrder' => 52],
+                ['Category' => 'Flower Girls', 'Name' => 'Halley Athena Xamarah E. Avendaño', 'Role' => 'Flower Girl', 'DisplayOrder' => 53],
             ];
 
             foreach ($entourage as $item) {
