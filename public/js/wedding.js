@@ -973,7 +973,6 @@ function renderSymmetricalEntourage(items, container) {
     // Header banner inside container (Ultra-Compact)
     const programHeader = `
       <div class="text-center border-b border-amber-200/50 pb-2 mb-2 sm:mb-2.5">
-        <span class="text-[9px] sm:text-[10px] uppercase tracking-[0.25em] font-bold text-wedding-secondary block mb-0.5">Kasalan nina Majh at Aaron</span>
         <h3 class="font-serif text-base sm:text-lg font-bold text-stone-800 tracking-wide">Sacred Matrimonial Entourage</h3>
         <div class="w-10 h-0.5 bg-gradient-to-r from-transparent via-wedding-secondary to-transparent mx-auto mt-1"></div>
       </div>
@@ -995,7 +994,7 @@ function renderSymmetricalEntourage(items, container) {
     if (ninongs.length > 0 || ninangs.length > 0) {
         tiers.push(buildAlignedTier(
             'Principal Sponsors',
-            'Witnesses of Faith & Life',
+            '',
             'Ninong',
             'Ninang',
             ninongs,
