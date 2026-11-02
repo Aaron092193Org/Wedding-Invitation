@@ -56,7 +56,7 @@ function applyThemeAndConfig(cfg) {
     const coupleText = `${cfg.brideName} & ${cfg.groomName}`;
     document.title = `${coupleText} — Our Wedding`;
     setText('meta-title', document.title);
-    setText('hero-couple-names', coupleText);
+    renderHeroCoupleNames(cfg.brideName, cfg.groomName);
     setText('footer-couple-names', coupleText);
     setText('hero-venue-summary', `${cfg.ceremonyVenue} • ${formatDateOnly(cfg.weddingDate)}`);
     setText('hero-date-display', formatDateOnly(cfg.weddingDate));
@@ -1935,6 +1935,52 @@ function showToast(msg, type = 'info') {
         toast.classList.remove('show');
     }, 3500);
 }
+
+// Hero Couple Names Typography & Layout Fitting
+function renderHeroCoupleNames(bride, groom) {
+    const el = document.getElementById('hero-couple-names');
+    if (!el) return;
+
+    const b = bride || 'Majhorie A. Fernandez';
+    const g = groom || 'Aaron Randell S. Avendaño';
+
+    el.innerHTML = `
+        <span class="hero-name-line hero-bride-name">${escapeHtml(b)}</span>
+        <span class="hero-ampersand-wrapper" aria-hidden="true">
+            <span class="hero-ampersand-ornament"></span>
+            <span class="hero-ampersand">&</span>
+            <span class="hero-ampersand-ornament"></span>
+        </span>
+        <span class="hero-name-line hero-groom-name">${escapeHtml(g)}</span>
+    `;
+
+    requestAnimationFrame(adjustHeroNamesFit);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(adjustHeroNamesFit);
+    }
+}
+
+function adjustHeroNamesFit() {
+    const lines = document.querySelectorAll('.hero-name-line');
+    const container = document.getElementById('hero-couple-names');
+    if (!container || lines.length === 0) return;
+
+    lines.forEach(line => line.style.fontSize = '');
+
+    const containerWidth = container.clientWidth;
+    if (containerWidth <= 0) return;
+
+    lines.forEach(line => {
+        const scrollW = line.scrollWidth;
+        if (scrollW > containerWidth) {
+            const currentComputed = parseFloat(window.getComputedStyle(line).fontSize) || 32;
+            const ratio = (containerWidth - 8) / scrollW;
+            const newSize = Math.max(16, Math.floor(currentComputed * ratio));
+            line.style.fontSize = `${newSize}px`;
+        }
+    });
+}
+window.addEventListener('resize', adjustHeroNamesFit);
 
 // Helpers
 function setText(id, text) {

@@ -296,7 +296,7 @@ h1, h2, h3, h4, h5, h6 {
 .invitation-card {
   position: relative;
   z-index: 10;
-  max-width: 680px;
+  max-width: 720px;
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
@@ -305,7 +305,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 16px;
   box-shadow: 0 30px 60px -15px rgba(69, 51, 37, 0.45);
   border: 2px solid var(--card-border) !important;
-  padding: 3.5rem 2.5rem;
+  padding: 3.5rem 2.25rem;
   text-align: center;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
 }
@@ -347,6 +347,58 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 50%;
   border: 1px dashed rgba(199, 178, 161, 0.6);
   pointer-events: none;
+}
+
+/* Hero Invitation Couple Names (Tailored for Browser & Mobile View) */
+.hero-couple-names {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0.65rem auto 1.15rem auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: center !important;
+}
+
+.hero-name-line {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  color: var(--wedding-primary, #845E3E) !important;
+  font-size: clamp(1.25rem, 3.8vw, 2.35rem) !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.03em !important;
+  text-align: center !important;
+  display: inline-block !important;
+  width: 100% !important;
+  white-space: nowrap !important;
+  text-shadow: 0 1px 2px rgba(132, 94, 62, 0.08) !important;
+  transition: font-size 0.2s ease;
+}
+
+.hero-ampersand-wrapper {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.85rem !important;
+  margin: 0.15rem auto !important;
+  width: 100% !important;
+}
+
+.hero-ampersand-ornament {
+  height: 1px !important;
+  width: 44px !important;
+  background: linear-gradient(90deg, transparent, rgba(166, 124, 82, 0.65), transparent) !important;
+}
+
+.hero-ampersand {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem) !important;
+  color: var(--wedding-secondary, #A67C52) !important;
+  line-height: 1 !important;
 }
 
 .btn-open-invitation {
