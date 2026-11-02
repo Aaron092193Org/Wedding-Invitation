@@ -809,7 +809,7 @@ function renderSymmetricalEntourage(items, container) {
         } else if (cr.includes('cord') || cr.includes('yugal')) {
             cordItems.push(...expandSecondaryItem(i, 'Cord Sponsor'));
         } else {
-            generalSecondaryItems.push(...expandSecondaryItem(i, 'Secondary Sponsor'));
+            generalSecondaryItems.push(...expandSecondaryItem(i, ''));
         }
     });
 
@@ -936,6 +936,9 @@ function renderSymmetricalEntourage(items, container) {
                 let role = typeof item === 'object' && item.role && item.role !== defaultRole ? item.role : '';
                 if (role) {
                     role = role.replace(/\s*[·•-]\s*To\s+(?:Light Our Path|Clothe Us in Unity|Bind Us in Love).*/i, '').trim();
+                    if (/^(secondary sponsor|secondary sponsors)$/i.test(role)) {
+                        role = '';
+                    }
                 }
                 return `
                   <div class="py-[2px]">
@@ -992,7 +995,7 @@ function renderSymmetricalEntourage(items, container) {
     if (ninongs.length > 0 || ninangs.length > 0) {
         tiers.push(buildAlignedTier(
             'Principal Sponsors',
-            'Witnesses of Faith & Life · Mga Ninong at Ninang',
+            'Witnesses of Faith & Life',
             'Ninong',
             'Ninang',
             ninongs,
@@ -1016,7 +1019,7 @@ function renderSymmetricalEntourage(items, container) {
     if (secondaryLeft.length > 0 || secondaryRight.length > 0) {
         tiers.push(buildAlignedTier(
             'Secondary Sponsors',
-            'Mga Pangalawang Tagapagtaguyod',
+            '',
             'Gentlemen',
             'Ladies',
             secondaryLeft,
