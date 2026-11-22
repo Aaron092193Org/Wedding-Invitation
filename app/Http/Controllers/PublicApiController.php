@@ -183,12 +183,53 @@ class PublicApiController extends Controller
         if (!$guest) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invitation code or guest details not found. Please double-check your code or proceed with general RSVP.',
+                'message' => 'Invitation code or guest details not found. Please double-check your code or contact the couple.',
             ], 404);
+        }
+
+        // Check if an RSVP already exists for this guest
+        $existingRsvp = Rsvp::with('companionGuests')
+            ->where('GuestId', $guest->GuestId)
+            ->latest('SubmittedDate')
+            ->first();
+
+        if (!$existingRsvp && !empty($guest->InvitationCode)) {
+            $existingRsvp = Rsvp::with('companionGuests')
+                ->whereHas('guest', function ($q) use ($guest) {
+                    $q->whereRaw('UPPER(InvitationCode) = ?', [strtoupper($guest->InvitationCode)]);
+                })
+                ->latest('SubmittedDate')
+                ->first();
+        }
+
+        if (!$existingRsvp && !empty($guest->FullName)) {
+            $existingRsvp = Rsvp::with('companionGuests')
+                ->whereRaw('LOWER(TRIM(FullName)) = ?', [strtolower(trim($guest->FullName))])
+                ->latest('SubmittedDate')
+                ->first();
+        }
+
+        $existingRsvpData = null;
+        if ($existingRsvp) {
+            $existingRsvpData = [
+                'rsvpId' => $existingRsvp->RSVPId,
+                'fullName' => $existingRsvp->FullName,
+                'invitationCode' => $guest->InvitationCode,
+                'attendanceStatus' => $existingRsvp->AttendanceStatus,
+                'numberOfGuests' => (int) $existingRsvp->NumberOfGuests,
+                'submittedDate' => $existingRsvp->SubmittedDate ? $existingRsvp->SubmittedDate->format('M d, Y · g:i A') : 'Previously Submitted',
+                'submittedDateIso' => $existingRsvp->SubmittedDate ? $existingRsvp->SubmittedDate->toIso8601String() : null,
+                'message' => $existingRsvp->Message,
+                'mealPreference' => $existingRsvp->MealPreference,
+                'dietaryRestrictions' => $existingRsvp->DietaryRestrictions,
+                'companions' => $existingRsvp->companionGuests->pluck('GuestName')->toArray(),
+            ];
         }
 
         return response()->json([
             'success' => true,
+            'hasSubmittedRsvp' => $existingRsvp ? true : false,
+            'existingRsvp' => $existingRsvpData,
             'guest' => [
                 'guestId' => $guest->GuestId,
                 'fullName' => $guest->FullName,
@@ -203,64 +244,92 @@ class PublicApiController extends Controller
     }
 
     /**
-     * Check duplicate RSVP submission by email or mobile, and retrieve allocated guest info if registered.
+     * Check duplicate RSVP submission by email, mobile, code, or name.
      */
     public function checkDuplicate(Request $request)
     {
         $email = trim($request->input('email', ''));
         $mobile = trim($request->input('mobileNumber', ''));
+        $invitationCode = trim($request->input('invitationCode', ''));
+        $guestId = $request->input('guestId');
+        $fullName = trim($request->input('fullName', ''));
 
-        $query = Rsvp::query();
+        $query = Rsvp::with('companionGuests');
 
-        if (!empty($email) && !empty($mobile)) {
-            $query->where(function ($q) use ($email, $mobile) {
-                $q->whereRaw('LOWER(Email) = ?', [strtolower($email)])
-                  ->orWhere('MobileNumber', $mobile);
+        $hasCriteria = false;
+        if (!empty($guestId)) {
+            $query->where('GuestId', $guestId);
+            $hasCriteria = true;
+        } elseif (!empty($invitationCode)) {
+            $query->whereHas('guest', function ($q) use ($invitationCode) {
+                $q->whereRaw('UPPER(InvitationCode) = ?', [strtoupper($invitationCode)]);
             });
-        } elseif (!empty($email)) {
-            $query->whereRaw('LOWER(Email) = ?', [strtolower($email)]);
-        } elseif (!empty($mobile)) {
-            $query->where('MobileNumber', $mobile);
-        } else {
+            $hasCriteria = true;
+        } elseif (!empty($email) || !empty($mobile)) {
+            $query->where(function ($q) use ($email, $mobile) {
+                if (!empty($email)) {
+                    $q->whereRaw('LOWER(Email) = ?', [strtolower($email)]);
+                }
+                if (!empty($mobile)) {
+                    if (!empty($email)) {
+                        $q->orWhere('MobileNumber', $mobile);
+                    } else {
+                        $q->where('MobileNumber', $mobile);
+                    }
+                }
+            });
+            $hasCriteria = true;
+        } elseif (!empty($fullName)) {
+            $query->whereRaw('LOWER(TRIM(FullName)) = ?', [strtolower($fullName)]);
+            $hasCriteria = true;
+        }
+
+        if (!$hasCriteria) {
             return response()->json(['exists' => false, 'guest' => null]);
         }
 
-        $existing = $query->first();
+        $existing = $query->latest('SubmittedDate')->first();
 
         // Also check if there is an allocated Guest record in the Guests table
-        $guestQuery = Guest::query();
-        if (!empty($email) && !empty($mobile)) {
-            $guestQuery->where(function ($q) use ($email, $mobile) {
-                $q->whereRaw('LOWER(Email) = ?', [strtolower($email)])
-                  ->orWhere('MobileNumber', $mobile);
-            });
-        } elseif (!empty($email)) {
-            $guestQuery->whereRaw('LOWER(Email) = ?', [strtolower($email)]);
-        } elseif (!empty($mobile)) {
-            $guestQuery->where('MobileNumber', $mobile);
+        $guest = null;
+        if (!empty($guestId)) {
+            $guest = Guest::find($guestId);
+        } elseif (!empty($invitationCode)) {
+            $guest = Guest::whereRaw('UPPER(InvitationCode) = ?', [strtoupper($invitationCode)])->first();
+        } elseif (!empty($email) || !empty($mobile)) {
+            $guest = Guest::where(function ($q) use ($email, $mobile) {
+                if (!empty($email)) $q->whereRaw('LOWER(Email) = ?', [strtolower($email)]);
+                if (!empty($mobile)) $q->orWhere('MobileNumber', $mobile);
+            })->first();
+        } elseif (!empty($fullName)) {
+            $guest = Guest::whereRaw('LOWER(TRIM(FullName)) = ?', [strtolower($fullName)])->first();
         }
-        $matchedGuest = $guestQuery->first();
+
         $guestData = null;
-        if ($matchedGuest) {
+        if ($guest) {
             $guestData = [
-                'guestId' => $matchedGuest->GuestId,
-                'fullName' => $matchedGuest->FullName,
-                'email' => $matchedGuest->Email,
-                'mobileNumber' => $matchedGuest->MobileNumber,
-                'allowedGuests' => (int) $matchedGuest->AllowedGuests,
-                'invitationCode' => $matchedGuest->InvitationCode,
-                'rsvpStatus' => $matchedGuest->RsvpStatus,
+                'guestId' => $guest->GuestId,
+                'fullName' => $guest->FullName,
+                'email' => $guest->Email,
+                'mobileNumber' => $guest->MobileNumber,
+                'allowedGuests' => (int) $guest->AllowedGuests,
+                'invitationCode' => $guest->InvitationCode,
+                'rsvpStatus' => $guest->RsvpStatus,
             ];
         }
 
         if ($existing) {
             return response()->json([
                 'exists' => true,
+                'alreadySubmitted' => true,
                 'rsvpId' => $existing->RSVPId,
                 'fullName' => $existing->FullName,
+                'invitationCode' => $guest ? $guest->InvitationCode : ($invitationCode ?: 'N/A'),
                 'attendanceStatus' => $existing->AttendanceStatus,
                 'numberOfGuests' => (int) $existing->NumberOfGuests,
-                'submittedDate' => $existing->SubmittedDate ? $existing->SubmittedDate->toIso8601String() : null,
+                'submittedDate' => $existing->SubmittedDate ? $existing->SubmittedDate->format('M d, Y · g:i A') : 'Previously Submitted',
+                'message' => $existing->Message,
+                'companions' => $existing->companionGuests->pluck('GuestName')->toArray(),
                 'guest' => $guestData,
             ]);
         }
@@ -285,16 +354,50 @@ class PublicApiController extends Controller
             'guestCount' => 'nullable|integer|min:0|max:10',
         ]);
 
+        $fullName = trim($request->input('fullName'));
         $email = $request->filled('email') ? strtolower(trim($request->input('email'))) : null;
         $mobile = $request->filled('mobileNumber') ? trim($request->input('mobileNumber')) : null;
         $status = $request->input('attendanceStatus');
         $numberOfGuests = $status === 'Attending' ? (int) ($request->input('numberOfGuests') ?? $request->input('guestCount') ?? 1) : 0;
-        $invitationCode = $request->input('invitationCode');
+        $invitationCode = $request->filled('invitationCode') ? trim($request->input('invitationCode')) : null;
         $guestId = $request->input('guestId');
 
-        // Check duplicate RSVP if not updating and email or mobile is provided
-        if (!empty($email) || !empty($mobile)) {
-            $existing = Rsvp::where(function ($q) use ($email, $mobile) {
+        // 1. Identify the linked guest record
+        $linkedGuest = null;
+        if ($guestId) {
+            $linkedGuest = Guest::find($guestId);
+        } elseif ($invitationCode) {
+            $linkedGuest = Guest::whereRaw('UPPER(InvitationCode) = ?', [strtoupper($invitationCode)])->first();
+        } elseif (!empty($email) || !empty($mobile)) {
+            $linkedGuest = Guest::where(function ($q) use ($email, $mobile) {
+                if (!empty($email)) $q->whereRaw('LOWER(Email) = ?', [$email]);
+                if (!empty($mobile)) $q->orWhere('MobileNumber', $mobile);
+            })->first();
+        }
+        if (!$linkedGuest && !empty($fullName)) {
+            $linkedGuest = Guest::whereRaw('LOWER(TRIM(FullName)) = ?', [strtolower($fullName)])->first();
+        }
+
+        // 2. Strict Duplicate Check: If an RSVP has already been submitted, it must NOT go through!
+        $existing = null;
+        if ($linkedGuest) {
+            $existing = Rsvp::with('companionGuests')
+                ->where('GuestId', $linkedGuest->GuestId)
+                ->latest('SubmittedDate')
+                ->first();
+        }
+
+        if (!$existing && $invitationCode) {
+            $existing = Rsvp::with('companionGuests')
+                ->whereHas('guest', function ($q) use ($invitationCode) {
+                    $q->whereRaw('UPPER(InvitationCode) = ?', [strtoupper($invitationCode)]);
+                })
+                ->latest('SubmittedDate')
+                ->first();
+        }
+
+        if (!$existing && (!empty($email) || !empty($mobile))) {
+            $existing = Rsvp::with('companionGuests')->where(function ($q) use ($email, $mobile) {
                 if (!empty($email)) {
                     $q->whereRaw('LOWER(Email) = ?', [$email]);
                 }
@@ -305,30 +408,38 @@ class PublicApiController extends Controller
                         $q->where('MobileNumber', $mobile);
                     }
                 }
-            })->first();
-
-            if ($existing) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'An RSVP with this email or mobile number has already been submitted.',
-                    'rsvpId' => $existing->RSVPId,
-                ], 409);
-            }
+            })->latest('SubmittedDate')->first();
         }
 
-        return DB::transaction(function () use ($request, $email, $mobile, $status, $numberOfGuests, $invitationCode, $guestId) {
-            $linkedGuest = null;
-            if ($guestId) {
-                $linkedGuest = Guest::find($guestId);
-            } elseif ($invitationCode) {
-                $linkedGuest = Guest::whereRaw('UPPER(InvitationCode) = ?', [strtoupper(trim($invitationCode))])->first();
-            } elseif (!empty($email) || !empty($mobile)) {
-                $linkedGuest = Guest::where(function ($q) use ($email, $mobile) {
-                    if (!empty($email)) $q->whereRaw('LOWER(Email) = ?', [$email]);
-                    if (!empty($mobile)) $q->orWhere('MobileNumber', $mobile);
-                })->first();
-            }
+        if (!$existing && !empty($fullName)) {
+            $existing = Rsvp::with('companionGuests')
+                ->whereRaw('LOWER(TRIM(FullName)) = ?', [strtolower($fullName)])
+                ->latest('SubmittedDate')
+                ->first();
+        }
 
+        if ($existing) {
+            $code = $linkedGuest ? $linkedGuest->InvitationCode : ($invitationCode ?: 'N/A');
+            return response()->json([
+                'success' => false,
+                'alreadySubmitted' => true,
+                'message' => 'An RSVP for this invitation has already been submitted.',
+                'rsvp' => [
+                    'rsvpId' => $existing->RSVPId,
+                    'fullName' => $existing->FullName,
+                    'invitationCode' => $code,
+                    'attendanceStatus' => $existing->AttendanceStatus,
+                    'numberOfGuests' => (int) $existing->NumberOfGuests,
+                    'submittedDate' => $existing->SubmittedDate ? $existing->SubmittedDate->format('M d, Y · g:i A') : 'Previously Submitted',
+                    'message' => $existing->Message,
+                    'mealPreference' => $existing->MealPreference,
+                    'dietaryRestrictions' => $existing->DietaryRestrictions,
+                    'companions' => $existing->companionGuests->pluck('GuestName')->toArray(),
+                ],
+            ], 409);
+        }
+
+        return DB::transaction(function () use ($request, $email, $mobile, $status, $numberOfGuests, $linkedGuest) {
             if ($linkedGuest) {
                 $linkedGuest->update([
                     'RsvpStatus' => $status,

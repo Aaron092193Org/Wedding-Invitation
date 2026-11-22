@@ -11,6 +11,7 @@ let isAudioPlaying = false;
 let audioPlayer = null;
 let existingRsvpId = null;
 let personalizedGuest = null;
+let lastSubmittedRsvpDetails = null;
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -435,20 +436,46 @@ async function checkPersonalizedInvite() {
         code = window.location.pathname.split('/rsvp/')[1];
     }
 
-    if (!code) return;
+    const rsvpSection = document.getElementById('rsvp');
+
+    // If no code is present in URL, keep RSVP section hidden!
+    if (!code) {
+        if (rsvpSection) {
+            rsvpSection.classList.add('hidden');
+        }
+        return;
+    }
 
     try {
         const res = await fetch(`/api/public/guest/${encodeURIComponent(code)}`);
-        if (!res.ok) return;
+        if (!res.ok) {
+            if (rsvpSection) rsvpSection.classList.add('hidden');
+            return;
+        }
 
         const data = await res.json();
         if (data.success && data.guest) {
             personalizedGuest = data.guest;
+
+            // Unhide RSVP section because valid invitation code was verified!
+            if (rsvpSection) {
+                rsvpSection.classList.remove('hidden');
+            }
+
             showPersonalizedBanner(personalizedGuest);
             prefillRsvpForm(personalizedGuest);
+
+            // If this guest has already submitted an RSVP, lock and show notice
+            if (data.hasSubmittedRsvp && data.existingRsvp) {
+                lastSubmittedRsvpDetails = data.existingRsvp;
+                showRsvpSubmittedBanner(data.existingRsvp);
+            }
+        } else {
+            if (rsvpSection) rsvpSection.classList.add('hidden');
         }
     } catch (e) {
         console.warn('Personalized code lookup failed:', e);
+        if (rsvpSection) rsvpSection.classList.add('hidden');
     }
 }
 
@@ -551,9 +578,18 @@ async function lookupInvitationCode() {
 
         if (res.ok && data.success && data.guest) {
             personalizedGuest = data.guest;
+            const rsvpSection = document.getElementById('rsvp');
+            if (rsvpSection) rsvpSection.classList.remove('hidden');
+
             prefillRsvpForm(personalizedGuest);
             showPersonalizedBanner(personalizedGuest);
             showToast(`Found reservation for ${data.guest.fullName} (${data.guest.allowedGuests} seats)`);
+
+            if (data.hasSubmittedRsvp && data.existingRsvp) {
+                lastSubmittedRsvpDetails = data.existingRsvp;
+                showRsvpSubmittedBanner(data.existingRsvp);
+                showAlreadySubmittedModal(data.existingRsvp);
+            }
         } else {
             if (codeStatus) codeStatus.innerHTML = '<span class="text-red-600 font-medium text-xs"><i class="fas fa-times-circle"></i> Code not found</span>';
         }
@@ -1586,15 +1622,18 @@ function setupRsvpForm() {
 
                 if (data.exists) {
                     existingRsvpId = data.rsvpId;
-                    if (warningBox) {
-                        warningBox.classList.remove('hidden');
-                        warningBox.innerHTML = `
-                          <div class="bg-amber-50 border border-amber-300 text-amber-900 rounded-xl p-4 mb-4 text-sm">
-                            <i class="fas fa-info-circle mr-1.5 text-amber-600"></i>
-                            <strong>Notice:</strong> An RSVP record already exists under this contact for <em>${escapeHtml(data.fullName)}</em> (${escapeHtml(data.attendanceStatus)}). 
-                            Submitting this form again will securely update your existing reservation.
-                          </div>
-                        `;
+                    if (data.alreadySubmitted) {
+                        lastSubmittedRsvpDetails = {
+                            fullName: data.fullName,
+                            invitationCode: data.invitationCode,
+                            attendanceStatus: data.attendanceStatus,
+                            numberOfGuests: data.numberOfGuests,
+                            submittedDate: data.submittedDate,
+                            message: data.message,
+                            companions: data.companions || []
+                        };
+                        showRsvpSubmittedBanner(lastSubmittedRsvpDetails);
+                        showAlreadySubmittedModal(lastSubmittedRsvpDetails);
                     }
                 } else {
                     existingRsvpId = null;
@@ -1711,16 +1750,38 @@ async function handleRsvpSubmit(e) {
     };
 
     try {
-        const url = existingRsvpId ? `/api/public/rsvp/${existingRsvpId}` : '/api/public/rsvp';
-        const method = existingRsvpId ? 'PUT' : 'POST';
-
-        const res = await fetch(url, {
-            method,
+        const res = await fetch('/api/public/rsvp', {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const data = await res.json();
+
+        // 409 Conflict: RSVP already submitted -> DO NOT ALLOW THROUGH!
+        if (res.status === 409 || data.alreadySubmitted) {
+            const rsvpData = data.rsvp || {
+                fullName: payload.fullName,
+                invitationCode: payload.invitationCode,
+                attendanceStatus: payload.attendanceStatus,
+                numberOfGuests: payload.numberOfGuests,
+                submittedDate: 'Earlier today',
+                message: payload.message,
+                companions: payload.companionGuests?.map(c => c.guestName) || []
+            };
+
+            lastSubmittedRsvpDetails = rsvpData;
+            showAlreadySubmittedModal(rsvpData);
+            showRsvpSubmittedBanner(rsvpData);
+            showToast('An RSVP for this invitation has already been submitted.', 'error');
+
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-60', 'cursor-not-allowed');
+                btn.innerHTML = `<i class="fas fa-lock mr-2"></i> RSVP Already Submitted`;
+            }
+            return;
+        }
 
         if (!res.ok) {
             showToast(data.message || 'Error submitting RSVP. Please check your inputs.', 'error');
@@ -1736,6 +1797,18 @@ async function handleRsvpSubmit(e) {
 
         // Show Success Modal
         showRsvpSuccessModal(payload);
+
+        // Lock form & show submitted banner
+        lastSubmittedRsvpDetails = {
+            fullName: payload.fullName,
+            invitationCode: payload.invitationCode,
+            attendanceStatus: payload.attendanceStatus,
+            numberOfGuests: payload.numberOfGuests,
+            submittedDate: 'Just now',
+            message: payload.message,
+            companions: payload.companionGuests?.map(c => c.guestName) || []
+        };
+        showRsvpSubmittedBanner(lastSubmittedRsvpDetails);
     } catch (err) {
         console.error('RSVP submission error:', err);
         showToast('Network error while submitting RSVP. Please try again.', 'error');
@@ -1774,12 +1847,12 @@ function closeRsvpSuccessModal() {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
-    const form = document.getElementById('rsvp-form');
-    if (form) form.reset();
+    // Lock the submit button so user cannot re-submit
     const btn = document.getElementById('btn-submit-rsvp');
     if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fas fa-heart mr-2"></i> Submit Response`;
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'cursor-not-allowed');
+        btn.innerHTML = `<i class="fas fa-lock mr-2"></i> RSVP Already Submitted`;
     }
 }
 
@@ -1788,8 +1861,16 @@ function scrollToRsvp(e) {
     if (e && typeof e.preventDefault === 'function') {
         e.preventDefault();
     }
+
+    // If invitation code has not been entered/verified yet, prompt with Code Entry Modal!
+    if (!personalizedGuest) {
+        openInviteCodeModal();
+        return;
+    }
+
     const rsvpSection = document.getElementById('rsvp');
     if (rsvpSection) {
+        rsvpSection.classList.remove('hidden');
         rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         setTimeout(() => {
             const nameInput = document.getElementById('rsvp-fullname');
@@ -1800,6 +1881,224 @@ function scrollToRsvp(e) {
     }
 }
 window.scrollToRsvp = scrollToRsvp;
+
+// ==================== INVITATION CODE ENTRY MODAL ====================
+function openInviteCodeModal() {
+    const modal = document.getElementById('invite-code-entry-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    const input = document.getElementById('modal-invite-code-input');
+    const status = document.getElementById('modal-invite-code-status');
+    if (status) status.innerHTML = '';
+    if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
+    }
+}
+window.openInviteCodeModal = openInviteCodeModal;
+
+function closeInviteCodeModal() {
+    const modal = document.getElementById('invite-code-entry-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+window.closeInviteCodeModal = closeInviteCodeModal;
+
+async function handleModalCodeSubmit(e) {
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+    }
+    const input = document.getElementById('modal-invite-code-input');
+    const status = document.getElementById('modal-invite-code-status');
+    const submitBtn = document.getElementById('btn-modal-code-submit');
+    const code = input?.value.trim();
+
+    if (!code) {
+        if (status) status.innerHTML = '<span class="text-amber-700">Please enter your code</span>';
+        return;
+    }
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Checking...';
+    }
+    if (status) status.innerHTML = '';
+
+    try {
+        const res = await fetch(`/api/public/guest/${encodeURIComponent(code)}`);
+        const data = await res.json();
+
+        if (res.ok && data.success && data.guest) {
+            personalizedGuest = data.guest;
+            const rsvpSection = document.getElementById('rsvp');
+            if (rsvpSection) rsvpSection.classList.remove('hidden');
+
+            showPersonalizedBanner(personalizedGuest);
+            prefillRsvpForm(personalizedGuest);
+            closeInviteCodeModal();
+
+            // Smooth scroll to the unlocked RSVP section
+            if (rsvpSection) {
+                rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            if (data.hasSubmittedRsvp && data.existingRsvp) {
+                lastSubmittedRsvpDetails = data.existingRsvp;
+                showRsvpSubmittedBanner(data.existingRsvp);
+                showAlreadySubmittedModal(data.existingRsvp);
+            } else {
+                showToast(`Welcome, ${data.guest.fullName}! Please confirm your attendance below.`);
+            }
+        } else {
+            if (status) {
+                status.innerHTML = `<span class="text-red-600"><i class="fas fa-times-circle mr-1"></i> ${escapeHtml(data.message || 'Invitation code not found. Please double-check your code.')}</span>`;
+            }
+        }
+    } catch (err) {
+        console.error('Modal code verification failed:', err);
+        if (status) {
+            status.innerHTML = '<span class="text-red-600"><i class="fas fa-exclamation-triangle mr-1"></i> Network error. Please try again.</span>';
+        }
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-unlock-alt mr-1"></i> <span>Access RSVP</span>';
+        }
+    }
+}
+window.handleModalCodeSubmit = handleModalCodeSubmit;
+
+// ==================== ALREADY SUBMITTED MODAL & BANNER ====================
+function showRsvpSubmittedBanner(rsvp) {
+    if (!rsvp) return;
+    lastSubmittedRsvpDetails = rsvp;
+    const banner = document.getElementById('rsvp-already-submitted-banner');
+    const summary = document.getElementById('rsvp-banner-summary');
+    const form = document.getElementById('rsvp-form');
+    const submitBtn = document.getElementById('btn-submit-rsvp');
+
+    if (banner) {
+        banner.classList.remove('hidden');
+    }
+
+    const isAttending = rsvp.attendanceStatus === 'Attending';
+    const statusText = isAttending ? 'Joyfully Attending' : 'Regretfully Declined';
+    const seatsText = isAttending ? ` · ${rsvp.numberOfGuests} seat${rsvp.numberOfGuests > 1 ? 's' : ''}` : '';
+    const dateText = rsvp.submittedDate ? ` on ${rsvp.submittedDate}` : '';
+
+    if (summary) {
+        summary.innerHTML = `
+          <strong>${escapeHtml(rsvp.fullName)}</strong>, your RSVP has already been received (<strong class="${isAttending ? 'text-green-700' : 'text-stone-700'}">${statusText}${seatsText}</strong>)${dateText}.
+        `;
+    }
+
+    // Lock the form inputs & submit button to prevent re-submission
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+        submitBtn.innerHTML = `<i class="fas fa-lock mr-2"></i> RSVP Already Submitted`;
+    }
+
+    if (form) {
+        const inputs = form.querySelectorAll('input:not([type="hidden"]), textarea, select');
+        inputs.forEach(input => {
+            input.setAttribute('readonly', 'true');
+            input.classList.add('bg-stone-100', 'cursor-not-allowed');
+        });
+    }
+}
+window.showRsvpSubmittedBanner = showRsvpSubmittedBanner;
+
+function showAlreadySubmittedModal(rsvp) {
+    if (!rsvp) return;
+    lastSubmittedRsvpDetails = rsvp;
+    const modal = document.getElementById('rsvp-already-submitted-modal');
+    const detailsContainer = document.getElementById('already-submitted-details');
+    if (!modal || !detailsContainer) return;
+
+    const isAttending = rsvp.attendanceStatus === 'Attending';
+    const companions = Array.isArray(rsvp.companions) ? rsvp.companions : [];
+
+    let companionsHtml = '';
+    if (isAttending && companions.length > 0) {
+        companionsHtml = `
+          <div class="pt-2 border-t border-stone-200">
+            <p class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">Registered Companion(s):</p>
+            <ul class="list-disc list-inside space-y-0.5 text-stone-800 font-medium pl-1">
+              ${companions.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+    }
+
+    let messageHtml = '';
+    if (rsvp.message && rsvp.message.trim() !== '') {
+        messageHtml = `
+          <div class="pt-2 border-t border-stone-200">
+            <p class="text-xs font-bold uppercase tracking-wider text-stone-500 mb-0.5">Your Message for the Couple:</p>
+            <p class="text-stone-700 italic font-serif bg-white p-2.5 rounded-lg border border-stone-200 text-xs sm:text-sm">"${escapeHtml(rsvp.message)}"</p>
+          </div>
+        `;
+    }
+
+    detailsContainer.innerHTML = `
+      <div class="flex items-center justify-between border-b border-stone-200 pb-2">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block">Guest Name</span>
+          <span class="font-serif text-base sm:text-lg font-bold text-stone-900">${escapeHtml(rsvp.fullName)}</span>
+        </div>
+        ${rsvp.invitationCode ? `<span class="font-mono text-xs font-bold bg-amber-100/80 text-wedding-primary px-2.5 py-1 rounded-md border border-amber-200">${escapeHtml(rsvp.invitationCode)}</span>` : ''}
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block">Status</span>
+          <span class="inline-flex items-center gap-1.5 font-bold ${isAttending ? 'text-green-700' : 'text-stone-700'} text-xs sm:text-sm">
+            <i class="fas ${isAttending ? 'fa-check-circle text-green-600' : 'fa-times-circle text-stone-400'}"></i>
+            ${isAttending ? 'Joyfully Attending' : 'Regretfully Declined'}
+          </span>
+        </div>
+        ${isAttending ? `
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-stone-400 block">Confirmed Seats</span>
+          <span class="font-bold text-stone-800 text-xs sm:text-sm">${rsvp.numberOfGuests} Seat${rsvp.numberOfGuests > 1 ? 's' : ''}</span>
+        </div>
+        ` : ''}
+      </div>
+
+      ${companionsHtml}
+
+      <div class="pt-2 border-t border-stone-200 text-xs text-stone-500 flex items-center justify-between">
+        <span><i class="fas fa-clock mr-1 text-stone-400"></i> Date Submitted:</span>
+        <span class="font-medium text-stone-700">${escapeHtml(rsvp.submittedDate || 'Recorded')}</span>
+      </div>
+
+      ${messageHtml}
+    `;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+window.showAlreadySubmittedModal = showAlreadySubmittedModal;
+
+function openAlreadySubmittedModal() {
+    if (lastSubmittedRsvpDetails) {
+        showAlreadySubmittedModal(lastSubmittedRsvpDetails);
+    }
+}
+window.openAlreadySubmittedModal = openAlreadySubmittedModal;
+
+function closeAlreadySubmittedModal() {
+    const modal = document.getElementById('rsvp-already-submitted-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+window.closeAlreadySubmittedModal = closeAlreadySubmittedModal;
 
 // 11. Background Music Player (With Web Audio Chime Fallback)
 function setupAudioPlayer() {
