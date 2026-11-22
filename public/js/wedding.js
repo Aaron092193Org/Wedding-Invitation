@@ -104,7 +104,7 @@ function applyThemeAndConfig(cfg) {
     setText('dress-code-text', cfg.dressCode);
     const swSecondaryLadies = document.getElementById('palette-secondary-sponsor-ladies');
     if (swSecondaryLadies) {
-        const secLadiesColor = cfg.primaryColor || '#845E3E';
+        const secLadiesColor = cfg.secondarySponsorsColor || '#4A2E18';
         swSecondaryLadies.style.backgroundColor = secLadiesColor;
         setText('hex-secondary-sponsor-ladies', secLadiesColor);
     }
@@ -401,15 +401,15 @@ function initAttireTabs() {
 const attireLookbook = [
     {
         imageUrl: '/images/attire-principal-sponsors.png',
-        caption: 'Principal Sponsors Attire Guide — Traditional Barong Tagalog (Gentlemen) & Warm Champagne Floor-Length Evening Gown (Ladies)'
+        caption: 'Principal Sponsors Attire Guide — Traditional Barong Tagalog & Khaki Pants (Gentlemen) & Elegant Nude Evening Gown (Ladies)'
     },
     {
         imageUrl: '/images/attire-secondary-sponsors.png',
-        caption: 'Secondary Sponsors Attire Guide — Traditional Barong Tagalog (Gentlemen) & Signature Motif Golden Mocha Brown #845E3E Evening Gown (Ladies)'
+        caption: 'Secondary Sponsors Attire Guide — Traditional Barong Tagalog (Gentlemen) & Rich Chocolate Brown Evening Gown (Ladies)'
     },
     {
         imageUrl: '/images/attire-guests.png',
-        caption: 'Guests Attire Guide — Formal Polo / Barong (Gentlemen) & Wedding Palette Elegant Dress (Ladies)'
+        caption: 'Guests Attire Guide — Formal Polo / Barong (Gentlemen) & Chic Taupe Dress (Ladies)'
     }
 ];
 
