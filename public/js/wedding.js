@@ -401,15 +401,15 @@ function initAttireTabs() {
 const attireLookbook = [
     {
         imageUrl: '/images/attire-principal-sponsors.png',
-        caption: 'Principal Sponsors Attire Guide — Traditional Barong Tagalog & Khaki Pants (Gentlemen) & Elegant Nude Evening Gown (Ladies)'
+        caption: 'Principal Sponsors Attire Guide — Gentlemen (Left): Traditional Barong Tagalog & Khaki Pants • Ladies (Right): Elegant Nude Evening Gown'
     },
     {
         imageUrl: '/images/attire-secondary-sponsors.png',
-        caption: 'Secondary Sponsors Attire Guide — Traditional Barong Tagalog (Gentlemen) & Rich Chocolate Brown Evening Gown (Ladies)'
+        caption: 'Secondary Sponsors Attire Guide — Gentlemen (Left): Traditional Barong Tagalog • Ladies (Right): Rich Chocolate Brown Evening Gown'
     },
     {
         imageUrl: '/images/attire-guests.png',
-        caption: 'Guests Attire Guide — Formal Polo / Barong (Gentlemen) & Chic Taupe Dress (Ladies)'
+        caption: 'Guests Attire Guide — Gentlemen (Left): Formal Polo / Barong • Ladies (Right): Chic Taupe Dress'
     }
 ];
 
