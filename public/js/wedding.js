@@ -1698,8 +1698,8 @@ async function handleRsvpSubmit(e) {
 
     const payload = {
         fullName: document.getElementById('rsvp-fullname')?.value.trim(),
-        email: document.getElementById('rsvp-email')?.value.trim(),
-        mobileNumber: document.getElementById('rsvp-mobile')?.value.trim(),
+        email: document.getElementById('rsvp-email')?.value.trim() || null,
+        mobileNumber: document.getElementById('rsvp-mobile')?.value.trim() || null,
         attendanceStatus: attendance,
         numberOfGuests: isAttending ? parseInt(document.getElementById('rsvp-guest-count')?.value || '1', 10) : 0,
         mealPreference: null,
@@ -1760,7 +1760,6 @@ function showRsvpSuccessModal(payload) {
             <p><strong>Status:</strong> <span class="${isAttending ? 'text-green-700 font-bold' : 'text-red-700 font-bold'}">${escapeHtml(payload.attendanceStatus)}</span></p>
             ${isAttending ? `<p><strong>Confirmed Seats:</strong> ${payload.numberOfGuests}</p>` : ''}
             ${isAttending && payload.mealPreference ? `<p><strong>Selected Meal:</strong> ${escapeHtml(payload.mealPreference)}</p>` : ''}
-            <p><strong>Confirmation Sent To:</strong> ${escapeHtml(payload.email)}</p>
           </div>
         `;
     }
@@ -1783,6 +1782,24 @@ function closeRsvpSuccessModal() {
         btn.innerHTML = `<i class="fas fa-heart mr-2"></i> Submit Response`;
     }
 }
+
+// Quick Jump Floating Action to RSVP
+function scrollToRsvp(e) {
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+    }
+    const rsvpSection = document.getElementById('rsvp');
+    if (rsvpSection) {
+        rsvpSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+            const nameInput = document.getElementById('rsvp-fullname');
+            if (nameInput) {
+                nameInput.focus({ preventScroll: true });
+            }
+        }, 550);
+    }
+}
+window.scrollToRsvp = scrollToRsvp;
 
 // 11. Background Music Player (With Web Audio Chime Fallback)
 function setupAudioPlayer() {

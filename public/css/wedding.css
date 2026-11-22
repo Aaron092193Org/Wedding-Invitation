@@ -254,6 +254,51 @@ h1, h2, h3, h4, h5, h6 {
   transition: var(--transition-smooth);
 }
 
+/* Floating Quick RSVP Action Button */
+.floating-rsvp-btn {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #8C6849 0%, #4A2E18 100%);
+  color: #FAF5EF;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1.5px solid rgba(245, 230, 211, 0.55);
+  box-shadow: 0 8px 24px rgba(74, 46, 24, 0.35);
+  z-index: 9999;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.floating-rsvp-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 12px 28px rgba(74, 46, 24, 0.45), 0 0 16px rgba(220, 185, 140, 0.4);
+  background: linear-gradient(135deg, #9C7553 0%, #5A381E 100%);
+  color: #FFFFFF;
+}
+
+.floating-rsvp-btn i {
+  font-size: 13px;
+  color: #F3E5D8;
+  transition: transform 0.3s ease;
+}
+
+.floating-rsvp-btn:hover i {
+  transform: scale(1.15);
+  color: #FFFFFF;
+}
+
 .music-toggle-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 12px 30px var(--gold-glow);
@@ -1193,6 +1238,17 @@ h1, h2, h3, h4, h5, h6 {
     width: 44px;
     height: 44px;
     font-size: 14px;
+  }
+  .floating-rsvp-btn {
+    bottom: 68px;
+    right: 16px;
+    padding: 8px 14px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    gap: 6px;
+  }
+  .floating-rsvp-btn i {
+    font-size: 11px;
   }
 }
 

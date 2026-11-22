@@ -32,6 +32,13 @@
 
   <!-- Floating Audio Background Player -->
   <audio id="wedding-audio" loop preload="auto" src="/audio/wedding-ambient.mp3"></audio>
+
+  <!-- Floating RSVP Quick Jump Button -->
+  <button id="floating-rsvp-btn" class="floating-rsvp-btn" onclick="scrollToRsvp(event)" title="Directly Go to RSVP Form" aria-label="Go to RSVP">
+    <i class="fas fa-envelope-open-text text-amber-200"></i>
+    <span>RSVP</span>
+  </button>
+
   <button id="music-toggle" class="music-toggle-btn" title="Play: Wedding Ambient Music">
     ♫
   </button>
@@ -1096,19 +1103,19 @@
             <input type="text" id="rsvp-fullname" required class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-wedding-primary focus:border-transparent outline-none transition text-sm bg-white" placeholder="e.g. John Doe" />
           </div>
 
-          <!-- Email & Mobile -->
+          <!-- Email & Mobile (Optional) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5" for="rsvp-email">
-                Email Address <span class="text-[#845E3E] font-bold">*</span>
+                Email Address <span class="text-stone-400 font-normal lowercase">(optional)</span>
               </label>
-              <input type="email" id="rsvp-email" required class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-wedding-primary focus:border-transparent outline-none transition text-sm bg-white" placeholder="your.email@example.com" />
+              <input type="email" id="rsvp-email" class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-wedding-primary focus:border-transparent outline-none transition text-sm bg-white" placeholder="your.email@example.com (optional)" />
             </div>
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5" for="rsvp-mobile">
-                Mobile Number <span class="text-[#845E3E] font-bold">*</span>
+                Mobile Number <span class="text-stone-400 font-normal lowercase">(optional)</span>
               </label>
-              <input type="tel" id="rsvp-mobile" required class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-wedding-primary focus:border-transparent outline-none transition text-sm bg-white" placeholder="+63 917 000 0000" />
+              <input type="tel" id="rsvp-mobile" class="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-wedding-primary focus:border-transparent outline-none transition text-sm bg-white" placeholder="+63 917 000 0000 (optional)" />
             </div>
           </div>
 

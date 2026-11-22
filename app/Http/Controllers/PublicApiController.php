@@ -278,32 +278,42 @@ class PublicApiController extends Controller
     {
         $request->validate([
             'fullName' => 'required|string|max:150',
-            'email' => 'required|email|max:150',
-            'mobileNumber' => 'required|string|max:50',
+            'email' => 'nullable|email|max:150',
+            'mobileNumber' => 'nullable|string|max:50',
             'attendanceStatus' => 'required|string|in:Attending,Declined',
             'numberOfGuests' => 'nullable|integer|min:0|max:10',
             'guestCount' => 'nullable|integer|min:0|max:10',
         ]);
 
-        $email = strtolower(trim($request->input('email')));
-        $mobile = trim($request->input('mobileNumber'));
+        $email = $request->filled('email') ? strtolower(trim($request->input('email'))) : null;
+        $mobile = $request->filled('mobileNumber') ? trim($request->input('mobileNumber')) : null;
         $status = $request->input('attendanceStatus');
         $numberOfGuests = $status === 'Attending' ? (int) ($request->input('numberOfGuests') ?? $request->input('guestCount') ?? 1) : 0;
         $invitationCode = $request->input('invitationCode');
         $guestId = $request->input('guestId');
 
-        // Check duplicate RSVP if not updating
-        $existing = Rsvp::where(function ($q) use ($email, $mobile) {
-            $q->whereRaw('LOWER(Email) = ?', [$email])
-              ->orWhere('MobileNumber', $mobile);
-        })->first();
+        // Check duplicate RSVP if not updating and email or mobile is provided
+        if (!empty($email) || !empty($mobile)) {
+            $existing = Rsvp::where(function ($q) use ($email, $mobile) {
+                if (!empty($email)) {
+                    $q->whereRaw('LOWER(Email) = ?', [$email]);
+                }
+                if (!empty($mobile)) {
+                    if (!empty($email)) {
+                        $q->orWhere('MobileNumber', $mobile);
+                    } else {
+                        $q->where('MobileNumber', $mobile);
+                    }
+                }
+            })->first();
 
-        if ($existing) {
-            return response()->json([
-                'success' => false,
-                'message' => 'An RSVP with this email or mobile number has already been submitted.',
-                'rsvpId' => $existing->RSVPId,
-            ], 409);
+            if ($existing) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An RSVP with this email or mobile number has already been submitted.',
+                    'rsvpId' => $existing->RSVPId,
+                ], 409);
+            }
         }
 
         return DB::transaction(function () use ($request, $email, $mobile, $status, $numberOfGuests, $invitationCode, $guestId) {
@@ -379,10 +389,13 @@ class PublicApiController extends Controller
         $numberOfGuests = $status === 'Attending' ? (int) $request->input('numberOfGuests', 1) : 0;
 
         return DB::transaction(function () use ($request, $rsvp, $status, $numberOfGuests) {
+            $emailVal = $request->has('email') ? ($request->filled('email') ? strtolower(trim($request->input('email'))) : null) : $rsvp->Email;
+            $mobileVal = $request->has('mobileNumber') ? ($request->filled('mobileNumber') ? trim($request->input('mobileNumber')) : null) : $rsvp->MobileNumber;
+
             $rsvp->update([
                 'FullName' => trim($request->input('fullName', $rsvp->FullName)),
-                'Email' => strtolower(trim($request->input('email', $rsvp->Email))),
-                'MobileNumber' => trim($request->input('mobileNumber', $rsvp->MobileNumber)),
+                'Email' => $emailVal,
+                'MobileNumber' => $mobileVal,
                 'AttendanceStatus' => $status,
                 'NumberOfGuests' => $numberOfGuests,
                 'MealPreference' => $request->input('mealPreference', $rsvp->MealPreference),
