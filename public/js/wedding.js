@@ -397,6 +397,34 @@ function initAttireTabs() {
     showPage(0);
 }
 
+// Attire Realistic Lookbook Modal Preview
+const attireLookbook = [
+    {
+        imageUrl: '/images/attire-principal-sponsors.png',
+        caption: 'Principal Sponsors Attire Guide — Traditional Barong Tagalog (Gentlemen) & Warm Champagne Floor-Length Evening Gown (Ladies)'
+    },
+    {
+        imageUrl: '/images/attire-secondary-sponsors.png',
+        caption: 'Secondary Sponsors Attire Guide — Traditional Barong Tagalog (Gentlemen) & Signature Motif Golden Mocha Brown #845E3E Evening Gown (Ladies)'
+    },
+    {
+        imageUrl: '/images/attire-guests.png',
+        caption: 'Guests Attire Guide — Formal Polo / Barong (Gentlemen) & Wedding Palette Elegant Dress (Ladies)'
+    }
+];
+
+function openAttireModal(index) {
+    if (!attireLookbook || !attireLookbook[index]) return;
+    const item = attireLookbook[index];
+    const modal = document.getElementById('lightbox-modal');
+    const img = document.getElementById('lightbox-img');
+    const caption = document.getElementById('lightbox-caption');
+    if (img) img.src = item.imageUrl;
+    if (caption) caption.textContent = item.caption;
+    if (modal) modal.classList.add('active');
+}
+window.openAttireModal = openAttireModal;
+
 // 3. Personalized Invitation Verification
 async function checkPersonalizedInvite() {
     const params = new URLSearchParams(window.location.search);
